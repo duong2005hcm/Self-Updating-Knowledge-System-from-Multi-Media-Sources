@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../components/header/header.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+
+<body>
+    <div id="header"></div>
+
+    <div class="profile-container">
+        <h2>👤 Thông tin cá nhân</h2>
+
+        <div class="avatar">
+            <img id="avatarPreview">
+            <input type="file" id="avatarInput" accept="image/*">
+        </div>
+
+        <label>Tên</label>
+        <input type="text" id="name">
+
+        <label>Email</label>
+        <input type="email" id="email" disabled>
+
+        <label>Mật khẩu</label>
+        <input type="password" id="password">
+
+        <button onclick="updateProfile()">Cập nhật</button>
+    </div>
+
+    <script src="../components/header/header.js"></script>
+    <script src="profile.js"></script>
+</body>
+
+</html>

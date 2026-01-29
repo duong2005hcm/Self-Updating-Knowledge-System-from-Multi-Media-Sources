@@ -1,0 +1,31 @@
+.profile-container {
+    max-width: 420px;
+    margin: 40px auto;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.profile-container label {
+    font-weight: 600;
+    margin-top: 12px;
+    display: block;
+}
+
+.profile-container input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+}
+
+.avatar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.avatar img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+}

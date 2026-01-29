@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "title": "Trí tuệ nhân tạo là gì",
+        "content": "Trí tuệ nhân tạo (AI) là lĩnh vực nghiên cứu...",
+        "keywords": [
+            "ai",
+            "trí tuệ nhân tạo"
+        ],
+        "source": "Wikipedia"
+    },
+    {
+        "id": 2,
+        "title": "Chatbot là gì",
+        "content": "Chatbot là chương trình mô phỏng hội thoại...",
+        "keywords": [
+            "chatbot",
+            "hội thoại"
+        ],
+        "source": "Blog CNTT"
+    }
+]
