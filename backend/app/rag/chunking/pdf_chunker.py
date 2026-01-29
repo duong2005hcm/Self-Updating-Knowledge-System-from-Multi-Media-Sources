@@ -84,17 +84,17 @@ def process_pdfs():
     for pdf_path in pdf_files:
         print(f"\n📄 Đang xử lý file: {pdf_path}")
 
-        # 1️⃣ Profile PDF
+        # Profile PDF
         profile = profile_pdf(pdf_path)
 
-        # 2️⃣ Lấy sample text để classify
+        # Lấy sample text để classify
         full_text = load_pdf_text(pdf_path)
         sample_text = full_text[:2000]  # lấy mẫu đầu file
 
-        # 3️⃣ Phân loại tài liệu
+        # Phân loại tài liệu
         doc_type = classify_document(profile, sample_text)
 
-        # 4️⃣ Lấy cấu hình chunk tương ứng
+        # Lấy cấu hình chunk tương ứng
         chunk_config = select_chunk_config(doc_type)
         chunk_size = chunk_config["chunk_size"]
         chunk_overlap = chunk_config["overlap"]
@@ -102,14 +102,14 @@ def process_pdfs():
         print(f"📌 Loại tài liệu: {doc_type}")
         print(f"📐 Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
 
-        # 5️⃣ Chunk text
+        # Chunk text
         chunks = chunk_text(
             full_text,
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap
         )
 
-        # 6️⃣ Lưu chunk + metadata
+        # Lưu chunk + metadata
         for chunk in tqdm(chunks, desc="Chunking"):
             all_chunks.append({
                 "id": f"chunk_{chunk_id}",
