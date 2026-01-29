@@ -99,8 +99,8 @@ def process_pdfs():
         chunk_size = chunk_config["chunk_size"]
         chunk_overlap = chunk_config["overlap"]
 
-        print(f"📌 Loại tài liệu: {doc_type}")
-        print(f"📐 Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
+        print(f" Loại tài liệu: {doc_type}")
+        print(f" Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
 
         # Chunk text
         chunks = chunk_text(
