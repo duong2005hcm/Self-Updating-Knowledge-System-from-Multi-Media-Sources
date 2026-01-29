@@ -3,6 +3,10 @@ import json
 from typing import List, Dict
 from pypdf import PdfReader
 from tqdm import tqdm
+from document_profiler import profile_pdf
+from document_classifier import classify_document
+from chunk_strategy import select_chunk_config
+
 
 RAW_DATA_DIR = "data/raw"
 PROCESSED_DATA_DIR = "data/processed"
@@ -70,7 +74,6 @@ def chunk_text(
 
 
 def process_pdfs():
-    """MAIN PIPELINE"""
     os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 
     pdf_files = check_pdf_exists(RAW_DATA_DIR)
@@ -79,15 +82,41 @@ def process_pdfs():
     chunk_id = 0
 
     for pdf_path in pdf_files:
-        print(f"📄 Đang xử lý file: {pdf_path}")
-        text = load_pdf_text(pdf_path)
+        print(f"\n📄 Đang xử lý file: {pdf_path}")
 
-        chunks = chunk_text(text, CHUNK_SIZE, CHUNK_OVERLAP)
+        # 1️⃣ Profile PDF
+        profile = profile_pdf(pdf_path)
 
+        # 2️⃣ Lấy sample text để classify
+        full_text = load_pdf_text(pdf_path)
+        sample_text = full_text[:2000]  # lấy mẫu đầu file
+
+        # 3️⃣ Phân loại tài liệu
+        doc_type = classify_document(profile, sample_text)
+
+        # 4️⃣ Lấy cấu hình chunk tương ứng
+        chunk_config = select_chunk_config(doc_type)
+        chunk_size = chunk_config["chunk_size"]
+        chunk_overlap = chunk_config["overlap"]
+
+        print(f"📌 Loại tài liệu: {doc_type}")
+        print(f"📐 Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
+
+        # 5️⃣ Chunk text
+        chunks = chunk_text(
+            full_text,
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap
+        )
+
+        # 6️⃣ Lưu chunk + metadata
         for chunk in tqdm(chunks, desc="Chunking"):
             all_chunks.append({
                 "id": f"chunk_{chunk_id}",
                 "source": os.path.basename(pdf_path),
+                "doc_type": doc_type,
+                "chunk_size": chunk_size,
+                "chunk_overlap": chunk_overlap,
                 "text": chunk
             })
             chunk_id += 1
@@ -96,10 +125,11 @@ def process_pdfs():
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(all_chunks, f, ensure_ascii=False, indent=2)
 
-    print(" Hoàn tất chunking")
+    print("\n Hoàn tất chunking PDF")
     print(f" Tổng số chunk: {len(all_chunks)}")
     print(f" File lưu tại: {output_path}")
     print(" Sẵn sàng cho embedding local & ChromaDB")
+
 
 
 if __name__ == "__main__":
