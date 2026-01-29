@@ -121,7 +121,9 @@ def process_pdfs():
             })
             chunk_id += 1
 
-    output_path = os.path.join(PROCESSED_DATA_DIR, "pdf_chunks.json")
+    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
+    output_file = f"{base_name}_chunks.json"
+    output_path = os.path.join(PROCESSED_DATA_DIR, output_file)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(all_chunks, f, ensure_ascii=False, indent=2)
 
