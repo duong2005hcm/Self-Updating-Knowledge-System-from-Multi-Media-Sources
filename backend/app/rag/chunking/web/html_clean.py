@@ -1,13 +1,36 @@
 from bs4 import BeautifulSoup
+from readability import Document
 
-def extract_text_html( html : str) -> str:
-    """Trích xuất văn bản từ HTML"""
-    soup = BeautifulSoup(html, 'html.parser')
+def clean_docs(html: str) -> str:
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["nav", "footer", "aside", "script", "style"]):
+        tag.decompose()
+    return soup.get_text("\n")
 
-    for tag in soup(['script', 'style','canvans','footer','nav']):
+
+def clean_news(html: str) -> str:
+    doc = Document(html)
+    content = doc.summary(html_partial=True)
+    soup = BeautifulSoup(content, "html.parser")
+
+    for tag in soup(["figure", "figcaption", "aside"]):
         tag.decompose()
 
-    main = soup.find('main') or soup.body or soup.find('header')
-    text = main.get_text(separator ='\n')
+    paragraphs = [
+        p.get_text().strip()
+        for p in soup.find_all("p")
+        if len(p.get_text().strip()) > 40
+    ]
+    return "\n".join(paragraphs)
 
-    return text
+
+def clean_ecommerce(html: str) -> dict:
+    soup = BeautifulSoup(html, "html.parser")
+
+    title = soup.find("h1")
+    desc = soup.find("div", {"class": "description"})
+
+    return {
+        "title": title.get_text(strip=True) if title else "",
+        "description": desc.get_text("\n", strip=True) if desc else ""
+    }

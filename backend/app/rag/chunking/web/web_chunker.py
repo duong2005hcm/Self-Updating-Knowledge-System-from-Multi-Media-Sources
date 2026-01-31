@@ -1,76 +1,69 @@
-import requests
-from bs4 import BeautifulSoup
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-import os, json, hashlib
+# web_chunker.py
+import os, json, uuid
 from urllib.parse import urlparse
 
-from html_clean import extract_text_html
-from section_splitter import split_by_heading
+from html_clean import clean_docs, clean_news, clean_ecommerce
+from chunker import chunk_text
+from web_classifiers import classify_web
 
-def fetch_web_content(url: str) -> str:
-    """Lấy nội dung text từ trang web"""
-    headers = {
-        "User-Agent":"Mozilla/5.0"
-    }
-    
-    resp = requests.get(url , headers = headers , timeout=15)
-    resp.raise_for_status()
-    return resp.text
 
-def chunk_session(sections: list[str],
-    chunk_size: int,
-    chunk_overlap: int
-) -> list[str]:
-    """Chia nhỏ các phần văn bản thành các đoạn nhỏ hơn"""
-    splitters = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,)
-    
-    chunks = []
-    for section in sections:
-        chunks.extend(splitters.split_text(section))
-    
-    return chunks
+class WebChunker:
 
-def save_web_chunks(
-    url: str,
-    chunks: list[str],
-    doc_type: str,
-    output_dir: str
-):
-    os.makedirs(output_dir, exist_ok=True)
+    def __init__(self, output_dir="processed/web"):
+        self.output_dir = output_dir
+        os.makedirs(output_dir, exist_ok=True)
 
-    domain = urlparse(url).netloc.replace(".", "_")
-    doc_id = hashlib.md5(url.encode()).hexdigest()[:8]
-    filename = f"{domain}_{doc_id}.chunks.json"
+    def process(self, url: str, html: str):
+        web_type = classify_web(url)
 
-    data = []
-    for i, chunk in enumerate(chunks):
-        data.append({
+        if web_type == "docs":
+            return self._process_docs(url, html)
+
+        if web_type == "news":
+            return self._process_news(url, html)
+
+        if web_type == "ecommerce":
+            return self._process_ecommerce(url, html)
+
+        raise ValueError("Unsupported web type")
+
+    # ===== DOCS =====
+    def _process_docs(self, url, html):
+        text = clean_docs(html)
+        chunks = chunk_text(text, size=350, overlap=50)
+        return self._save(url, chunks, "docs")
+
+    # ===== NEWS =====
+    def _process_news(self, url, html):
+        article = clean_news(html)
+        if len(article) < 500:
+            return None
+        chunks = chunk_text(article, size=500, overlap=100)
+        return self._save(url, chunks, "news")
+
+    # ===== ECOMMERCE =====
+    def _process_ecommerce(self, url, html):
+        product = clean_ecommerce(html)
+        text = f"{product['title']}\n{product['description']}"
+        chunks = chunk_text(text, size=250, overlap=40)
+        return self._save(url, chunks, "ecommerce")
+
+    # ===== SAVE =====
+    def _save(self, url, chunks, source_type):
+        doc_id = f"{source_type}_{uuid.uuid4().hex[:8]}"
+        domain = urlparse(url).netloc.replace(".", "_")
+
+        data = [{
             "doc_id": doc_id,
-            "source_type": "web",
+            "source_type": source_type,
             "url": url,
-            "domain": domain,
             "chunk_index": i,
-            "text": chunk
-        })
+            "text": c
+        } for i, c in enumerate(chunks)]
 
-    with open(os.path.join(output_dir, filename), "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        path = os.path.join(self.output_dir, f"{domain}_{doc_id}.chunks.json")
 
-    return filename
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
 
-def process_web_url(url: str, chunk_size: int, chunk_overlap: int):
-    html = fetch_web_content(url)
-    text = extract_text_html(html)
-    sections = split_by_heading(text)
-    chunks = chunk_session(sections, chunk_size, chunk_overlap)
-
-    output_file = save_web_chunks(
-        url=url,
-        chunks=chunks,
-        doc_type="web",
-        output_dir="data/processed/web"
-    )
-
-    print(f" Hoàn tất web ingest: {output_file}")
+        return path
