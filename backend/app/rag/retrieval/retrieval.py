@@ -155,20 +155,20 @@ def multi_query_retrieve(
     return retriever.retrieve(question)
 
 
-# ---------- MANUAL TEST ----------
+# # ---------- MANUAL TEST ----------
 
-if __name__ == "__main__":
-    retriever = MultiQueryRetriever(
-        collection_name="rag_knowledge",
-        top_k_per_query=3,
-        max_total_results=8,
-        enable_parallel=True,
-    )
+# if __name__ == "__main__":
+#     retriever = MultiQueryRetriever(
+#         collection_name="rag_knowledge",
+#         top_k_per_query=3,
+#         max_total_results=8,
+#         enable_parallel=True,
+#     )
 
-    results = retriever.retrieve("Máy tính là gì?")
+#     results = retriever.retrieve("Máy tính là gì?")
 
-    print(f"Found {len(results)} results")
-    for i, r in enumerate(results[:3], 1):
-        print(f"\n{i}. score={r['score']:.3f}")
-        print(f"   text={r['text'][:120]}...")
-        print(f"   priority={r['query_priority']}")
+#     print(f"Found {len(results)} results")
+#     for i, r in enumerate(results[:3], 1):
+#         print(f"\n{i}. score={r['score']:.3f}")
+#         print(f"   text={r['text'][:120]}...")
+#         print(f"   priority={r['query_priority']}")
