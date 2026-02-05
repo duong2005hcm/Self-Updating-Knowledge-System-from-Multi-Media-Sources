@@ -3,9 +3,9 @@ import json
 from typing import List, Dict
 from pypdf import PdfReader
 from tqdm import tqdm
-from document_profiler import profile_pdf
-from document_classifier import classify_document
-from chunk_strategy import select_chunk_config
+from .document_profiler import profile_pdf
+from .document_classifier import classify_document
+from .chunk_strategy import select_chunk_config
 
 
 RAW_DATA_DIR = "data/raw"

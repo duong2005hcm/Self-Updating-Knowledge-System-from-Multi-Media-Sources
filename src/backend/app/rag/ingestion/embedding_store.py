@@ -1,9 +1,8 @@
 import json
 import uuid
 from datetime import datetime
-from embeddings.local_embbeder import OptimizedLocalEmbedder
-from client.database import initialize_chroma_client
-
+from backend.app.rag.embeddings.local_embbeder import OptimizedLocalEmbedder
+from backend.app.client.database import initialize_chroma_client
 
 def embed_and_store_chunks(
     chunks_json_path: str,

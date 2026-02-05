@@ -2,8 +2,8 @@ from fastapi import APIRouter, UploadFile, File
 import os
 import uuid
 
-from rag.chunking.pdf.pdf_chunker import chunk_pdf
-from rag.ingestion.embedding_store import embed_and_store_chunks
+from backend.app.rag.chunking.pdf.pdf_chunker import process_pdfs as chunk_pdf
+from backend.app.rag.ingestion.embedding_store import embed_and_store_chunks
 
 router = APIRouter(prefix="/ingest", tags=["Ingest"])
 

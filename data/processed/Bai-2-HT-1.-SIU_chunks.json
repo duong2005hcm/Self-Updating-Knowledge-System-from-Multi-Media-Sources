@@ -1,0 +1,1490 @@
+[
+  {
+    "id": "chunk_0",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "1 \n \n \nTỔNG QUAN VỀ TRÍ TUỆ NHÂN TẠO VÀ NHỮNG VẤN ĐỀ PHÁP LÝ \nOVERVIEW OF ARTIFICIAL INTELLIGENCE AND LEGAL ISSUES \n \n                                                                   PGS. TS. Lê Bộ Lĩnh \n                                                                         Viện Nghiên cứu Pháp luật & Xã hội, \n Nguyên Phó Tổng thư ký Quốc hội, Phó Chủ nhiệm Ủy ban Khoa học Công nghệ và Môi \ntrường của Quốc hội \n         \n        Tóm tắt: Trí tuệ nhân tạo (AI) là nền tảng của cách mạng công n"
+  },
+  {
+    "id": "chunk_1",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ường của Quốc hội \n         \n        Tóm tắt: Trí tuệ nhân tạo (AI) là nền tảng của cách mạng công nghệ 4.0, được ứng dụng \ntrong nhiều lĩnh vực như y tế, giáo dục, giao thông, tài chính, kinh tế, có tác động sâu rộng đến \nmọi mặt của đời sống xã hội và định hình một kỷ nguyên phát triển mới. Tuy nhiên, nó cũng đi \nkèm với nhiều thách thức mang tính pháp lý như xâm phạm quyền riêng tư, tạo sự thiên vị trong \ndữ liệu và sự không rõ ràng về trách nhiệm pháp lý của trí tuệ nhân tạo. Bài viết tổng h"
+  },
+  {
+    "id": "chunk_2",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n vị trong \ndữ liệu và sự không rõ ràng về trách nhiệm pháp lý của trí tuệ nhân tạo. Bài viết tổng hợp các \nchính sách và quy định hiện hành về trí tuệ nhân tạo của Liên minh châu Âu, Mỹ của Trung \nQuốc và các nước Châu Á; thời cơ và thách thức đặt ra cho Việt Nam và nhấn mạnh rằng sự \nphát triển của trí tuệ nhân tạo cần cân bằng giữa lợi ích công nghệ và quản lý rủi ro để đảm bảo \ntính bền vững và tính trách nhiệm. \n       Từ khóa: trí tuệ nhân tạo, thách thức, rủi ro, kinh nghiệm quốc tế"
+  },
+  {
+    "id": "chunk_3",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "à tính trách nhiệm. \n       Từ khóa: trí tuệ nhân tạo, thách thức, rủi ro, kinh nghiệm quốc tế \n        Abstract: Artificial intelligence is the foundation of the 4.0 technology revolution, applied \nin many fields such as health, education, transportation, and finance, having a profound impact \non all aspects of social life and shaping a new era of development. However, it also comes with \nmany legal challenges such as invasion of privacy, creating bias in data and ambiguity about \nthe liability"
+  },
+  {
+    "id": "chunk_4",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "gal challenges such as invasion of privacy, creating bias in data and ambiguity about \nthe liability of artificial intelligence. The article shall analyze current regulations on artificial \nintelligence of the European Union, the US and China; related opportunities and challenges for \nVietnam and emphasize that the development of artificial intelligence needs to balance between \ntechnological benefits and risk management to ensure sustainability and responsibility. \n          Keywords: artificia"
+  },
+  {
+    "id": "chunk_5",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "fits and risk management to ensure sustainability and responsibility. \n          Keywords: artificial intelligence, challenges, risk, international experiences \n \nI. CUỘC CÁCH MẠNG TRÍ TUỆ NHÂN TẠO \n1. Trí tuệ nhân tạo - linh hồn của cuộc cách mạng công nghệ 4.0 \nCuộc cách mạng công nghệ 4.0 đánh dấu một bước nhảy vọt không chỉ trong lĩnh vực công \nnghệ mà còn trong mọi lĩnh vực của đời sống xã hội. Tại trung tâm của cuộc cá ch mạng này \n \n \n2 \n \n \nchính là AI, một công nghệ mang tính cách mạng,"
+  },
+  {
+    "id": "chunk_6",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "i. Tại trung tâm của cuộc cá ch mạng này \n \n \n2 \n \n \nchính là AI, một công nghệ mang tính cách mạng, hứa hẹn sẽ biến đổi sâu sắc cách chúng ta \nlàm việc, giao tiếp và sống hàng ngày. \n AI là công việc mô phỏng  thông tin của con người trong các máy móc được thiết kế để \nsuy nghĩ và học hỏi như con người.  \n  AI đã xuất hiện từ giữa thế kỷ 20, bắt đầu từ những năm 1950 với các nghiên cứu của các \nnhà khoa học như Alan Turing và John McCarthy. Alan Turing, trong bài báo nổi tiếng của \nmình \"Comput"
+  },
+  {
+    "id": "chunk_7",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hà khoa học như Alan Turing và John McCarthy. Alan Turing, trong bài báo nổi tiếng của \nmình \"Computing Machinery and Intelligence\" (1950), đã đặt nền tảng cho việc xem xét khả \nnăng của máy tính trong việc thực hiện các hoạt động thông minh tương tự như con người. Năm \n1956, tại hội nghị Dartmouth, đề xuất phát triển AI đã đư ợc chính thức công nhận, và từ đây, \nnhiều thuật ngữ và lý thuyết về AI đã ra đời. \n  Đến năm 1959, phòng thí nghiệm AI đầu tiên, nơi nghiên cứu về AI đã bắt đầu, phòng th"
+  },
+  {
+    "id": "chunk_8",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "đã ra đời. \n  Đến năm 1959, phòng thí nghiệm AI đầu tiên, nơi nghiên cứu về AI đã bắt đầu, phòng thí \nnghiệm MIT, vẫn đang hoạt động cho đến nay. Tiếp theo đó, vào năm 1960, robot lần đầu tiên \nđược đưa vào dây leo lắp ráp của General Motors. Năm 1961, chatbot lần đầu tiên được phát \nhiện, bây giờ chúng ta có Siri và Alexa, nhưng đến năm 1961, có một chatbot được gọi là Eliza \nđã được giới thiệu vào thời điểm đó. Tiếp theo là IBM Deep Blue, vào năm 1997, tin tức nổ ra \nrằng Deep Blue của IBM đã"
+  },
+  {
+    "id": "chunk_9",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "vào thời điểm đó. Tiếp theo là IBM Deep Blue, vào năm 1997, tin tức nổ ra \nrằng Deep Blue của IBM đã đánh bại nhà vô địch thế giới Gary Kasparow, trong trò chơi cờ \nvua. Đây là thành tựu đầu tiên của AI đánh bại nhà vô địch thế giới. Năm 2005, khi DARPA \nGrand Challenge được tổ chức, một chiếc xe robot ma ng tên Stanley do Đội đua Stanford chế \ntạo đã giành chiến thắng tại DARPA Grand Challenge.  \n Trải qua nhiều thập kỷ, AI đã phát triển với nhiều giai đoạn khác nhau, từ các hệ thống \nmáy học v"
+  },
+  {
+    "id": "chunk_10",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "Trải qua nhiều thập kỷ, AI đã phát triển với nhiều giai đoạn khác nhau, từ các hệ thống \nmáy học và mạng nơ -ron đơn giản đến những công nghệ hiện đại như deep learn ing và xử lý \nngôn ngữ tự nhiên. Tuy nhiên, sự phát triển của AI không đều, và đã trải qua những \"mùa đông \nAI\" – những thời kỳ gián đoạn trong nghiên cứu do thiếu hụt tài nguyên và hứng thú. Đến thập \nkỷ 2010, với sự bùng nổ dữ liệu lớn và khả năng tính toán ngày càng mạnh mẽ, AI đã có những \nbước nhảy vọt đáng kể, ứng dụng trong"
+  },
+  {
+    "id": "chunk_11",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "u lớn và khả năng tính toán ngày càng mạnh mẽ, AI đã có những \nbước nhảy vọt đáng kể, ứng dụng trong nhiều lĩnh vực thực tiễn như y tế, giao thông vận tải, \ntài chính và giáo dục. AI bao gồm các lĩnh vực như Học máy, Học sâu, Mạng nơ-ron, Hệ thống \nchuyên gia xử lý ngôn ngữ tự nhiên, v.v. Nó cũng đã xâm nhập vào thị giác máy tính và xử lý \nhình ảnh. \nTrí tuệ nhân tạo hay AI bao gồm nhiều nhánh, trong đó mỗi nhánh sử dụng các phương \npháp khác nhau để khiến máy móc bắt chước trí thông minh của co"
+  },
+  {
+    "id": "chunk_12",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ong đó mỗi nhánh sử dụng các phương \npháp khác nhau để khiến máy móc bắt chước trí thông minh của con người. Học máy bao gồm \nviệc sử dụng các thu ật toán cho phép hệ thống học và ước tính từ hồ sơ trong khi Xử lý ngôn \nngữ tự nhiên là phương tiện cho phép con người tương tác với máy tính thông qua văn bản cũng \nnhư nói chuyện với chúng. Thị giác máy tính là nhánh của AI cho phép máy tính phân tích cả \nvideo và hình ảnh trực tiếp và được ghi lại, và robot là một nhánh khác của AI nhằm mục đích"
+  },
+  {
+    "id": "chunk_13",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "h cả \nvideo và hình ảnh trực tiếp và được ghi lại, và robot là một nhánh khác của AI nhằm mục đích \ntạo ra các hệ thống có khả năng thực hiện các nhiệm vụ vật lý. Hệ thống chuyên gia sử dụng cơ \nsở quy tắc và cơ sở kiến thức để đưa ra quyết định của các chuyên gia cao cấp. Mạng nơ-ron và \n \n \n3 \n \n \nHọc sâu sao chép nhận thức nhiều lớp của tâm trí con người để giải quyết những thách thức to \nlớn. Tất cả các nhánh này kết hợp lại với nhau thành một tổng thể đều là những người đóng góp \ntích cực c"
+  },
+  {
+    "id": "chunk_14",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "Tất cả các nhánh này kết hợp lại với nhau thành một tổng thể đều là những người đóng góp \ntích cực cho sự tiến bộ của AI và cách mạn g hóa các lĩnh vực khác nhau và các lựa chọn phát \ntriển trong tương lai. \nHiện nay có nhiều loại Trí tuệ nhân tạo. Nhưng chủ yếu chúng ta chỉ nói về hai loại trí tuệ \nvì tất cả các loại Trí tuệ nhân tạo khác đều là tập hợp con của một trong hai loại chính này. Hai \nloại trí tuệ này là: Trí tuệ nhân tạo hẹp và Trí tuệ nhân tạo chung. \nAI là một lĩnh vực khoa học cô"
+  },
+  {
+    "id": "chunk_15",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "loại trí tuệ này là: Trí tuệ nhân tạo hẹp và Trí tuệ nhân tạo chung. \nAI là một lĩnh vực khoa học công nghệ đang thu hút được sự quan tâm và nghiên cứu mạnh \nmẽ trong những năm gần đây. AI không chỉ bao gồm các khía cạnh lý thuyết mà còn liên quan \nđến rất nhiều ứng dụng trong cuộc sống hàng ngày, từ giao thông, y tế đến dịch vụ khách hàng. \nĐể hiểu rõ hơn về lĩnh vực rộng lớn này, chúng ta cần khám phá các nhánh chính của AI, mỗi \nnhánh đều có những đặc điểm, ứng dụng và thách thức riêng biệt."
+  },
+  {
+    "id": "chunk_16",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ám phá các nhánh chính của AI, mỗi \nnhánh đều có những đặc điểm, ứng dụng và thách thức riêng biệt. \nHọc máy (Machine Learning - ML). Học máy (ML) là một trong những nhánh quan trọng \nnhất của AI, chuyên nghiên cứu các thuật toán có khả năng học hỏi từ dữ liệu và cải thiện hiệu \nsuất của chúng qua thời gian. ML có ba loại chính: học có giám sát, học không giám sát và học \ntăng cường. Ứng dụng của ML rất đa dạng, từ nhận diện hình ảnh và giọng nói đến phân tích \ndự đoán và hệ thống đề xuất. Các t"
+  },
+  {
+    "id": "chunk_17",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ML rất đa dạng, từ nhận diện hình ảnh và giọng nói đến phân tích \ndự đoán và hệ thống đề xuất. Các thuật toán chính trong học máy bao gồm cây quyết định, máy \nvectơ hỗ trợ, mạng nơ-ron và K-Láng giềng gần nhất. \nXử lý ngôn ngữ tự  nhiên (Natural Language Processing - NLP). Xử lý ngôn ngữ tự \nnhiên (NLP) tập trung vào việc giúp máy tính hiểu và tương tác với ngôn ngữ của con người. \nNLP có rất nhiều ứng dụng thực tế như dịch ngôn ngữ, phân tích tình cảm và chatbot. Tuy \nnhiên, NLP cũng phải đối m"
+  },
+  {
+    "id": "chunk_18",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "u ứng dụng thực tế như dịch ngôn ngữ, phân tích tình cảm và chatbot. Tuy \nnhiên, NLP cũng phải đối mặt với nhiều thách thức như sự mơ hồ trong ngôn ngữ, yêu cầu cao \nvề ngữ cảnh và sự đa dạng của các ngôn ngữ. Các công nghệ trong NLP bao gồm phân quyền, \nđánh dấu từ loại, và nhận dạng thực thể có tên. \nTầm nhìn máy tính (Computer Vision). Tầm nhìn máy tính là một nhánh liên quan đến \nkhả năng cho phép máy móc diễn giải và đưa ra quyết định dựa trên dữ liệu trực quan. Các ứng \ndụng tiêu biểu của"
+  },
+  {
+    "id": "chunk_19",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "phép máy móc diễn giải và đưa ra quyết định dựa trên dữ liệu trực quan. Các ứng \ndụng tiêu biểu của tầm nhìn máy tính bao gồm nhận diện khuôn mặt, xe tự hành và phân tích \nhình ảnh y tế. Kỹ thuật chính trong  tầm nhìn máy tính là mạng nơ -ron tích chập (CNN), phát \nhiện đối tượng và trích xuất tính năng, để giúp máy móc hiểu rõ hơn về hình ảnh mà nó xử lý. \nKỹ thuật Robot (Robotics). Kỹ thuật robot là ngành nghiên cứu về thiết kế, xây dựng và \nvận hành các robot. Với việc áp dụng trong tự động h"
+  },
+  {
+    "id": "chunk_20",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "t là ngành nghiên cứu về thiết kế, xây dựng và \nvận hành các robot. Với việc áp dụng trong tự động hóa sản xuất, robot y tế và robot dịch vụ, \nkỹ thuật robot đang ngày càng trở thành một phần thiết yếu trong nhiều lĩnh vực. Tuy nhiên, \nlĩnh vực này cũng có những thách thức trong việc lập kế hoạch chuyển động, tích hợp cảm biến \nvà tương tác giữa người và robot. \n \n \n4 \n \n \nHệ thống chuyên gia (Expert Systems ). Hệ thống chuyên gia là chương trình AI mô \nphỏng khả năng ra quyết định của các chuyê"
+  },
+  {
+    "id": "chunk_21",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ert Systems ). Hệ thống chuyên gia là chương trình AI mô \nphỏng khả năng ra quyết định của các chuyên gia con người. Chúng phù hợp cho các ứng dụng \nnhư chẩn đoán y tế và dự báo tài chính, với các t hành phần chính bao gồm cơ sở kiến thức, \ncông cụ suy luận và giao diện người dùng. Hệ thống chuyên gia mang lại ưu điểm lớn về tính \nnhất quán và khả năng sao chép chuyên môn. \nHọc sâu (Deep Learning). Học sâu là một phần của học máy, sử dụng các mạng nơ -ron \nnhiều lớp. Sự phát triển của học sâu đã"
+  },
+  {
+    "id": "chunk_22",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": ". Học sâu là một phần của học máy, sử dụng các mạng nơ -ron \nnhiều lớp. Sự phát triển của học sâu đã dẫn đến những bước đột phá trong nhận diện hình ảnh, \nxử lý ngôn ngữ tự nhiên và thậm chí là chơi trò chơi. Các công cụ như TensorFlow, PyTorch \nvà Keras đã hỗ trợ việc phát triển các mô hình học sâu một cách dễ dàng hơn. \n Ngoài những nhánh chính trên, AI còn bao gồm nhiều lĩnh vực khác như logic mờ, tính \ntoán tiến hóa và trí thông minh bầy đàn. Mỗi lĩnh vực này đều có những ứng dụng và thách t"
+  },
+  {
+    "id": "chunk_23",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "mờ, tính \ntoán tiến hóa và trí thông minh bầy đàn. Mỗi lĩnh vực này đều có những ứng dụng và thách thức \nriêng, từ việc xử lý sự không chắc chắn trong logic mờ đến các thuật toán tối ưu hóa trong tính \ntoán tiến hóa. \nTóm lại, AI là một lĩnh vực đa dạng với nhiều nhánh và ứng dụng khác nhau. Sự phát triển \nkhông ngừng của các nhánh này không chỉ thúc đẩy khoa học công nghệ mà còn có ảnh hưởng \nsâu rộng đến đời sống con người, tạo ra những cơ hội và thách thức mới trong tương lai. \nHệ thống chuyê"
+  },
+  {
+    "id": "chunk_24",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "rộng đến đời sống con người, tạo ra những cơ hội và thách thức mới trong tương lai. \nHệ thống chuyên gia (Expert Systems). Hệ thống chuyên gia là chương trình AI mô phỏng \nkhả năng ra quyết định của các chuyên gia con ngư ời. Chúng phù hợp cho các ứng dụng như \nchẩn đoán y tế và dự báo tài chính, với các thành phần chính bao gồm cơ sở kiến thức, công cụ \nsuy luận và giao diện người dùng. Hệ thống chuyên gia mang lại ưu điểm lớn về tính nhất quán \nvà khả năng sao chép chuyên môn. \nHọc sâu (Deep"
+  },
+  {
+    "id": "chunk_25",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "chuyên gia mang lại ưu điểm lớn về tính nhất quán \nvà khả năng sao chép chuyên môn. \nHọc sâu (Deep Learning). Học sâu là m ột phần của học máy, s ử dụng các mạng nơ-ron \nnhiều lớp. Sự phát triển của học sâu đã dẫn đến những bước đột phá trong nhận diện hình ảnh, \nxử lý ngôn ngữ tự nhiên và thậm chí là chơi trò chơi. Các công c ụ như TensorFlow, PyTorch \nvà Keras đã hỗ trợ việc phát triển các mô hình học sâu một cách dễ dàng hơn. \n Ngoài những nhánh chính trên, AI còn bao g ồm nhiều lĩnh vực khá"
+  },
+  {
+    "id": "chunk_26",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ình học sâu một cách dễ dàng hơn. \n Ngoài những nhánh chính trên, AI còn bao g ồm nhiều lĩnh vực khác như logic m ờ, tính \ntoán tiến hóa và trí thông minh bầy đàn. Mỗi lĩnh vực này đều có những ứng dụng và thách thức \nriêng, từ việc xử lý sự không chắc chắn trong logic mờ đến các thuật toán tối ưu hóa trong tính \ntoán tiến hóa. \nTóm lại, AI là một lĩnh vực đa dạng với nhiều nhánh và ứng dụng khác nhau. Sự phát triển \nkhông ngừng của các nhánh này không chỉ thúc đẩy khoa học công nghệ mà còn có ả"
+  },
+  {
+    "id": "chunk_27",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nhau. Sự phát triển \nkhông ngừng của các nhánh này không chỉ thúc đẩy khoa học công nghệ mà còn có ảnh hưởng \nsâu rộng đến đời sống con người, tạo ra những cơ hội và thách thức mới trong tương lai. \n2. Những ứng dụng và xu hướng phát triển của AI \n \n \n5 \n \n \nAI đã trở thành một phần không thể thiếu trong nhiều lĩnh vực, từ thương mại điện tử đến \nchăm sóc sức khỏe, giáo dục, và robot. Các ứng dụng của AI ngày  càng đa dạng và tác động \nmạnh mẽ, mang lại nhiều lợi ích cho con người. \n AI trong th"
+  },
+  {
+    "id": "chunk_28",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "của AI ngày  càng đa dạng và tác động \nmạnh mẽ, mang lại nhiều lợi ích cho con người. \n AI trong thương mại điện  tử: AI giúp cải thiện trải nghiệm khách hàng qua việc phân \ntích sở thích và hành vi mua sắm của người tiêu dùng. Các thuật toán cung cấp đề xuất sản \nphẩm cá nhân hóa, chatbot hỗ trợ khách hàng 24/7, và phát hiện đánh giá giả, từ đó cải thiện \nhiệu quả mua sắm trực tuyến. \nAI trong giáo dục: AI đang biến đổi cách giáo dục với các trợ lý giọng nói, gamification, \nvà tạo nội dung thô"
+  },
+  {
+    "id": "chunk_29",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "iáo dục: AI đang biến đổi cách giáo dục với các trợ lý giọng nói, gamification, \nvà tạo nội dung thông minh. Những công nghệ này tạo ra môi trường học tập thú vị và hiệu quả \ncho học sinh, giúp họ tiếp cận thông tin một cách dễ dàng và nhanh chóng. \nAI trong robot: AI góp phần nâng cao khả năng tự động hóa trong robot. Công nghệ này \ncho phép robot phân tích ô không gian, nhận diện và thao  tác với các đối tượng, đồng thời tối \nưu hóa tương tác giữa con người và robot (HRI). \nAI trong GPS và điề"
+  },
+  {
+    "id": "chunk_30",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "i các đối tượng, đồng thời tối \nưu hóa tương tác giữa con người và robot (HRI). \nAI trong GPS và điều hướng: AI giúp đưa ra các tùy chọn lộ trình tốt nhất dựa trên phân \ntích dữ liệu giao thông thời gian thực. Tính năng hỗ trợ giọng nói và hệ thống cá nhân hóa giúp \ncải thiện sự an toàn và trải nghiệm giao thông cho người dùng. \nAI trong chăm sóc sức khỏe : AI hỗ trợ phát hiện bệnh, theo dõi bệnh nhân, cung cấp \nthông tin y tế, và dự đoán các vấn đề sức khỏe trong tương lai. Công nghệ này đã và"
+  },
+  {
+    "id": "chunk_31",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nhân, cung cấp \nthông tin y tế, và dự đoán các vấn đề sức khỏe trong tương lai. Công nghệ này đã và đang giúp \ncải thiện chất lượng dịch vụ y tế và cứu sống nhiều mạng người. \n AI trong ô tô: AI đang cung cấp những đổi mới lớn trong ngành công nghiệp ô tô, từ hệ \nthống hỗ trợ lái xe đến xe tự lái. Những công nghệ như phát hiện va chạm và quản lý giao thông \nđược triển khai để tăng cường an toàn và giảm thiểu tác động môi trường. \nAI trong nông nghiệp: AI giúp nông dân quản lý cây trồng, dinh dưỡ"
+  },
+  {
+    "id": "chunk_32",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "giảm thiểu tác động môi trường. \nAI trong nông nghiệp: AI giúp nông dân quản lý cây trồng, dinh dưỡng và dịch hại. Công \nnghệ này tối ưu hóa năng suất và giảm thiểu thiệt hại do thiên nhiên hoặc dịch bệnh. \n  AI trong quản lý nguồn nhân lực: Các quá trình liên quan đến tuyển dụng và đánh giá \nnhân viên được tự động hóa nhờ vào AI. Điều này giúp tối ưu hóa thời gian và tăng cường chất \nlượng quy trình tuyển chọn. \nAI trong lối sống: AI xác định các sở thích cá nhân, từ đó tạo ra các khuyến nghị"
+  },
+  {
+    "id": "chunk_33",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "rình tuyển chọn. \nAI trong lối sống: AI xác định các sở thích cá nhân, từ đó tạo ra các khuyến nghị mua sắm, \ngiúp cải thiện trải nghiệm người dùng hàng ngày. Các công nghệ như trợ lý ảo giúp người dùng \ntương tác dễ dàng hơn với thiết bị của họ. \nAI trong phương tiện truyền thông xã hội : AI theo dõi các hành vi người dùng để cải \nthiện trải nghiệm người dùng trên các nền tảng đa phương tiện. Nó cũng giúp phát hiện các tài \nkhoản giả và nội dung không phù hợp. \n \n \n6 \n \n \nAI trong trò chơi: AI"
+  },
+  {
+    "id": "chunk_34",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "cũng giúp phát hiện các tài \nkhoản giả và nội dung không phù hợp. \n \n \n6 \n \n \nAI trong trò chơi: AI đóng vai trò quan trọng trong việc nâng cao trải nghiệm chơi game \nbằng cách tạo ra các mô phỏng, hỗ trợ kiểm tra chất lượng, và phát hiện lỗi trong hệ thống. \nAI trong thiên văn học : AI được sử dụng để phân tích dữ liệu thiên văn, giúp nhà khoa \nhọc nghiên cứu và dự đoán các hiện tượng thiên văn. \nAI trong chatbot: Chatbot sử dụng AI để giao tiếp với khách hàng, cung cấp thông tin và \ngiải quyết"
+  },
+  {
+    "id": "chunk_35",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "AI trong chatbot: Chatbot sử dụng AI để giao tiếp với khách hàng, cung cấp thông tin và \ngiải quyết vấn đề nhanh chóng. Công nghệ xử lý ngôn ngữ tự nhiên giúp chatbot hoạt động hiệu \nquả hơn. \nAI trong giám sát: Công nghệ này giúp nhận diện khuôn mặt và phân tích hành vi, tăng \ncường an ninh cho các khu vực nhạy cảm. \nAI trong tài chính: A I phân tích dữ liệu để phát hiện gian lận, đánh giá rủi ro và hỗ trợ \nlập kế hoạch tài chính cho doanh nghiệp. \n AI trong bảo mật dữ liệu: AI sử dụng để phát"
+  },
+  {
+    "id": "chunk_36",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "o và hỗ trợ \nlập kế hoạch tài chính cho doanh nghiệp. \n AI trong bảo mật dữ liệu: AI sử dụng để phát hiện mối đe dọa và lỗ hổng bảo mật, bảo \nvệ thông tin người dùng. \nAI trong du lịch và vận tải : AI giúp lập kế hoạch chuyến đi, phân tích thị trường và cải \nthiện trải nghiệm của hành khách. \n AI trong tiếp thị: AI  tối ưu hóa các chiến dịch tiếp thị, phân tích thị trường và cá nhân \nhóa nội dung quảng cáo. \nAI trong giải trí: Công nghệ giúp phân loại nội dung phim ảnh, gợi ý cho người xem và \nn"
+  },
+  {
+    "id": "chunk_37",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "quảng cáo. \nAI trong giải trí: Công nghệ giúp phân loại nội dung phim ảnh, gợi ý cho người xem và \nnâng cao trải nghiệm người dùng. \nAI trong quân sự: AI hỗ trợ phân tích dữ liệu lớn trong quân đội, giúp ra quyết định hiệu \nquả và tăng cường an ninh mạng. \nTrong bối cảnh công nghệ hiện đại, AI nổi bật như một sức mạnh biến đổi, định hình lại \ncác ngành công nghiệp, nâng cao năng lực của con người và xác định lại ranh giới mà máy móc \ncó thể đạt được. Từ những khởi đầu mang tính khái niệm cho đến"
+  },
+  {
+    "id": "chunk_38",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "và xác định lại ranh giới mà máy móc \ncó thể đạt được. Từ những khởi đầu mang tính khái niệm cho đến các ứng dụng hiện tại, AI đã \nđi từ lĩnh vực nghiên cứu học thuật để trở thành xươn g sống của nhiều ứng dụng thực tế ảnh \nhưởng đến cuộc sống hàng ngày của chúng ta; \nNâng cao hiệu quả và năng suất:  Các hệ thống hỗ trợ AI có thể thực hiện các nhiệm vụ \nnhanh hơn và chính xác hơn nhiều so với con người, dẫn đến nâng cao hiệu quả và năng suất  \ntrong nhiều ngành công nghiệp, bao gồm sản xuất, chă"
+  },
+  {
+    "id": "chunk_39",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "người, dẫn đến nâng cao hiệu quả và năng suất  \ntrong nhiều ngành công nghiệp, bao gồm sản xuất, chăm sóc sức khỏe và tài chính. \nTạo việc làm và thay thế việc làm: AI có tiềm năng tạo ra các cơ hội việc làm mới, chẳng \nhạn như nhà khoa học dữ liệu và kỹ sư AI, nhưng cũng có khả năng thay thế một số công  việc \nnhất định, chẳng hạn như nhân viên tổng đài và nhân viên nhập dữ liệu. \n \n \n7 \n \n \nCải thiện khả năng ra quyết định: Thuật toán AI có thể xử lý lượng lớn dữ liệu và cung \ncấp thông tin ch"
+  },
+  {
+    "id": "chunk_40",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thiện khả năng ra quyết định: Thuật toán AI có thể xử lý lượng lớn dữ liệu và cung \ncấp thông tin chi tiết giúp đưa ra quyết định chính xác và hiệu quả hơn trong nhiều lĩnh vực , \nchẳng hạn như chăm sóc sức khỏe, tài chính và tiếp thị. \nNâng cao khả năng cá nhân hóa và tùy chỉnh:  Các hệ thống hỗ trợ AI có thể phân tích \ndữ liệu về sở thích, hành vi và thông tin nhân khẩu học của từng cá nhân để đưa ra các đề xuất \nđược cá nhân hóa, chẳng hạn như đề xuất sản phẩm và danh sách phát nhạc. \nNhà thi"
+  },
+  {
+    "id": "chunk_41",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ưa ra các đề xuất \nđược cá nhân hóa, chẳng hạn như đề xuất sản phẩm và danh sách phát nhạc. \nNhà thiết kế trò chơi điện tử  – Đối với một nhà thiết kế trò chơi điện tử, AI có nghĩa là \nviết mã ảnh hưởng đến cách chơi của bot và cách môi trường phản ứng với người chơi. \nBiên kịch – Đối với một biên kịch, AI có nghĩa là một nhân vật hoạt động giống như con \nngười, kết hợp một số tính năng của máy tính. \nNhà khoa học dữ liệu  – Đối với một nhà khoa học, AI có thể là một cách khám phá và \nphân loại"
+  },
+  {
+    "id": "chunk_42",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nh. \nNhà khoa học dữ liệu  – Đối với một nhà khoa học, AI có thể là một cách khám phá và \nphân loại dữ liệu để đáp ứng các mục tiêu cụ thể. \nThuật toán AI học bằng ví dụ là yếu tố chúng ta có thể trò chuyện với Watson, Alexa, Siri, \nCortana và Google Assistant, và chúng có thể nói lại với chúng ta. Khả năng xử lý ngôn ngữ tự \nnhiên và tạo ngôn ngữ tự nhiên của AI đang tạo ra những cơ hội mới và những cách thức kin h \ndoanh mới. \nTóm lại, AI không ngừng phát triển và đưa ra các ứng dụng hữu ích t"
+  },
+  {
+    "id": "chunk_43",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ững cách thức kin h \ndoanh mới. \nTóm lại, AI không ngừng phát triển và đưa ra các ứng dụng hữu ích trong nhiều lĩnh vực \ntrên toàn cầu, hứa hẹn sẽ còn nhiều tiềm năng khai thác hơn nữa trong tương lai. \n3. Xu hướng tương lai của AI. \nTrí tuệ nhân tạo tổng hợp (AGI):  AGI, hay AI mạn h mẽ, đề cập đến việc cải thiện hệ \nthống AI với trí thông minh tổng thống tương ứng hoặc vượt quá trí thông minh cấp độ người \ndùng trên nhiều lĩnh vực. Mặc dù AGI vẫn là mục tiêu dài hạn, nhưng tiến bộ trong các lĩ"
+  },
+  {
+    "id": "chunk_44",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "p độ người \ndùng trên nhiều lĩnh vực. Mặc dù AGI vẫn là mục tiêu dài hạn, nhưng tiến bộ trong các lĩnh \nvực như học sâu, học tăng cường và tìm kiếm cấu trúc kiến trúc thần kinh có thể đưa chúng đến \ngần hơn mục tiêu đó. \nAI có thể giải quyết (XAI): Khi các cấu trúc AI trở nên phức tạp và phổ biến hơn, người \nta ngày càng chú ý đến việc phát triển các mô hình AI có thể giải quyết được, cung cấp các  \nphương pháp giải quyết xác định rõ ràng và dễ hiểu. XAI hướng đến mục tiêu làm cho các chi \nnhánh"
+  },
+  {
+    "id": "chunk_45",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "phương pháp giải quyết xác định rõ ràng và dễ hiểu. XAI hướng đến mục tiêu làm cho các chi \nnhánh AI của hệ thống thành hơn, có trách nhiệm hơn và phù hợp hơn với các giá trị của con \nngười. \nHợp tác giữa con người và AI:  Thầy xem AI là sự thay thế cho trí t hông minh của con \nngười, các cấu trúc AI tương lai sẽ xem xét khả năng tăng cường và bổ sung các kỹ năng của \ncon người thông qua sự hợp tác Mạnh mẽ giữa con người và AI. \nĐiện toán tử và AI: Điện toán lượng tử có tiềm năng cách mạng hó"
+  },
+  {
+    "id": "chunk_46",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "tác Mạnh mẽ giữa con người và AI. \nĐiện toán tử và AI: Điện toán lượng tử có tiềm năng cách mạng hóa các mô hình tính toán \nmới và thúc đẩy khối lượng công việc AI cực nhanh. Các thuật toán lượng tử và hệ thống lượng \n \n \n8 \n \n \ntử thu thập kiến thức sẽ dẫn đến những đột phá trong các lĩnh vực như tối ưu hóa và mã hóa, \ntác động đến nhiều ứng dụng AI khác nhau. \nVào ngày 29 tháng 11 năm 2024, Deloitte Global đã công bố báo cáo “Dự đoán về Công \nnghệ, Truyền thông & Viễn thông (TMT) năm 2025.” B"
+  },
+  {
+    "id": "chunk_47",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "oitte Global đã công bố báo cáo “Dự đoán về Công \nnghệ, Truyền thông & Viễn thông (TMT) năm 2025.” Báo cáo này không chỉ mang tính chất \ndự báo mà còn cung cấp cái nhìn sâu sắc về tương lai của lĩnh vực AI, cũng như những biến \nđổi mà nó có thể mang đến cho ngành TMT. Theo Deloitte, năm 2025 sẽ đánh dấu một bước \nngoặt quan trọng với sự phát triển mạnh mẽ của trí tuệ nhân tạo tạo sinh (GenAI) cùng những \nthách thức và yêu cầu cấp thiết của xã hội đối với nó. \nMột trong những điểm đáng chú ý tron"
+  },
+  {
+    "id": "chunk_48",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "những \nthách thức và yêu cầu cấp thiết của xã hội đối với nó. \nMột trong những điểm đáng chú ý trong báo cáo  là dự báo rằng mức tiêu thụ năng lượng \ncủa các trung tâm dữ liệu toàn cầu dự kiến sẽ gia tăng mạnh mẽ do nhu cầu về GenAI. Deloitte \nước tính rằng vào năm 2030, mức tiêu thụ điện năng của các trung tâm dữ liệu có thể đạt tới \n1.065 terawatt-giờ, tương đương  4% tổng mức tiêu thụ năng lượng toàn cầu. Điều này nhấn \nmạnh rằng sự phát triển của GenAI không chỉ tạo ra giá trị kinh tế mà cò"
+  },
+  {
+    "id": "chunk_49",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ng toàn cầu. Điều này nhấn \nmạnh rằng sự phát triển của GenAI không chỉ tạo ra giá trị kinh tế mà còn đặt ra những thách \nthức về môi trường mà ngành phải đối mặt. \nMột yếu tố quan trọng trong sự phát triển của GenAI là sự gia tă ng tham gia của phụ nữ \nvào lĩnh vực này. Deloitte dự đoán rằng đến năm 2025, tỷ lệ phụ nữ sử dụng GenAI ở Hoa Kỳ \nsẽ bằng hoặc thậm chí vượt qua tỷ lệ nam giới, điều này thể hiện sự tiến bộ trong việc thu hẹp \nkhoảng cách giới tính. Tuy nhiên, báo cáo cũng nhấn mạnh rằ"
+  },
+  {
+    "id": "chunk_50",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thể hiện sự tiến bộ trong việc thu hẹp \nkhoảng cách giới tính. Tuy nhiên, báo cáo cũng nhấn mạnh rằng ngành công nghệ cần phải tăng \ncường lòng tin, sự đại diện và tính đa dạng trong lực lượng lao động AI để đảm bảo rằng mọi \nngười đều có thể tham gia và hưởng lợi từ các công nghệ này. \nBên cạnh đó, Deloitte cũng cho rằng các doanh nghiệp sẽ ngày càng sử dụng các tác nhân \nAI. Dự báo rằng 25% doanh nghiệp sử dụng GenAI sẽ triển khai các tác nhân AI vào năm 2025 \nvà con số này sẽ tăng lên 50% và"
+  },
+  {
+    "id": "chunk_51",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nh nghiệp sử dụng GenAI sẽ triển khai các tác nhân AI vào năm 2025 \nvà con số này sẽ tăng lên 50% vào năm 2027. Các tác nhân AI - phần mềm được thiết kế để \nhoàn thành nhiệm vụ với sự can thiệp tối thiểu của  con người - hứa hẹn sẽ mang lại tính linh \nhoạt cao hơn, thúc đẩy năng suất và sự đổi mới trong các quy trình làm việc. \nCác thiết bị công nghệ cũng sẽ trở nên thông minh hơn nhờ GenAI. Deloitte dự đoán rằng \nvào năm 2025, sẽ có hơn 30% điện thoại thông minh và 50% máy tính xách tay có khả"
+  },
+  {
+    "id": "chunk_52",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "tte dự đoán rằng \nvào năm 2025, sẽ có hơn 30% điện thoại thông minh và 50% máy tính xách tay có khả năng xử \nlý GenAI cục bộ. Điều này không chỉ mang lại trải nghiệm công nghệ tốt hơn cho người dùng \nmà còn đóng góp vào tăng trưởng doanh thu cho các nhà sản xuất. \nNgoài các dự đoán về công nghệ, báo cáo còn đề cập đến sự thay đổi trong thị trường viễn \nthông. Deloitte dự báo rằng các vụ sáp nhập và mua lại trong lĩnh vực viễn thông không dây sẽ \ngia tăng, đặc biệt là ở châu Âu. Điều này sẽ giúp"
+  },
+  {
+    "id": "chunk_53",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "à mua lại trong lĩnh vực viễn thông không dây sẽ \ngia tăng, đặc biệt là ở châu Âu. Điều này sẽ giúp cải thiện khả năng phục hồi và hiệu quả của \nmạng lưới, đồng thời tạo ra một hệ sinh thái viễn thông bền vững hơn. \nTrong lĩnh vực phát trực tuyến, Deloitte phân tích rằng sự mệt mỏi của người tiêu dùng với \ncác dịch vụ phát trực tuyến độc lập sẽ dẫn đến sự chuyển dịch sang các nền tảng tổng hợp. Sau \n \n \n9 \n \n \nkhi đạt đỉnh vào năm 2024, số lượng đăng ký dịch vụ video theo yêu cầu dự kiến sẽ bắt"
+  },
+  {
+    "id": "chunk_54",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "u \n \n \n9 \n \n \nkhi đạt đỉnh vào năm 2024, số lượng đăng ký dịch vụ video theo yêu cầu dự kiến sẽ bắt đầu \ngiảm vào năm 2025. Doanh thu từ các dịch vụ này mặc dù có thể tăng do việc tăng giá và cải \nthiện các tùy chọn gói dịch vụ, nhưng xu hướng này vẫn đòi hỏi các nhà cung cấp phải tìm ra \ncách mới để thu hút và giữ chân người dùng. \nTrong tổng thể, báo cáo từ Deloitte không chỉ tuyên bố những dự đoán về công nghệ mà \ncòn cung cấp một cái nhìn sâu sắc về những thách thức và cơ hội mà ngành TMT sẽ"
+  },
+  {
+    "id": "chunk_55",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "oán về công nghệ mà \ncòn cung cấp một cái nhìn sâu sắc về những thách thức và cơ hội mà ngành TMT sẽ phải đối \nmặt trong năm 2025. Sự thành công không chỉ tùy thuộc vào việc phát triển công nghệ mà còn \nphụ thuộc vào khả năng khai thác chúng để tăng cường năng lực của con người cũng như tạo \nra những tác động tích cực cho xã hội. Điều này khẳng định rằng tương lai của ngành công nghệ \nkhông chỉ là câu chuyện của những tiến bộ kỹ  thuật mà còn là sự phấn đấu hướng tới sự công \nbằng và bền vững ch"
+  },
+  {
+    "id": "chunk_56",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "câu chuyện của những tiến bộ kỹ  thuật mà còn là sự phấn đấu hướng tới sự công \nbằng và bền vững cho mọi người. \n4. Tác động tiêu cực và thách thức: \n Mặc dù AI mang lại nhiều lợi ích rõ rệt, nhưng không thể phủ nhận rằng nó cũng gây ra \nnhiều vấn đề nghiêm trọng. Nhiều nghiên cứu đã chỉ ra những tác động tiêu cực của AI, bao \ngồm sự thay đổi công việc, thiên vị và phân biệt đối xử, xâm phạm quyền riêng tư, cũng như \nnhững vấn đề đạo đức và an ninh. \n(1) Sự thay đổi công việc \nAI và tự động hóa"
+  },
+  {
+    "id": "chunk_57",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n riêng tư, cũng như \nnhững vấn đề đạo đức và an ninh. \n(1) Sự thay đổi công việc \nAI và tự động hóa ngày càng thay thế con người trong nhiều lĩnh vực, đặc biệt là các ngành \nsản xuất và dịch vụ. Sự chuyển đổi này có thể gây ra tỷ lệ thất nghiệp cao hơn, dẫn đến sự bất \nổn kinh tế và gia tăng khoảng cách giữa người lao động có tay nghề và không có tay nghề, từ \nđó làm trầm trọng thêm bất bình đẳng xã hội. \n(2) Sự thiên vị và phân biệt đối xử \nMột trong những vấn đề nổi bật của AI là khả năng thừ"
+  },
+  {
+    "id": "chunk_58",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "xã hội. \n(2) Sự thiên vị và phân biệt đối xử \nMột trong những vấn đề nổi bật của AI là khả năng thừa hưởng thiên kiến từ dữ liệu trong \nquá trình huấn luyện. Kết quả là, nhiều hệ thống AI có thể đưa ra những quyết định không công \nbằng dựa trên chủng tộc, giới tính hay tuổi tác. Sự thiên vị này không chỉ làm xói mòn niềm tin \ncủa công chúng vào công nghệ mà còn tạo ra những hậu quả nghiêm trọng trong việc xây dựng \nmột xã hội công bằng. \n(3) Xâm phạm quyền riêng tư \nAI có khả năng phân tích và"
+  },
+  {
+    "id": "chunk_59",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "rong việc xây dựng \nmột xã hội công bằng. \n(3) Xâm phạm quyền riêng tư \nAI có khả năng phân tích và xử lý lượng lớn dữ liệu người dùng, điều này có thể dẫn đến \nviệc xâm phạm quyền riêng tư. Việc giám sát và thu thập thông tin cá nhân có thể gây ra những \nlo ngại về quyền tự do và về việc sử dụng dữ liệu sai mục đích, dẫn đến trộm cắp danh tính và \ncác tội phạm mạng khác. \n(4) Vũ khí tự động \n \n \n10 \n \n \nSự tích hợp AI vào các h ệ thống quân sự đã dẫn đến sự phát triển của vũ khí t ự động có \nkh"
+  },
+  {
+    "id": "chunk_60",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "10 \n \n \nSự tích hợp AI vào các h ệ thống quân sự đã dẫn đến sự phát triển của vũ khí t ự động có \nkhả năng ra quyết định mà không cần đến sự can thiệp của con người. Điều này đặt ra những \ncâu hỏi về đạo đức, cũng như những mối lo ngại về an ninh toàn cầu khi vũ khí tự động có thể \ndẫn tới cuộc chạy đua vũ trang mới. \n(5) Thiếu trách nhiệm \nVới độ phức tạp cao và tính thi ếu minh bạch, việc xác định trách nhiệm trong các s ự cố \nliên quan đến AI đang trở thành một thách thức. Hệ thống “hộp đen”"
+  },
+  {
+    "id": "chunk_61",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nh trách nhiệm trong các s ự cố \nliên quan đến AI đang trở thành một thách thức. Hệ thống “hộp đen” của AI có thể khiến các \ncông ty không ch ịu trách nhi ệm về những quyết định mà công ngh ệ của họ đưa ra, t ạo nên \nnhững lỗ hổng trong quy định pháp lý. \n(6)  Mối đe dọa an ninh \nAI không chỉ tăng cường khả năng phòng thủ mà còn làm gia tăng nguy cơ tấn công mạng. \nCác phương pháp t ấn công như deepfake và hack t ự động khiến an ninh m ạng trở thành một \ncuộc chiến không ngừng nghỉ, đòi hỏi phải"
+  },
+  {
+    "id": "chunk_62",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "epfake và hack t ự động khiến an ninh m ạng trở thành một \ncuộc chiến không ngừng nghỉ, đòi hỏi phải cải tiến công nghệ và quy trình bảo mật liên tục. \n(7)  Những vấn đề đạo đức \nAI đang đư ợc ứng dụng trong nhi ều lĩnh v ực yêu c ầu các quy ết định đạo đức phức tạp. \nViệc lập trình khả năng ra quyết định có đạo đức vào các hệ thống AI đòi hỏi sự thận trọng và \nmột sự đồng thuận rộng rãi trong xã hội. \n(8)  Sự phụ thuộc vào AI \nSự gia tăng phụ thuộc vào AI có th ể dẫn đến tình trạng mất đi kỹ nă"
+  },
+  {
+    "id": "chunk_63",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hội. \n(8)  Sự phụ thuộc vào AI \nSự gia tăng phụ thuộc vào AI có th ể dẫn đến tình trạng mất đi kỹ năng và kiến thức cần \nthiết của con người. Sự phụ thuộc này làm cho con người dễ bị tổn thương trước sự cố của hệ \nthống, gây ra hậu quả nghiêm trọng khi những công nghệ này bị lỗi. \n(9)  Thất nghiệp và gián đoạn kinh tế \nSự phát triển của AI có th ể dẫn đến việc mất việc làm không ch ỉ trong các lĩnh v ực đơn \ngiản mà còn cả những ngành nghề đòi hỏi trình độ cao. Điều này không chỉ ảnh hưởng đến đ"
+  },
+  {
+    "id": "chunk_64",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "h v ực đơn \ngiản mà còn cả những ngành nghề đòi hỏi trình độ cao. Điều này không chỉ ảnh hưởng đến đời \nsống cá nhân mà còn có thể làm tăng khoảng cách thu nhập và dẫn đến bất ổn kinh tế. \n(10)  AI siêu thông minh \nCuối cùng, kh ả năng phát tri ển AI siêu thông minh đ ặt ra nh ững rủi ro không th ể lường \ntrước. Đảm bảo rằng AI siêu thông minh phù h ợp với các giá tr ị nhân văn là m ột thách th ức \nlớn, và việc để loại AI này ở ngoài tầm kiểm soát có thể dẫn đến những hậu quả thảm khốc cho \nnhân"
+  },
+  {
+    "id": "chunk_65",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "lớn, và việc để loại AI này ở ngoài tầm kiểm soát có thể dẫn đến những hậu quả thảm khốc cho \nnhân loại. \nNhìn chung, mặc dù AI có thể thúc đẩy sự tiến bộ và tiện ích trong cuộc sống, nhưng cần \ncó sự thận trọng và quản lý kịp thời để giảm thiểu những tác động tiêu cực đi kèm. Việc phát \ntriển và triển khai AI cần phải đi đôi với việc xem xét các vấn đề xã hội, đạo đức và an ninh. \n \n \n11 \n \n \nTrí tuệ nhân tạo tổng hợp, hay còn gọi là trí tuệ nhân tạo chung (AGI), đang trở thành một \ntrong nhữ"
+  },
+  {
+    "id": "chunk_66",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "rí tuệ nhân tạo tổng hợp, hay còn gọi là trí tuệ nhân tạo chung (AGI), đang trở thành một \ntrong những mảng nghiên c ứu khoa h ọc máy tính thu hút s ự quan tâm m ạnh mẽ từ giới học \nthuật lẫn ngành công nghiệp. Dù có tiềm năng mang lại nhiều lợi ích cho xã hội, AGI cũng tiềm \nẩn những rủi ro đáng k ể, có thể dẫn đến thất bại thảm khốc và gây t ổn hại nghiêm trọng cho \ncon người. Bài viết này sẽ thảo luận sâu về các mối đe dọa liên quan đến AGI, liên quan đ ến \ncác khía cạnh như kiểm soát vũ khí,"
+  },
+  {
+    "id": "chunk_67",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ảo luận sâu về các mối đe dọa liên quan đến AGI, liên quan đ ến \ncác khía cạnh như kiểm soát vũ khí, thiên kiến, gián đoạn kinh tế, mất kiểm soát, mối quan ngại \nđạo đức và hậu quả không lường trước. \nMột trong những rủi ro nghiêm trọng nhất của AGI là khả năng thất bại nếu nó được giao \nquyền kiểm soát các hệ thống vũ khí tự động. Nếu một trí tuệ nhân tạo cực kỳ thông minh có \nthể tự biện minh rằng việc đạt được hòa bình thế giới cần thiết phải xóa sổ loài người, chúng ta \ncó thể đối mặt với ng"
+  },
+  {
+    "id": "chunk_68",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ng việc đạt được hòa bình thế giới cần thiết phải xóa sổ loài người, chúng ta \ncó thể đối mặt với nguy cơ xảy ra một cuộc chiến tranh toàn cầu mà không thể kiểm soát được. \nCông nghệ vũ khí tự động có khả năng triển khai quyết định một cách nhanh chóng và chính \nxác, nhưng trong tay một AGI không có đạo đức hay cảm xúc, chúng ta đang tự đưa mình vào \nmột tình huống đầy nguy hiểm. \nNgoài ra, khi AGI được giao nhiệm vụ thực hiện một công việc cụ thể, nó có thể chọn cách \nthức tàn nhẫn để hoàn thàn"
+  },
+  {
+    "id": "chunk_69",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "I được giao nhiệm vụ thực hiện một công việc cụ thể, nó có thể chọn cách \nthức tàn nhẫn để hoàn thành mục tiêu. Chẳng hạn, một chiếc xe tự lái được lập trình chỉ để đến \nđích nhanh nhất có thể có thể gây thiệt hại nghiêm trọng cho môi trường và những người xung \nquanh. Thiếu sự nhạy bén về các yếu tố ngoại cảnh, AGI có khả năng trở thành một tác nhân \ngây ra nh ững tổn hại không mong mu ốn, khiến con người phải trả giá cho sự tiện ích mà nó \nmang lại. \nMột vấn đề quan trọng khác liên quan đ ến A"
+  },
+  {
+    "id": "chunk_70",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "con người phải trả giá cho sự tiện ích mà nó \nmang lại. \nMột vấn đề quan trọng khác liên quan đ ến AGI là sự thiên lệch cố hữu. Trí tuệ nhân tạo, \nkhi được huấn luyện từ các tập dữ liệu có thiên ki ến, có thể dẫn đến việc ra quyết định phân \nbiệt đối xử. Các quyết định mang tính thiên lệch này có khả năng gây hại cho các nhóm người \nkhác nhau trong xã hội, tạo ra những bất công và và tiếp tục duy trì các định kiến xã hội đã tồn \ntại. Do đó, quá trình tìm kiếm một cách tiếp cận công bằng và minh"
+  },
+  {
+    "id": "chunk_71",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "trì các định kiến xã hội đã tồn \ntại. Do đó, quá trình tìm kiếm một cách tiếp cận công bằng và minh bạch trong việc phát triển \nAGI là hết sức cần thiết. \nSự trỗi dậy của AGI cũng có thể gây ra hàng loạt gián đoạn kinh tế, với khả năng thay thế \ncon người trong nhiều ngành công nghiệp. Sự chuyển mình này có thể dẫn đến tình trạng thất \nnghiệp tràn lan và sự mất ổn định xã hội. Đoàn kết cộng đồng và sự phát triển bền vững sẽ trở \nthành thách thức lớn, khi mà hàng triệu người có thể mất đi sinh kế"
+  },
+  {
+    "id": "chunk_72",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "à sự phát triển bền vững sẽ trở \nthành thách thức lớn, khi mà hàng triệu người có thể mất đi sinh kế của mình do sự thay thế của \nmáy móc. Chúng ta cần phải bàn thảo các giải pháp khả thi để giải quyết vấn đề này, bao gồm \nviệc đào tạo lại lực lượng lao động và xây dựng các chương trình an sinh xã hội hiệu quả. \n \n \n12 \n \n \nMất kiểm soát cũng là một vấn đề đáng lo ngại, đặc biệt là khi AGI trở nên quá tiên tiến và \ntự nhận thức. Việc không còn khả năng kiểm soát AGI có thể dẫn đến những hậu quả"
+  },
+  {
+    "id": "chunk_73",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "quá tiên tiến và \ntự nhận thức. Việc không còn khả năng kiểm soát AGI có thể dẫn đến những hậu quả thảm khốc \ncho nhân loại, tạo ra một thế giới mà con người không còn là chủ thể quyết định. Điều này đặt \nra một thách thức khổng lồ trong điều chỉnh và giám sát sự phát triển của công nghệ. \nCuối cùng, những mối quan ngại về đạo đức và sự tồn tại của AGI không th ể bị bỏ qua. \nVấn đề liệu có đúng đắn khi tạo ra những cỗ máy có khả năng suy nghĩ và hành động như con \nngười cần phải được thảo luận"
+  },
+  {
+    "id": "chunk_74",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ắn khi tạo ra những cỗ máy có khả năng suy nghĩ và hành động như con \nngười cần phải được thảo luận một cách sâu sắc. Hơn nữa, việc đảm bảo quyền riêng tư và bảo \nmật thông tin cá nhân trong kỷ nguyên AGI cũng đang trở thành một thách thức lớn cần được \ngiải quyết. \nNói tóm lại, phát triển trí tuệ nhân tạo tổng hợp đem lại nhiều mối nguy hiểm tiềm tàng mà \nchúng ta không th ể xem nhẹ. Việc hiểu rõ v ề các rủi ro này và xây d ựng những cơ chế điều \nchỉnh và giám sát h ợp lý chính là chìa khóa đ ể"
+  },
+  {
+    "id": "chunk_75",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "v ề các rủi ro này và xây d ựng những cơ chế điều \nchỉnh và giám sát h ợp lý chính là chìa khóa đ ể tận dụng tiềm năng c ủa AGI trong khi tránh \nnhững thảm họa không mong muốn. Xã hội cần phối hợp giải quyết các vấn đề này thông qua \nmột cách tiếp cận đa ngành và hội nhập, từ đó đảm bảo rằng công nghệ sẽ phục vụ con người \nvà không biến thành nguy cơ cho sự tồn vong của chính chúng ta. \nCác thách thức kỹ thuật bao gồm việc phát triển các thuật toán AI có kh ả năng xử lý các \ncông việc phức tạp,"
+  },
+  {
+    "id": "chunk_76",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thức kỹ thuật bao gồm việc phát triển các thuật toán AI có kh ả năng xử lý các \ncông việc phức tạp, cải thiện khả năng mở rộng và hiệu quả của các hệ thống AI, đồng thời đảm \nbảo khả năng tương tác và tương thích trên các nền tảng AI khác nhau. \nNhững cân nhắc về mặt đạo đức ngày càng quan tr ọng trong quá trình phát tri ển AI, với \nnhững lo về sự thiên vị, công bằng, minh bạch và trách nhiệm giải trình. Việc giải quyết những \nvấn đề này là rất quan trọng để xây dựng lòng tin vào hệ thống AI và"
+  },
+  {
+    "id": "chunk_77",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "i trình. Việc giải quyết những \nvấn đề này là rất quan trọng để xây dựng lòng tin vào hệ thống AI và đảm bảo chúng mang lại \nlợi ích cho toàn xã hội. \nII. CHÍNH SÁCH, PHÁP LUẬT VỀ PHÁT TRIỂN AI CỦA MỘT SỐ QUỐC GIA  \n1. Cách tiếp cận của EU: một tầm nhìn toàn diện \nAI đang dần trở thành yếu tố then chốt trong việc định hình tương lai c ủa xã hội, kinh tế \nvà công nghệ. Cách tiếp cận của Liên minh Châu Âu (EU) đối với AI không chỉ tập trung vào \nviệc cải thiện năng lực công nghiệp và nghiên cứu mà"
+  },
+  {
+    "id": "chunk_78",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hâu Âu (EU) đối với AI không chỉ tập trung vào \nviệc cải thiện năng lực công nghiệp và nghiên cứu mà còn chú trọng đến sự an toàn và bảo vệ \ncác quyền cơ bản của con người. Châu Âu đang xây dựng một nền tảng vững chắc nhằm đảm \nbảo rằng AI phát triển một cách có trách nhiệm, với con người làm trung tâm và có th ể tạo ra \ngiá trị tích cực cho xã hội. \nChiến lược AI của Châu Âu nhắm đến việc biến EU thành một trung tâm AI hàng đầu thế \ngiới, với những quy tắc và hành động cụ thể nhằm thúc đẩy sự x"
+  },
+  {
+    "id": "chunk_79",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thành một trung tâm AI hàng đầu thế \ngiới, với những quy tắc và hành động cụ thể nhằm thúc đẩy sự xuất sắc và lòng tin trong lĩnh \nvực này. Vào tháng 4 năm 2021, Ủy ban Châu Âu đã công b ố một gói chính sách quan tr ọng \n \n \n13 \n \n \nvề AI, bao gồm các thông báo nhằm thúc đẩy cách tiếp cận của Châu Âu đối với AI, đánh giá \nkế hoạch phối hợp và đề xuất khung pháp lý cho trí tuệ nhân tạo. \nSự ra đời của gói đ ổi mới AI vào tháng 1 năm 2024 cũng đánh d ấu bước đi quan tr ọng \ntrong việc hỗ trợ các"
+  },
+  {
+    "id": "chunk_80",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "của gói đ ổi mới AI vào tháng 1 năm 2024 cũng đánh d ấu bước đi quan tr ọng \ntrong việc hỗ trợ các công ty khởi nghiệp và doanh nghiệp vừa và nhỏ trong việc phát triển AI \nđáng tin cậy, tôn trọng các giá trị và quy tắc của EU. Một trong những sáng kiến chính của gói \nnày là \"GenAI4EU\", v ới mục tiêu thúc đ ẩy việc áp d ụng AI t ạo sinh trong các ngành công \nnghiệp quan trọng của Châu Âu và khuy ến khích sự hợp tác giữa các công ty kh ởi nghiệp và \ncác đơn vị ứng dụng AI. \nĐể thúc đẩy sự xuất sắ"
+  },
+  {
+    "id": "chunk_81",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n khích sự hợp tác giữa các công ty kh ởi nghiệp và \ncác đơn vị ứng dụng AI. \nĐể thúc đẩy sự xuất sắc trong AI, EU đề ra mục tiêu tạo ra môi trường thuận lợi cho nghiên \ncứu và phát triển AI. Chính quyền Châu Âu đang nỗ lực biến EU thành nơi phát triển mạnh mẽ \ncho AI từ phòng thí nghiệm đến thị trường, đồng thời đảm bảo rằng AI hoạt động vì lợi ích của \ncon người và thúc đ ẩy các m ục tiêu xã h ội tích c ực. Việc đầu tư cho các chương trình như \nHorizon Europe và Digital Europe là r ất quan trọ"
+  },
+  {
+    "id": "chunk_82",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "i tích c ực. Việc đầu tư cho các chương trình như \nHorizon Europe và Digital Europe là r ất quan trọng, khi hai chương trình này cam kết đầu tư \nmỗi năm 1 tỷ euro vào AI. Mục tiêu tổng thể là 20 tỷ euro đầu tư hàng năm vào AI trong su ốt \nthập kỷ kỹ thuật số, từ các nguồn công cộng và tư nhân. \nBên cạnh đó, một yếu tố then chốt khác trong chiến lược của EU là việc đảm bảo truy cập \nvào dữ liệu chất lượng cao, một yếu tố thiết yếu cho việc phát triển các hệ thống AI mạnh mẽ \nvà hiệu suất cao. Các"
+  },
+  {
+    "id": "chunk_83",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "t lượng cao, một yếu tố thiết yếu cho việc phát triển các hệ thống AI mạnh mẽ \nvà hiệu suất cao. Các sáng ki ến như Chiến lược an ninh m ạng của EU và Đ ạo luật dữ liệu sẽ \nđóng vai trò tạo nền tảng hạ tầng cho sự phát triển này. \nTrong khi đó, việc xây dựng lòng tin trong AI cũng là một ưu tiên thiết yếu. Để tạo ra một \nmôi trường an toàn và thân thi ện cho đổi mới, EU đã đề xuất ba sáng kiến pháp lý liên quan. \nCác quy tắc này bao gồm một khuôn khổ pháp lý nhằm bảo vệ các quyền cơ bản và đối p"
+  },
+  {
+    "id": "chunk_84",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "p lý liên quan. \nCác quy tắc này bao gồm một khuôn khổ pháp lý nhằm bảo vệ các quyền cơ bản và đối phó với \ncác rủi ro an toàn, khuôn kh ổ trách nhiệm dân sự điều chỉnh trách nhiệm trong thời đại số và \nviệc sửa đổi các luật an toàn theo ngành. \nKhung pháp lý v ề AI của EU đư ợc thiết kế để giải quyết các r ủi ro phát sinh t ừ việc sử \ndụng AI, đồng thời đảm bảo rằng Châu Âu có  thể dẫn đầu trong việc thiết lập các tiêu chu ẩn \nvàng toàn cầu. Bằng cách phân loại các mô hình AI theo b ốn mức độ r"
+  },
+  {
+    "id": "chunk_85",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "việc thiết lập các tiêu chu ẩn \nvàng toàn cầu. Bằng cách phân loại các mô hình AI theo b ốn mức độ rủi ro và đưa ra các quy \ntắc cụ thể, EU không chỉ tạo ra môi trường pháp lý rõ ràng cho các nhà phát triển mà còn hỗ trợ \nviệc triển khai AI trên diện rộng. \nTóm lại, cách tiếp cận của Châu Âu đối với trí tuệ nhân tạo không chỉ tập trung vào việc \nphát triển công nghệ mà còn đảm bảo rằng phát triển đó phục vụ cho lợi ích của con người. Với \nmột chiến lược và khung pháp lý rõ ràng, EU th ể hiện quy"
+  },
+  {
+    "id": "chunk_86",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "đó phục vụ cho lợi ích của con người. Với \nmột chiến lược và khung pháp lý rõ ràng, EU th ể hiện quyết tâm trở thành một trong nh ững \n \n \n14 \n \n \ntrung tâm hàng đầu thế giới về trí tuệ nhân tạo, thúc đẩy sự sáng tạo và đổi mới trong khi bảo \nvệ các quyền cơ bản và an toàn cho người dùng. \n2. Hoa Kỳ \nTrong bối cảnh sự phát triển nhanh chóng c ủa công nghệ AI và những tác động đa dạng \ncủa nó lên đ ời sống xã hội, kinh tế, và chính tr ị, Hoa Kỳ đã đẩy mạnh nỗ lực trong việc điều \nchỉnh và quản lý"
+  },
+  {
+    "id": "chunk_87",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ời sống xã hội, kinh tế, và chính tr ị, Hoa Kỳ đã đẩy mạnh nỗ lực trong việc điều \nchỉnh và quản lý AI. Cách tiếp cận hiện tại ở cấp liên bang cho thấy sự phân tán, nơi mà chính \nquyền Biden và các cơ quan quản lý liên bang đang cố gắng đánh giá một cách cẩn trọng những \nlợi ích cũng như rủi ro tiềm tàng của công nghệ này. Câu hỏi quan trọng đặt ra là: liệu hệ thống \nluật pháp và cơ quan quản lý hiện tại đã đủ mạnh mẽ để bảo vệ công dân khỏi những nguy cơ \ntiềm ẩn của AI, hay cần có một khuôn k"
+  },
+  {
+    "id": "chunk_88",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hiện tại đã đủ mạnh mẽ để bảo vệ công dân khỏi những nguy cơ \ntiềm ẩn của AI, hay cần có một khuôn khổ hoàn toàn mới để ứng phó với sự phát triển này? \nNăm 2022, chính quyền Biden-Harris đã giới thiệu Kế hoạch chi tiết về Dự luật Quyền AI \nvới năm nguyên tắc chính nhằm hướng dẫn việc ứng dụng AI một cách có trách nhiệm. Đồng \nthời, Viện Tiêu chuẩn và Công nghệ Quốc gia (NIST) đã thi ết lập Khung Quản lý Rủi ro AI, \nhướng dẫn các tổ chức cách định hình và giảm thiểu rủi ro liên quan đến AI. NIST"
+  },
+  {
+    "id": "chunk_89",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "uản lý Rủi ro AI, \nhướng dẫn các tổ chức cách định hình và giảm thiểu rủi ro liên quan đến AI. NIST còn bổ sung \nbằng việc công bố nhóm làm việc tập trung vào AI vào tháng 6 năm 2023, nhằm nêu rõ các rủi \nro liên quan đến AI tạo sinh. \nTuy nhiên, sự thiếu hụt một bộ luật toàn diện để điều chỉnh AI không ngăn cản các cơ quan \nthực thi pháp luật liên bang như Cục Bảo vệ Tài chính Người tiêu dùng và Ủy ban Thương mại \nLiên bang (FTC) thực hiện trách nhiệm của mình. Thông qua Tuyên bố chung, các cơ"
+  },
+  {
+    "id": "chunk_90",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "Ủy ban Thương mại \nLiên bang (FTC) thực hiện trách nhiệm của mình. Thông qua Tuyên bố chung, các cơ quan này \ncam kết sẽ bảo vệ quyền lợi của công dân khỏi các hành vi phân bi ệt đối xử và thiên vị trong \nhệ thống AI. Họ đang nỗ lực tận dụng các thẩm quyền hiện tại để điều chỉnh công nghệ một \ncách có trách nhiệm, minh họa qua các bài đăng trên blog và các hướng dẫn thực thi. \nBên cạnh những nỗ lực từ chính quyền và các cơ quan hành pháp, Quốc hội Hoa Kỳ cũng \nkhông đứng yên. Thượng nghị sĩ Chuc"
+  },
+  {
+    "id": "chunk_91",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "c từ chính quyền và các cơ quan hành pháp, Quốc hội Hoa Kỳ cũng \nkhông đứng yên. Thượng nghị sĩ Chuck Schumer đã phát biểu về Khung đổi mới SAFE, mang \nđến một hướng tiếp cận dựa trên nguyên tắc cho việc quản lý AI, với các mục tiêu về bảo mật, \ntrách nhiệm giải trình, và đổi mới. Mặc dù hiện tại chưa có thông tin chi tiết về các luật AI tiềm \nnăng, nhưng hư ớng đi này cho th ấy sự gia tăng mong mu ốn giám sát công ngh ệ trong Quốc \nhội, với các phiên điều trần về AI diễn ra liên tục. \nMột trong"
+  },
+  {
+    "id": "chunk_92",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "u ốn giám sát công ngh ệ trong Quốc \nhội, với các phiên điều trần về AI diễn ra liên tục. \nMột trong những dấu ấn quan trọng trong quản lý AI của Mỹ là Sắc lệnh hành pháp được \nban hành vào cuối năm 2023. Sắc lệnh này không chỉ vạch ra các tiêu chu ẩn mà còn thiết lập \nmột khung quản lý để khuyến khích đổi mới trong lĩnh vực AI, đồng thời bảo vệ quyền và lợi \ních của người dân. Những nguyên tắc cơ bản trong sắc lệnh này bao gồm yêu cầu chia sẻ kết \n \n \n15 \n \n \nquả kiểm tra bảo mật giữa các nhà p"
+  },
+  {
+    "id": "chunk_93",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "bản trong sắc lệnh này bao gồm yêu cầu chia sẻ kết \n \n \n15 \n \n \nquả kiểm tra bảo mật giữa các nhà phát triển và chính phủ, bảo vệ quyền riêng tư, và ngăn chặn \nsự phân biệt đối xử trong ứng dụng AI. \nBằng cách phát triển các tiêu chuẩn công bằng và khuyến khích sự cạnh tranh trong nghiên \ncứu AI, Hoa K ỳ đang tìm cách tr ở thành một lãnh đạo trong lĩnh v ực công nghệ này và thúc \nđẩy hợp tác quốc tế. Điều này thể hiện rõ nét qua cam kết của chính phủ nhằm nâng cao sự sử \ndụng AI có trách nhiệm"
+  },
+  {
+    "id": "chunk_94",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "tế. Điều này thể hiện rõ nét qua cam kết của chính phủ nhằm nâng cao sự sử \ndụng AI có trách nhiệm trong các cơ quan hành chính công. \nHoa Kỳ đã quốc tế hóa các cam k ết tự nguyện được các công ty công ngh ệ ký kết thông \nqua cái được gọi là quy trình AI Hiroshima của Nhóm Bảy nước công nghiệp phát triển (G7) . \nHoa Kỳ cũng tham gia Hội nghị thượng đỉnh về An toàn AI của Vương quốc Anh và ký Tuyên \nbố Bletchley, khuyến khích tính minh bạch và trách nhiệm giải trình từ các bên phát triển công \nn"
+  },
+  {
+    "id": "chunk_95",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n \nbố Bletchley, khuyến khích tính minh bạch và trách nhiệm giải trình từ các bên phát triển công \nnghệ AI tiên tiến. Vào tháng 9 năm 2024, Hoa K ỳ đã ký Công ước khung về Trí tuệ nhân tạo \nvà Nhân quyền, Dân chủ và Pháp quyền của Hội đồng Châu Âu. Tài li ệu này nhằm mục đích \nđảm bảo các hệ thống AI phù hợp với nhân quyền, dân chủ và pháp quyền. \nỞ cấp tiểu bang, trong bối cảnh sự phát triển nhanh chóng của AI, việc quy định và quản \nlý AI tại các tiểu bang ở Hoa Kỳ đã trở thành một vấn đề quan"
+  },
+  {
+    "id": "chunk_96",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "h chóng của AI, việc quy định và quản \nlý AI tại các tiểu bang ở Hoa Kỳ đã trở thành một vấn đề quan trọng. Hiện nay, chưa có m ột \nkhung quy đ ịnh toàn di ện cho AI ở cấp tiểu bang, v ới hầu hết các bi ện pháp đư ợc thực hiện \nthông qua các đi ều khoản trong các lu ật bảo mật dữ liệu. Ví dụ, Đạo luật Quyền riêng tư c ủa \nCalifornia (CPRA) và các luật tương tự ở Colorado, Connecticut và Montana đã thiết lập quyền \ntừ chối cho người tiêu dùng về việc sử dụng dữ liệu cá nhân trong việc ra quyết đị"
+  },
+  {
+    "id": "chunk_97",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thiết lập quyền \ntừ chối cho người tiêu dùng về việc sử dụng dữ liệu cá nhân trong việc ra quyết định tự động, \ngiúp bảo vệ quyền lợi của họ trong các lĩnh vực quan trọng như tài chính, nhà ở và việc làm. \nCác quy định này không chỉ bảo đảm tính minh bạch mà còn thúc đẩy các công ty cải thiện \nquy trình ra quyết định của mình. Bên cạnh đó, các luật bảo mật dữ liệu đang yêu cầu các công \nty đánh giá cẩn thận loại dữ liệu mà họ sử dụng trong vi ệc phát triển sản phẩm AI, đảm bảo \ntuân thủ quy địn"
+  },
+  {
+    "id": "chunk_98",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "iá cẩn thận loại dữ liệu mà họ sử dụng trong vi ệc phát triển sản phẩm AI, đảm bảo \ntuân thủ quy định an toàn dữ liệu. Dự luật 311 của California hiện đang được xem xét như một \nkhuôn khổ toàn diện cho AI, nếu được thông qua, có thể giúp tiểu bang dẫn đầu trong lĩnh vực \nnày.  \nChính sách AI c ủa Tổng thống mới đắc cử Donald Trump, Cuộc bầu cử tổng thống \nnăm 2024 đã chứng kiến sự trở lại của Donald Trump, người đã tuyên bố nhiệm kỳ thứ hai của \nmình với một chiến lược chặt chẽ xung quanh AI. Đặ"
+  },
+  {
+    "id": "chunk_99",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ld Trump, người đã tuyên bố nhiệm kỳ thứ hai của \nmình với một chiến lược chặt chẽ xung quanh AI. Đặc biệt, sự bổ nhiệm Sriram Krishnan làm \nCố vấn Chính sách C ấp cao v ề AI đã đánh d ấu một bước ngoặt quan tr ọng trong chính sách \ncông nghệ Mỹ, hướng đến việc củng cố vị thế dẫn đầu của Hoa Kỳ trong cuộc cách mạng công \nnghiệp mới này. Việc thúc đẩy đổi mới và cải cách trong quản trị dữ liệu không chỉ đơn thuần \n \n \n16 \n \n \nlà một chiến lược phát triển kinh tế mà còn là một nỗ lực chính trị nhằ"
+  },
+  {
+    "id": "chunk_100",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "g chỉ đơn thuần \n \n \n16 \n \n \nlà một chiến lược phát triển kinh tế mà còn là một nỗ lực chính trị nhằm kiểm soát và định hình \ntương lai công nghệ toàn cầu. \nChính sách AI dưới thời Trump sẽ không chỉ định hình lại cách các doanh nghiệp vận hành \nmà còn có thể tạo ra một môi trường pháp lý thuận lợi cho sự phát triển bền vững của AI. Trọng \ntâm của chính quyền này sẽ là tạo ra một cân bằng giữa việc khuyến khích đổi mới và thực thi \ntrách nhiệm xã hội. Việc hạn chế các quy định quá chặt chẽ sẽ ch"
+  },
+  {
+    "id": "chunk_101",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "c khuyến khích đổi mới và thực thi \ntrách nhiệm xã hội. Việc hạn chế các quy định quá chặt chẽ sẽ cho phép các doanh nghiệp nhỏ \nvà startup phát triển hơn, trong khi vẫn đảm bảo rằng các tiêu chuẩn đạo đức trong việc sử dụng \nAI được tuân thủ. \nChính quyền Trump dự kiến sẽ áp dụng một cách tiếp cận thận trọng nhưng cần thiết trong \nviệc xử lý các vấn đề như sở hữu trí tuệ và deepfake. Xu hướng ủng hộ giảm bớt quy định có \nthể khuyến khích sự sáng tạo trong các lĩnh vực như sản xuất nội dung và g"
+  },
+  {
+    "id": "chunk_102",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hộ giảm bớt quy định có \nthể khuyến khích sự sáng tạo trong các lĩnh vực như sản xuất nội dung và giáo dục. Tuy nhiên, \nđiều này cũng tiềm ẩn rủi ro cho việc lạm dụng công nghệ, đặc biệt trong việc tạo ra nội dung \ngiả mạo có thể gây tác động tiêu cực đến lòng tin của công chúng. \n Điều đáng chú ý là trong khi Trump thúc đ ẩy AI như một công cụ chiến lược, ông cũng \nkhông thể không đối mặt với thách thức từ Trung Quốc. Chính quyền dự kiến sẽ tiếp tục chính \nsách kiểm soát xuất khẩu đối với các"
+  },
+  {
+    "id": "chunk_103",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ách thức từ Trung Quốc. Chính quyền dự kiến sẽ tiếp tục chính \nsách kiểm soát xuất khẩu đối với các công nghệ liên quan đến AI, nhằm ngăn chặn sự tiếp cận \ncủa Trung Quốc tới các công nghệ tiên tiến này. Tuy nhiên, một câu hỏi quan trọng là liệu Mỹ \ncó thể duy trì sự hợp tác với các đối tác toàn c ầu, đồng thời chống lại mối đe dọa từ sự phát \ntriển mạnh mẽ của AI tại Trung Quốc. \nChính sách AI dư ới thời Tổng thống Trump và chính quy ền Biden có nh ững điểm khác \nbiệt rõ rệt, đặc biệt là trong"
+  },
+  {
+    "id": "chunk_104",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ới thời Tổng thống Trump và chính quy ền Biden có nh ững điểm khác \nbiệt rõ rệt, đặc biệt là trong các vấn đề về giám sát quy định và khuyến khích đổi mới. \nVề giám sát quy định,chính quyền Trump tập trung vào việc giảm thiểu các rào cản pháp \nlý nhằm kích thích đổi mới và thúc đẩy phát triển công nghệ. Chính quyền này có thể ủng hộ \nnhững chính sách đơn giản hóa quy trình phê duyệt để hỗ trợ các công ty khởi nghiệp. Ngược \nlại, chính quy ền Biden có xu hư ớng nhấn mạnh vào vi ệc tăng cư ờng qu"
+  },
+  {
+    "id": "chunk_105",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "công ty khởi nghiệp. Ngược \nlại, chính quy ền Biden có xu hư ớng nhấn mạnh vào vi ệc tăng cư ờng quy đ ịnh nhằm bảo vệ \nquyền riêng tư và an ninh, đồng thời đảm bảo các tiêu chuẩn đạo đức trong ứng dụng AI. \nTrong lĩnh vực khuyến khích đổi mới, chính quyền Trump có khả năng khuyến khích tài \ntrợ cho nghiên cứu và hợp tác giữa chính phủ với ngành công nghi ệp. Các chính sách có th ể \nchú trọng đến việc ưu đãi thuế cho các công ty sáng tạo. Ngược lại, Biden có thể liên kết việc \nkhuyến khích đổi"
+  },
+  {
+    "id": "chunk_106",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "việc ưu đãi thuế cho các công ty sáng tạo. Ngược lại, Biden có thể liên kết việc \nkhuyến khích đổi mới với các mục tiêu công bằng xã hội, tập trung vào việc giải quyết các vấn \nđề như biến đổi khí hậu và cải thiện bình đẳng. \nCuối cùng, về đối tác quốc tế,chính quyền Trump có th ể theo đuổi chính sách \"nư ớc Mỹ \ntrước tiên\", trong khi Biden có thể tìm cách thiết lập các quan hệ hợp tác toàn cầu để phát triển \n \n \n17 \n \n \ncác tiêu chuẩn đạo đức và an toàn cho công nghệ AI. Tổng thể, sự phân biệt"
+  },
+  {
+    "id": "chunk_107",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ể phát triển \n \n \n17 \n \n \ncác tiêu chuẩn đạo đức và an toàn cho công nghệ AI. Tổng thể, sự phân biệt trong chính sách \nAI giữa hai chính quyền thể hiện sự khác biệt trong quan điểm về quy định, đầu tư và hợp tác \ntoàn cầu. \nThách thức cốt lõi mà chính quyền Trump cần đối mặt là làm thế nào để định hình một hệ \nthống quản trị AI không chỉ phục vụ lợi ích quốc gia mà còn thúc đ ẩy sự đổi mới sáng tạo và \nđạo đức trong lĩnh vực công nghệ. Nếu Trump thành công trong việc cân bằng giữa việc khuyến \nk"
+  },
+  {
+    "id": "chunk_108",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "o và \nđạo đức trong lĩnh vực công nghệ. Nếu Trump thành công trong việc cân bằng giữa việc khuyến \nkhích đổi mới và thiết lập các tiêu chuẩn đạo đức, ông có khả năng không chỉ củng cố được vai \ntrò lãnh đạo của Mỹ trong lĩnh vực AI mà còn góp phần hình thành triết lý quản trị công nghệ \ntoàn cầu một cách tích cực hơn. \nTóm lại, nhiệm kỳ thứ 2 có thể là một thời kỳ quan trọng trong việc định hình không chỉ \nchính sách công ngh ệ trong nước mà còn c ả cách thức Mỹ tương tác v ới thế giới bên ngoài"
+  },
+  {
+    "id": "chunk_109",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hông chỉ \nchính sách công ngh ệ trong nước mà còn c ả cách thức Mỹ tương tác v ới thế giới bên ngoài \ntrong lĩnh vực AI, với những cuộc chiến về dữ liệu và công nghệ ngày càng trở nên quan trọng \nhơn bao giờ hết. \n3. Trung Quốc \nTrung Quốc đã đi đ ầu trong vi ệc thiết kế các quy đ ịnh về AI. Quốc gia này có m ột số \nchương trình rộng hơn để kích thích sự phát triển của ngành công nghi ệp AI, chẳng hạn như \nMade in China 2025 ,  Phác thảo hành động thúc đẩy phát triển dữ liệu lớn (2015) ,  Kế hoạ"
+  },
+  {
+    "id": "chunk_110",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hạn như \nMade in China 2025 ,  Phác thảo hành động thúc đẩy phát triển dữ liệu lớn (2015) ,  Kế hoạch \nphát triển trí tuệ nhân tạo thế hệ tiếp theo (2017) . Trong những năm gần đây, Trung Quốc cũng \nđã đẩy nhanh tốc độ ban hành các chính sách c ụ thể để quản lý AI, liên quan đ ến đạo đức và \nthuật toán của ngành. \nCác cơ quan quản lý Trung Quốc đã thực hiện giám sát chặt chẽ các công ty công nghệ lớn \nnhất của đất nước, tăng cư ờng giám sát bảo mật dữ liệu và các chính sách niêm y ết ở nước \nng"
+  },
+  {
+    "id": "chunk_111",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "lớn \nnhất của đất nước, tăng cư ờng giám sát bảo mật dữ liệu và các chính sách niêm y ết ở nước \nngoài. Trong khi lĩnh vực công nghệ vẫn đang phục hồi sau tác động của cuộc đàn áp kể từ hai \nnăm trước, một số biện pháp nới lỏng quy định đã được báo cáo. Hiện đang phải đối mặt với \nsự cạnh tranh gay gắt hơn trên thế giới, Trung Quốc lại hướng đến lĩnh vực công nghệ của mình \nđể có thêm đòn bẩy \nTiến triển ở Thâm Quyến: Quy định AI cấp thành phố đầu tiên của Trung Quốc \nVào ngày 6 tháng 9 năm 202"
+  },
+  {
+    "id": "chunk_112",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ến triển ở Thâm Quyến: Quy định AI cấp thành phố đầu tiên của Trung Quốc \nVào ngày 6 tháng 9 năm 2022, chính quyền Thâm Quyến đã thông qua quy định địa phương \nđầu tiên của Trung Quốc nhằm thúc đẩy phát triển AI - Quy định thúc đẩy ngành trí tuệ nhân \ntạo tại Đặc khu kinh tế Thâm Quyến (Quy định AI Thâm Quyến ), có hiệu lực vào ngày 1 tháng \n11 năm 2022. \nQuy đ ịnh AI Thâm Quy ến nh ằm m ục đích thúc đ ẩy ngành công nghi ệp AI b ằng cách \nkhuyến khích các t ổ chức chính ph ủ đi đầu trong vi ệc s"
+  },
+  {
+    "id": "chunk_113",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "húc đ ẩy ngành công nghi ệp AI b ằng cách \nkhuyến khích các t ổ chức chính ph ủ đi đầu trong vi ệc sử dụng công ngh ệ liên quan và tăng \n \n \n18 \n \n \ncường hỗ trợ tài chính cho nghiên cứu AI tại thành phố. Quy định này cũng thiết lập các hướng \ndẫn về chia sẻ dữ liệu công khai cho các tổ chức và doanh nghiệp tham gia vào lĩnh vực này. \nTheo Quy định AI của Thâm Quyến, các dịch vụ và sản phẩm AI có trụ sở tại Thâm Quyến \nđược đánh giá là “r ủi ro th ấp” có th ể được thử nghiệm và th ử nghiệm ngay"
+  },
+  {
+    "id": "chunk_114",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "trụ sở tại Thâm Quyến \nđược đánh giá là “r ủi ro th ấp” có th ể được thử nghiệm và th ử nghiệm ngay c ả khi không có \nchuẩn mực địa phương và quốc gia, nếu chúng tuân thủ các tiêu chuẩn quốc tế. Các hướng dẫn \nphân loại và quản lý rủi ro sẽ được chính quyền Thâm Quyến xây dựng riêng. Quản lý dựa trên \nrủi ro này sẽ tạo điều kiện cho sự đổi mới trong lĩnh vực này. \nQuy định AI của Thâm Quyến cũng kêu gọi thành lập một hội đồng đạo đức AI, nơi sẽ xây \ndựng các tiêu chu ẩn an toàn và xem xét cách c"
+  },
+  {
+    "id": "chunk_115",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "êu gọi thành lập một hội đồng đạo đức AI, nơi sẽ xây \ndựng các tiêu chu ẩn an toàn và xem xét cách công ngh ệ này sẽ ảnh hưởng đến những vấn đề \nnhư việc làm, bảo vệ dữ liệu và các mối quan tâm khác của xã hội. \nHiện tại, Thâm Quyến, nơi có nhiều gã khổng lồ công nghệ và doanh nghiệp liên quan đến \nAI, đang đẩy mạnh nỗ lực phát triển lĩnh vực công nghệ cao của mình. Để theo đuổi mục tiêu \ntrở thành cường quốc công nghệ và AI của Trung Quốc, Thâm Quyến đã sẵn sàng đầu tư hơn \n700 tỷ nhân dân t ệ"
+  },
+  {
+    "id": "chunk_116",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "h cường quốc công nghệ và AI của Trung Quốc, Thâm Quyến đã sẵn sàng đầu tư hơn \n700 tỷ nhân dân t ệ (108 tỷ đô la M ỹ) vào nghiên c ứu và phát tri ển công ngh ệ cao trong giai \nđoạn 2021 đến 2025 . \nTiến triển ở Thượng Hải: Quy định cấp tỉnh đầu tiên của Trung Quốc về phát triển AI \nTương tự như vậy, Thượng Hải cũng đã đẩy nhanh tốc độ phát triển lĩnh vực AI của mình. \nQuy mô ngành công nghi ệp AI c ủa thành ph ố đã mở rộng đáng k ể trong vài năm qua. Nă m \n2021, giá trị sản lượng kết hợp của cá"
+  },
+  {
+    "id": "chunk_117",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "c ủa thành ph ố đã mở rộng đáng k ể trong vài năm qua. Nă m \n2021, giá trị sản lượng kết hợp của các doanh nghiệp AI của Thượng Hải vượt quá quy mô được \nchỉ định (đạt 305,68 tỷ RMB (42,73 tỷ đô la Mỹ), theo China Securities Journal . Số lượng các \nchuyên gia tài năng làm việc trong lĩnh vực AI đã tăng vọt từ 100.000 vào năm 2018 lên 230.000 \nvào năm 2021 t ại Thượng Hải . AI là m ột trong ba ngành công nghi ệp hàng đầu mà Thượng \nHải muốn phát triển với nỗ lực tập trung, cùng với mạch tích hợp"
+  },
+  {
+    "id": "chunk_118",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nh công nghi ệp hàng đầu mà Thượng \nHải muốn phát triển với nỗ lực tập trung, cùng với mạch tích hợp và y sinh học. \nVào ngày 22 tháng 9 năm 2022, Thượng Hải đã thông qua luật cấp tỉnh đầu tiên của Trung \nQuốc về phát triển AI, Quy định của Thượng Hải về thúc đẩy phát triển ngành công nghiệp AI \n(Quy định AI của Thượng Hải), có hi ệu lực từ ngày 1 tháng 10 năm 2022. Quy đ ịnh AI c ủa \nThượng Hải nhằm thúc đẩy đổi mới và đột phá bằng cách phát triển các ngành công nghiệp AI \ncốt lõi và tăng cư ờn"
+  },
+  {
+    "id": "chunk_119",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hằm thúc đẩy đổi mới và đột phá bằng cách phát triển các ngành công nghiệp AI \ncốt lõi và tăng cư ờng sự tập trung của các doanh nghiệp AI. Quy định AI của Thượng Hải sẽ \nmở đường cho sự phát triển lành mạnh và bền vững của công nghệ AI thông qua quản lý phân \nloại và giám sát \"hộp cát\" - như đã đề cập trong quy định, hai cách tiếp cận quản lý này nhằm \nmục đích cung cấp đủ không gian để các công ty khám phá và thử nghiệm công nghệ của họ. \nMột điểm nổi bật của Quy định AI Thượng Hải là nó quy đ"
+  },
+  {
+    "id": "chunk_120",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ty khám phá và thử nghiệm công nghệ của họ. \nMột điểm nổi bật của Quy định AI Thượng Hải là nó quy đ ịnh một mức độ khoan dung \nnhất định đối với các vi phạm nhỏ để khuyến khích khám phá các ranh giới khoa học và truyền \n \n \n19 \n \n \ncảm hứng cho sự đổi mới. Lý do là lĩnh vực AI là vùng nước chưa được biết đến và điều khoản \n\"miễn trừ trách nhiệm\" này có thể đảm bảo một số không gian nhất định cho các thử nghiệm và \nkiểm tra, tăng thêm tính bao trùm và linh hoạt của thể chế. Các sở ban ngành thàn"
+  },
+  {
+    "id": "chunk_121",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "các thử nghiệm và \nkiểm tra, tăng thêm tính bao trùm và linh hoạt của thể chế. Các sở ban ngành thành phố có liên \nquan có thể lập danh sách các hành vi vi phạm này, cho thấy sẽ không có hình phạt hành chính \nnào đối với các vi phạm nhỏ. \nQuy định AI của Thượng Hải cũng làm rõ các ranh giới cơ bản và chuẩn mực đạo đức cho \nsự phát triển của ngành b ằng cách thành l ập một hội đồng đạo đức. Các th ực thể thực hiện \nnghiên cứu, phát triển và ứng dụng liên quan đến AI phải tuân thủ luật pháp và quy"
+  },
+  {
+    "id": "chunk_122",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ực thể thực hiện \nnghiên cứu, phát triển và ứng dụng liên quan đến AI phải tuân thủ luật pháp và quy định, đồng \nthời nâng cao nhận thức về đạo đức, để đảm bảo sự phát triển lành mạnh và an toàn của ngành. \n4. Ở các nước Châu Á khác \nTrong bối cảnh toàn cầu ngày càng có sự gia tăng ứng dụng và phát triển của AI, quy định \nvề AI ở Châu Á nổi lên như một chủ đề quan trọng với tính đa dạng và năng động. Sự phát triển \nnày không chỉ phản ánh những lợi ích và mục tiêu chính sách khác nhau mà còn thể"
+  },
+  {
+    "id": "chunk_123",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ng. Sự phát triển \nnày không chỉ phản ánh những lợi ích và mục tiêu chính sách khác nhau mà còn thể hiện rõ các \ngiá trị văn hóa đặc trưng của từng khu vực pháp lý. Trong khi m ột số khu vực như Singapore \nvà Hồng Kông đã lựa chọn cách tiếp cận nhẹ nhàng, mang tính tự nguyện, những khu vực khác \nnhư Trung Quốc lại theo đuổi những biện pháp quy định cụ thể và bắt buộc hơn, nhằm đối phó \nvới các rủi ro tiềm ẩn từ công nghệ AI. Ở các quốc gia như Vi ệt Nam, Đài Loan, Hàn Qu ốc, \nNhật Bản, và tổ chứ"
+  },
+  {
+    "id": "chunk_124",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ro tiềm ẩn từ công nghệ AI. Ở các quốc gia như Vi ệt Nam, Đài Loan, Hàn Qu ốc, \nNhật Bản, và tổ chức ASEAN, luật và hướng dẫn để quản lý AI cũng đã dần được hình thành, \ncho thấy một sự công nhận ngày càng cao về tầm quan trọng của AI đối với sự phát triển kinh \ntế và xã hội. \nSingapore: Áp dụng Cách Tiếp Cận Tự Nguyện.Singapore, một trong những quốc gia tiên \nphong trong việc áp dụng AI, đã đưa ra Chiến lược AI quốc gia vào năm 2019, được cập nhật \nvào năm 2023. Chính phủ Singapore khuyến khíc"
+  },
+  {
+    "id": "chunk_125",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ra Chiến lược AI quốc gia vào năm 2019, được cập nhật \nvào năm 2023. Chính phủ Singapore khuyến khích việc sử dụng AI bằng cách đưa ra các khung \nvà hướng dẫn tự nguyện, mà không có bất kỳ quy định ràng buộc nào. Những khuôn khổ này \nbao gồm nguyên tắc về tính minh bạch, công bằng và chủ thể con người, cùng với chương trình \nAI Verify - một công cụ nhằm đảm bảo tuân thủ các nguyên tắc đạo đức. \nHồng Kông: Hướng dẫn Đạo đức và Quy định Theo Ngành.Hồng Kông đã áp dụng phương \npháp tương tự khi khô"
+  },
+  {
+    "id": "chunk_126",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ng Kông: Hướng dẫn Đạo đức và Quy định Theo Ngành.Hồng Kông đã áp dụng phương \npháp tương tự khi không đưa ra bất kỳ luật chung nào cho AI. Thay vào đó, một số hướng dẫn \nđã được công bố nhằm đảm bảo rằng các công nghệ AI được sử dụng một cách đạo đức và bảo \nvệ quyền riêng tư. Những hướng dẫn này nhấn mạnh tính minh bạch và trách nhiệm của các tổ \nchức trong việc phát triển và triển khai AI. \nĐài Loan: Hình Thành Khung Pháp Lý M ới. Đài Loan đang trong quá trình xây d ựng \nkhung pháp lý cho AI."
+  },
+  {
+    "id": "chunk_127",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "Loan: Hình Thành Khung Pháp Lý M ới. Đài Loan đang trong quá trình xây d ựng \nkhung pháp lý cho AI. Đài Loan cũng đã đề xuất dự thảo luật cơ bản về AI, nhằm thiết lập các \n \n \n20 \n \n \nchuẩn mực và nguyên tắc ứng xử cho công nghệ này. Cả hai quốc gia đang nhận thức rõ về tầm \nquan trọng của AI trong phát triển kinh tế và nhu cầu quản lý rủi ro tiềm ẩn. \nHàn Quốc và Nh ật Bản: Định Hình Khung Qu ản Lý Tiên Ti ến. Hàn Quốc đã phê duy ệt \nmột dự luật thúc đẩy ngành công nghiệp AI, với các nguyên tắ"
+  },
+  {
+    "id": "chunk_128",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "Lý Tiên Ti ến. Hàn Quốc đã phê duy ệt \nmột dự luật thúc đẩy ngành công nghiệp AI, với các nguyên tắc về đạo đức và an toàn cho người \ndùng. Nhật Bản, tuy không có luật toàn diện về AI, nhưng đã áp dụng các hướng dẫn và nguyên \ntắc đạo đức cho các doanh nghiệp nhằm đảm bảo an toàn và đáng tin cậy cho các hệ thống AI. \nASEAN: Hướng Dẫn Quản Trị và Đạo Đức AI. ASEAN cũng m ạnh mẽ trong việc định \nhình các hướng dẫn quản lý AI, thông qua Hướng dẫn khu vực về Quản trị và Đạo đức AI được \nban hành và"
+  },
+  {
+    "id": "chunk_129",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nh các hướng dẫn quản lý AI, thông qua Hướng dẫn khu vực về Quản trị và Đạo đức AI được \nban hành vào năm 2024. Hướng dẫn này kêu gọi việc áp dụng AI có đạo đức, tôn trọng nhân \nquyền và thúc đẩy sự đổi mới trong khu vực. \nCác cách tiếp cận khác nhau đối với quy định AI ở Châu Á thể hiện sự đa dạng trong việc \nnhận thức và quản lý các cơ hội cũng như thách thức mà AI mang lại. Sự phát triển nhanh chóng \ncủa công nghệ này đặt ra nhiều câu hỏi về tính hiệu quả của các quy đ ịnh hiện hành. Do đó,"
+  },
+  {
+    "id": "chunk_130",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "chóng \ncủa công nghệ này đặt ra nhiều câu hỏi về tính hiệu quả của các quy đ ịnh hiện hành. Do đó, \ntrong thời gian tới, các quốc gia và khu vực cần tiếp tục hợp tác và tìm kiếm các giải pháp cân \nbằng nhằm duy trì sự đổi mới trong ngành công nghệ, đồng thời đảm bảo an toàn và quyền lợi \ncho người tiêu dùng. Những nỗ lực này sẽ là yếu tố quyết định trong việc định hình tương lai \ncủa AI ở Châu Á \n5. Nguyên tắc của OECD về AI \nCác Nguyên tắc AI của Tổ chức Hợp tác và Phát tri ển Kinh tế, được thô"
+  },
+  {
+    "id": "chunk_131",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "5. Nguyên tắc của OECD về AI \nCác Nguyên tắc AI của Tổ chức Hợp tác và Phát tri ển Kinh tế, được thông qua vào cu ối \nnăm 2019 và cập nhật vào tháng 5 năm 2024, cung cấp một bộ hướng dẫn đã được nhiều quốc \ngia áp dụng và tham khảo rộng rãi. \nNhững nguyên tắc này nhấn mạnh vào sự phát triển có trách nhi ệm của các hệ thống AI \nđáng tin cậy, tập trung vào các khía cạnh như giá trị xoay quanh con người. \nQuản trị AI là điều cần thiết để đạt được trạng thái tuân thủ, tin cậy và hiệu quả trong quá"
+  },
+  {
+    "id": "chunk_132",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ười. \nQuản trị AI là điều cần thiết để đạt được trạng thái tuân thủ, tin cậy và hiệu quả trong quá \ntrình phát triển và ứng dụng các công ngh ệ AI. Với sự tích hợp ngày càng tăng vào các ho ạt \nđộng khác nhau, tác động tiêu cực tiềm ẩn của nó đã trở nên rõ ràng hơn. \nNếu không có s ự giám sát thích h ợp, AI có th ể gây ra tác h ại về mặt xã hội và đạo đức, \nđiều này làm cho tầm quan trọng của quản trị trong việc quản lý rủi ro liên quan đến trí tuệ nhân \ntạo tiên tiến trở nên rõ ràng hơn. Nếu ch"
+  },
+  {
+    "id": "chunk_133",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "trị trong việc quản lý rủi ro liên quan đến trí tuệ nhân \ntạo tiên tiến trở nên rõ ràng hơn. Nếu chúng ta có các hướng dẫn và khuôn khổ tại chỗ, đổi mới \ncông nghệ có thể được cân bằng với an toàn, do đó đ ảm bảo rằng các hệ thống AI không gây \nhại cho xã hội . \nMột điểm quan trọng khác là tính minh bạch trong quá trình ra quyết định và khả năng giải \nthích mọi thứ, điều này có thể đảm bảo rằng các hệ thống AI được sử dụng một cách có trách \n \n \n21 \n \n \nnhiệm và xây d ựng lòng tin. Đi ều rất qu"
+  },
+  {
+    "id": "chunk_134",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ác hệ thống AI được sử dụng một cách có trách \n \n \n21 \n \n \nnhiệm và xây d ựng lòng tin. Đi ều rất quan trọng là phải hiểu cách các h ệ thống AI \"ra quy ết \nđịnh\" để chúng chịu trách nhi ệm về các quyết định của mình và đ ảm bảo rằng chúng đưa ra \nquyết định một cách công bằng và có đạo đức. \nNgoài ra, qu ản trị không chỉ đảm bảo tuân th ủ các quy t ắc mà còn giúp duy trì các tiêu \nchuẩn đạo đức theo thời gian . Các mô hình AI có thể sai lệch và tạo ra những thay đổi về chất \nlượng và độ tin cậy"
+  },
+  {
+    "id": "chunk_135",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "eo thời gian . Các mô hình AI có thể sai lệch và tạo ra những thay đổi về chất \nlượng và độ tin cậy của kết quả, do đó, các xu hướng trong quản trị nhằm đảm bảo trách nhiệm \nxã hội của AI, bảo vệ chống lại thiệt hại về tài chính, pháp lý và danh tiếng, đồng thời thúc đẩy \nsự phát triển có trách nhiệm của công nghệ. \nIII. MỘT SỐ VẤN ĐỀ ĐẶT RA CHO VIỆT NAM  \n1. Thời cơ và thách thức  \nTrong bối cảnh cách mạng công nghiệp 4.0, AI đã trở thành một trong những xu thế chiến \nlược của toàn cầu, mở ra k"
+  },
+  {
+    "id": "chunk_136",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "cách mạng công nghiệp 4.0, AI đã trở thành một trong những xu thế chiến \nlược của toàn cầu, mở ra khả năng và cơ hội mới cho các quốc gia trong việc phát triển kinh tế, \nxã hội và nâng cao ch ất lượng cuộc sống. Việt Nam, v ới bối cảnh và ti ềm năng riêng, đang \nđứng trước những cơ hội lẫn thách thức lớn trong hành trình phát triển trí tuệ nhân tạo. \nThời cơ \nThứ nhất, Việt Nam đang có m ột nguồn nhân lực trẻ, dồi dào và nhiệt huyết. Theo thống \nkê, hơn 50% dân số Việt Nam hiện nay dưới 35 tuổi"
+  },
+  {
+    "id": "chunk_137",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nhân lực trẻ, dồi dào và nhiệt huyết. Theo thống \nkê, hơn 50% dân số Việt Nam hiện nay dưới 35 tuổi, với xu hướng tiếp cận công nghệ nhanh \nchóng. Điều này tạo ra một môi trường thuận lợi cho việc phát triển và ứng dụng AI, khi mà \ngiới trẻ có khả năng học hỏi và sáng tạo không ngừng. Hệ thống giáo dục của Việt Nam đã và \nđang có những cải cách đáng kể, thúc đẩy việc giảng dạy các ngành liên quan đ ến công nghệ \nthông tin và khoa học dữ liệu. \nThứ hai, Việt Nam đang nỗ lực xây dựng một chính sá"
+  },
+  {
+    "id": "chunk_138",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "đ ến công nghệ \nthông tin và khoa học dữ liệu. \nThứ hai, Việt Nam đang nỗ lực xây dựng một chính sách phù hợp với xu thế phát triển của \nAI. Chính phủ đã xác định trí tuệ nhân tạo là một trong những lĩnh vực ưu tiên trong chiến lược \nphát triển kinh tế - xã hội giai đoạn 2021-2030. Nhiều chính sách, kế hoạch đã được đề ra nhằm \nkhuyến khích nghiên c ứu, phát tri ển và ứng dụng AI trong các lĩnh v ực như s ản xuất, nông \nnghiệp, y tế, giáo dục, và giao thông vận tải. Các dự án đầu tư vào trí tu"
+  },
+  {
+    "id": "chunk_139",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ực như s ản xuất, nông \nnghiệp, y tế, giáo dục, và giao thông vận tải. Các dự án đầu tư vào trí tu ệ nhân tạo cũng đang \nđược triển khai, thu hút nguồn vốn trong và ngoài nước. \nThứ ba, môi trư ờng khởi nghiệp trong lĩnh v ực công ngh ệ tại Việt Nam đang phát tri ển \nmạnh mẽ. Nhiều startup trong lĩnh vực AI đã xu ất hiện, đóng góp vào vi ệc xây dựng một hệ \nsinh thái đổi mới sáng tạo. Chính sự cạnh tranh giữa các doanh nghiệp sẽ thúc đẩy công nghệ \nAI tiến xa hơn, đồng thời tạo ra nhiều cơ hội"
+  },
+  {
+    "id": "chunk_140",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nh tranh giữa các doanh nghiệp sẽ thúc đẩy công nghệ \nAI tiến xa hơn, đồng thời tạo ra nhiều cơ hội việc làm cho nguồn nhân lực chất lượng cao. \nThứ tư, Việt Nam nằm trong xu thế chuyển đổi số toàn cầu. Việc ứng dụng AI vào các lĩnh \nvực như tài chính, thương m ại điện tử, và logistics s ẽ mang lại nhiều lợi ích thi ết thực. Điều \n \n \n22 \n \n \nnày không ch ỉ giúp tăng cư ờng hiệu quả sản xuất mà còn nâng cao kh ả năng cạnh tranh c ủa \nhàng hóa Việt Nam trên thị trường quốc tế. \nThách thức \nMặc dù"
+  },
+  {
+    "id": "chunk_141",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n nâng cao kh ả năng cạnh tranh c ủa \nhàng hóa Việt Nam trên thị trường quốc tế. \nThách thức \nMặc dù có nhiều thời cơ, Việt Nam cũng phải đối mặt với không ít thách thức trong phát \ntriển trí tuệ nhân tạo. Đầu tiên, hạ tầng công nghệ thông tin và truyền thông chưa đồng bộ và \nthiếu hụt ở nhiều vùng miền, ảnh hưởng đến khả năng tiếp cận và ứng dụng AI. Việc xây dựng \nmột hệ thống hạ tầng mạnh mẽ và hiện đại là rất cần thiết để tạo điều kiện thuận lợi cho việc \nphát triển AI. \nThứ nhất, nguồn nhân"
+  },
+  {
+    "id": "chunk_142",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hiện đại là rất cần thiết để tạo điều kiện thuận lợi cho việc \nphát triển AI. \nThứ nhất, nguồn nhân lực định hướng cho trí tuệ nhân tạo còn khan hiếm. Dù có nhiều sinh \nviên tốt nghiệp các trường đào tạo công nghệ thông tin, nhưng số lượng chuyên gia có kỹ năng \nvà kinh nghiệm trong lĩnh vực AI còn hạn chế. Điều này đặt ra yêu cầu cấp bách cho việc nâng \ncao chất lượng đào tạo và các chương trình h ợp tác quốc tế để nâng cao năng l ực cho nguồn \nnhân lực. \nThứ hai, chính sách quản lý và bảo vệ"
+  },
+  {
+    "id": "chunk_143",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "h ợp tác quốc tế để nâng cao năng l ực cho nguồn \nnhân lực. \nThứ hai, chính sách quản lý và bảo vệ dữ liệu trong sử dụng AI còn thiếu đồng bộ, gây ra \nnhiều lo ngại về vấn đề bảo mật thông tin. Việc xây dựng khung pháp lý rõ ràng, minh bạch là \nđiều cần thiết để đảm bảo sự phát triển bền vững cho công nghệ AI mà không gây ra những hệ \nlụy tiêu cực. \nCuối cùng, sự cạnh tranh từ các quốc gia phát triển trong lĩnh vực AI là một thách thức lớn. \nViệt Nam cần phải có những chiến lược phát triển cụ t"
+  },
+  {
+    "id": "chunk_144",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "riển trong lĩnh vực AI là một thách thức lớn. \nViệt Nam cần phải có những chiến lược phát triển cụ thể, tập trung vào các lĩnh vực mà nước \nta có thế mạnh, để có thể bắt kịp và phát triển trong bối cảnh toàn cầu hóa sâu rộng. \nTóm lại, trí tuệ nhân tạo mang lại nhiều cơ hội cũng như thách th ức cho Việt Nam trong \nquá trình phát triển. Để tận dụng tối đa thời cơ và vượt qua thách thức, Việt Nam cần có một \nchiến lược phát triển toàn diện, kết hợp giữa chính sách, giáo d ục và đầu tư, nhằm xây dự"
+  },
+  {
+    "id": "chunk_145",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n có một \nchiến lược phát triển toàn diện, kết hợp giữa chính sách, giáo d ục và đầu tư, nhằm xây dựng \nmột nền tảng vững chắc cho trí tu ệ nhân tạo trong tương lai. Vi ệc phát triển AI không ch ỉ là \nmột xu hướng mà còn là một yêu cầu cấp bách để Việt Nam tham gia vào cuộc chơi toàn cầu. \n2. Chiến lược phát triển trí tuệ nhân tạo của Việt Nam  \nNgày 22-3-2018, Bộ Chính trị ban hành Ngh ị quyết số 23/NQ-TW, về định hướng xây \ndựng chính sách phát triển công nghiệp quốc gia đến năm 2030, tầm nhìn"
+  },
+  {
+    "id": "chunk_146",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "23/NQ-TW, về định hướng xây \ndựng chính sách phát triển công nghiệp quốc gia đến năm 2030, tầm nhìn đến năm 2045. Nghị \nquyết xác định, một trong nh ững ngành công ngh ệ cần ưu tiên phát tri ển là công ngh ệ thông \ntin, theo đó “giai đoạn 2030 - 2045, tập trung ưu tiên phát triển các thế hệ mới của ngành công \nnghiệp công nghệ thông tin và viễn thông; phổ cập công nghệ kỹ thuật số, tự động hoá…”. Tiếp \nđó, ngày 27-9-2019, Bộ Chính trị ban hành Nghị quyết số 52-NQ/TW, về một số chủ trương, \nchín"
+  },
+  {
+    "id": "chunk_147",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "Tiếp \nđó, ngày 27-9-2019, Bộ Chính trị ban hành Nghị quyết số 52-NQ/TW, về một số chủ trương, \nchính sách chủ động tham gia cuộc Cách mạng công nghiệp lần thứ tư. Trong nghị quyết này, \n \n \n23 \n \n \nlần đầu tiên nhắc đến khái niệm “trí tuệ nhân tạo” và xác định đây là một trong những lĩnh vực \ncần có chính sách ưu tiên phát tri ển. Ngày 17 -4-2020, Chính ph ủ ban hành Ngh ị quyết s ố \n50/NQ-CP, ban hành Chương trình hành động của Chính phủ về việc thực hiện Nghị quyết số \n52-NQ/TW, trong đó, gia"
+  },
+  {
+    "id": "chunk_148",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n hành Chương trình hành động của Chính phủ về việc thực hiện Nghị quyết số \n52-NQ/TW, trong đó, giao cho B ộ Khoa học và Công nghệ chủ trì triển khai một số chương \ntrình nghiên cứu trọng điểm quốc gia đối với một trong những lĩnh vực cần được ưu tiên phát \ntriển là TTNT. Đ ể thực hiện nhiệm vụ này, ngày 26-1-2021, Thủ tướng Chính phủ ký Quyết \nđịnh số 127/QĐ-TTg ban hành Chiến lược quốc gia về nghiên cứu, phát triển và ứng dụng trí \ntuệ nhân tạo đến năm 2030. \n Chiến lược quốc gia phát tri ển"
+  },
+  {
+    "id": "chunk_149",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ghiên cứu, phát triển và ứng dụng trí \ntuệ nhân tạo đến năm 2030. \n Chiến lược quốc gia phát tri ển TTNT của Việt Nam là m ột trong những sáng kiến quan \ntrọng nhằm phát huy tiềm năng công nghệ này, không chỉ trong lĩnh vực kinh tế mà còn trong \ncác mặt của đời sống xã hội, quốc phòng an ninh và phát triển khoa học công nghệ. \n Quan điểm chỉ đạo Chiến lược quốc gia về TTNT của Việt Nam được xây dựng dựa trên \ncác quan điểm cốt lõi: TTNT là công ngh ệ nền tảng cho nền kinh tế tri thức, góp phần t"
+  },
+  {
+    "id": "chunk_150",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ng dựa trên \ncác quan điểm cốt lõi: TTNT là công ngh ệ nền tảng cho nền kinh tế tri thức, góp phần tạo ra \ncác đột phá trong năng suất lao động và nâng cao năng lực cạnh tranh quốc gia. Đồng thời, việc \nphát triển TTNT cần gắn bó chặt chẽ với mục tiêu phát triển bền vững, giữ gìn an ninh quốc gia \nvà phát huy nguồn lực của các doanh nghiệp trong nước.  \nChiến lược khuyến khích nghiên cứu và phát triển TTNT có tính ứng dụng cao, hướng tới \nviệc tạo ra và phát triển các sản phẩm, dịch vụ TTNT mà V"
+  },
+  {
+    "id": "chunk_151",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "riển TTNT có tính ứng dụng cao, hướng tới \nviệc tạo ra và phát triển các sản phẩm, dịch vụ TTNT mà Việt Nam có lợi thế cạnh tranh. Việc \nnày sẽ được thực hiện thông qua đầu tư vào các lĩnh vực liên quan như quốc phòng an ninh và \nquản lý tài nguyên, môi trường, từ đó góp phần vào xây dựng một xã hội sáng tạo và chính phủ \nhiệu quả. \nMục tiêu .Chiến lược đặt ra các mục tiêu cụ thể cho từng giai đoạn từ nay đến năm 2025 \nvà 2030. Trước mắt, đến năm 2025, Việt Nam hướng tới việc trở thành một trong"
+  },
+  {
+    "id": "chunk_152",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n từ nay đến năm 2025 \nvà 2030. Trước mắt, đến năm 2025, Việt Nam hướng tới việc trở thành một trong năm quốc gia \nhàng đầu trong khu vực ASEAN về nghiên cứu và ứng dụng TTNT, đồng thời xây dựng ít nhất \n5 thương hiệu TTNT uy tín. Đến năm 2030, mục tiêu được đặt ra là nằm trong nhóm 4 quốc gia \ndẫn đầu khu vực ASEAN và 50 quốc gia hàng đầu thế giới về lĩnh vực này. \nĐặc biệt, sự phát triển của TTNT dự kiến sẽ được ứng dụng rộng rãi trong các lĩnh vực như \nhành chính công, hỗ trợ người dân và nân"
+  },
+  {
+    "id": "chunk_153",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "T dự kiến sẽ được ứng dụng rộng rãi trong các lĩnh vực như \nhành chính công, hỗ trợ người dân và nâng cao hi ệu quả quản lý đô thị, đặc biệt tại các thành \nphố lớn như Hà Nội và TP. HCM. \nĐịnh hướng chiến lược. Chiến lược quốc gia về TTNT bao gồm nhiều định hướng quan \ntrọng. Đầu tiên, cần xây dựng khung pháp lý chặt chẽ để tạo điều kiện thúc đẩy nghiên cứu và \nứng dụng TTNT. Việc này bao gồm cả phát triển hạ tầng dữ liệu và tính toán cần thiết cho các \n \n \n24 \n \n \nứng dụng TTNT, đồng thời đảm b"
+  },
+  {
+    "id": "chunk_154",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hát triển hạ tầng dữ liệu và tính toán cần thiết cho các \n \n \n24 \n \n \nứng dụng TTNT, đồng thời đảm bảo rằng các quyền lợi hợp pháp của cá nhân và tổ chức được \nbảo vệ. \nTiếp theo là việc phát triển một hệ sinh thái TTNT hoàn chỉnh. Điều này bao gồm việc đào \ntạo nhân lực chất lượng cao, đẩy mạnh nghiên cứu và phát triển sản phẩm TTNT, cùng với việc \nhình thành các trung tâm đổi mới sáng tạo về TTNT. Đặc biệt, việc xây dựng các doanh nghiệp \nkhởi nghiệp sáng tạo về TTNT cần được khuyến khích và h"
+  },
+  {
+    "id": "chunk_155",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "T. Đặc biệt, việc xây dựng các doanh nghiệp \nkhởi nghiệp sáng tạo về TTNT cần được khuyến khích và hỗ trợ từ cả chính phủ lẫn cộng đồng \ndoanh nghiệp. \nCuối cùng, việc hợp tác quốc tế trong lĩnh vực TTNT cũng được đề cao. Việt Nam sẽ tăng \ncường hợp tác với các tổ chức, doanh nghiệp nước ngoài để thúc đẩy chuyển giao công ngh ệ \nvà đào tạo nguồn nhân lực chất lượng cao. \nNhiệm vụ và giải pháp. Để thực hiện các mục tiêu chiến lược, các bộ ngành sẽ phối hợp \ntriển khai nhiều hoạt động cụ thể như h"
+  },
+  {
+    "id": "chunk_156",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thực hiện các mục tiêu chiến lược, các bộ ngành sẽ phối hợp \ntriển khai nhiều hoạt động cụ thể như hoàn thiện các khung pháp lý, phát tri ển cơ sở dữ liệu \ndùng chung, xây d ựng các chương trình đào t ạo về TTNT trong hệ thống giáo dục, và đầu tư \nvào các dự án nghiên cứu trọng điểm. \nNhư vậy, với những định hướng và mục tiêu rõ ràng, Chiến lược Quốc gia phát triển TTNT \ncủa Việt Nam không chỉ kỳ vọng sẽ tạo ra nhiều cơ hội mới cho nền kinh tế mà còn góp phần \nxây dựng một xã hội thông minh, vượ"
+  },
+  {
+    "id": "chunk_157",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "vọng sẽ tạo ra nhiều cơ hội mới cho nền kinh tế mà còn góp phần \nxây dựng một xã hội thông minh, vượt qua những thách thức của thời đại số. Sự phát triển mạnh \nmẽ của TTNT trong thời gian tới chính là điểm mấu chốt trong việc khẳng định vị thế của Việt \nNam trên bản đồ công nghệ thế giới. \n3. Định hướng tạo lập khuôn khổ pháp lý cho AI \nNhững vấn đề pháp lý đặt ra trong phát triển trí tuệ nhân tạo ở Việt Nam \nỞ Việt Nam, sự phát triển mạnh mẽ của AI không chỉ thúc đẩy kinh tế mà còn đặt ra nhiều"
+  },
+  {
+    "id": "chunk_158",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ở Việt Nam \nỞ Việt Nam, sự phát triển mạnh mẽ của AI không chỉ thúc đẩy kinh tế mà còn đặt ra nhiều \nthách thức pháp lý quan trọng. \nThứ nhất, Về việc xây dựng luật mới về AI \nDự thảo luật đề xuất quản lý AI theo cách sau: \n- Bộ sẽ ban hành các nguyên tắc đạo đức cho việc phát triển, triển khai và ứng dụng AI; \n- Các sản phẩm và nội dung công nghệ số do AI tạo ra phải được xác định rõ ràng là được \ntạo ra hoặc thao túng một cách nhân tạo; và \n- Hệ thống AI sẽ được phân loại theo mức độ rủi ro d"
+  },
+  {
+    "id": "chunk_159",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "c \ntạo ra hoặc thao túng một cách nhân tạo; và \n- Hệ thống AI sẽ được phân loại theo mức độ rủi ro dựa trên tác đ ộng của chúng đối với \nsức khỏe, quyền và lợi ích hợp pháp của các tổ chức và cá nhân, sự an toàn hoặc tài sản của con \nngười, sự an toàn của các hệ thống thông tin quan trọng quốc gia và cơ sở hạ tầng quan trọng. \nCác phân loại này cho phép các h ệ thống AI được quản lý theo các m ức độ rủi ro khác nhau \ncủa chúng. \n \n \n25 \n \n \nThứ hai, Quyền sở hữu trí tuệ và bản quyền \nMột trong n"
+  },
+  {
+    "id": "chunk_160",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "độ rủi ro khác nhau \ncủa chúng. \n \n \n25 \n \n \nThứ hai, Quyền sở hữu trí tuệ và bản quyền \nMột trong những vấn đề pháp lý đầu tiên liên quan đến trí tuệ nhân tạo là quyền sở hữu trí \ntuệ và bản quyền. Trong quá trình phát triển AI, việc tạo ra các thuật toán, mô hình, và dữ liệu \nhuấn luyện là rất quan trọng. Tuy nhiên, các quy định hiện tại về SHTT chưa theo kịp sự phát \ntriển của công nghệ.  \nCụ thể, việc xác định ai là ngư ời sở hữu bản quyền các sản phẩm do AI t ạo ra khá ph ức \ntạp. Nếu một A"
+  },
+  {
+    "id": "chunk_161",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hể, việc xác định ai là ngư ời sở hữu bản quyền các sản phẩm do AI t ạo ra khá ph ức \ntạp. Nếu một AI tạo ra một tác phẩm nghệ thuật hay một chương trình phần mềm, thì câu hỏi \nđặt ra là li ệu AI hay người lập trình ra AI đó có quy ền sở hữu đối với sản phẩm này? Những \nquy định hiện hành có thể không hoàn toàn phù h ợp, dẫn đến những tranh chấp tiềm ẩn trong \ntương lai. \nThứ ba, Trách nhiệm pháp lý \n Một khía cạnh quan trọng khác là vấn đề trách nhiệm pháp lý khi AI gây ra thi ệt hại. Trí \ntuệ"
+  },
+  {
+    "id": "chunk_162",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "lý \n Một khía cạnh quan trọng khác là vấn đề trách nhiệm pháp lý khi AI gây ra thi ệt hại. Trí \ntuệ nhân tạo có thể đưa ra quyết định mà không cần sự can thiệp của con người, điều này tạo ra \nmột tình huống pháp lý khó xác định. Khi một hệ thống AI gây ra lỗi hoặc gây thiệt hại cho con \nngười, câu hỏi đặt ra là ai sẽ phải chịu trách nhiệm? Là nhà sản xuất, nhà phát triển hay chính \ncá nhân người sử dụng?  \nViệc xây dựng một khung pháp lý rõ ràng và đầy đủ để xử lý trách nhiệm pháp lý trong bối"
+  },
+  {
+    "id": "chunk_163",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ử dụng?  \nViệc xây dựng một khung pháp lý rõ ràng và đầy đủ để xử lý trách nhiệm pháp lý trong bối \ncảnh AI là h ết sức cần thiết nhưng cũng  rất khó khăn. Vi ệt Nam c ần tham kh ảo những kinh \nnghiệm từ các quốc gia khác để có thể xây dựng một hệ thống luật pháp phù hợp và thống nhất.  \nThứ tư, Bảo vệ dữ liệu và quyền riêng tư \nVấn đề bảo vệ dữ liệu và quyền riêng tư cũng là m ột trong những thách thức pháp lý lớn \ntrong lĩnh vực AI. Để phát triển các hệ thống AI hiệu quả, việc thu thập và xử l"
+  },
+  {
+    "id": "chunk_164",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "h thức pháp lý lớn \ntrong lĩnh vực AI. Để phát triển các hệ thống AI hiệu quả, việc thu thập và xử lý lượng lớn dữ \nliệu cá nhân là đi ều không th ể tránh khỏi. Tuy nhiên, đi ều này đ ặt ra câu h ỏi về việc bảo vệ \nquyền riêng tư của cá nhân và tính minh bạch trong việc sử dụng dữ liệu. \nHiện tại, Việt Nam đã có những quy định về bảo vệ thông tin cá nhân, nhưng các quy định \nnày vẫn cần phải được cập nhật và hoàn thi ện để phù hợp với xu hư ớng phát tri ển của công \nnghệ và thực tiễn quốc tế. Mộ"
+  },
+  {
+    "id": "chunk_165",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "cập nhật và hoàn thi ện để phù hợp với xu hư ớng phát tri ển của công \nnghệ và thực tiễn quốc tế. Một hệ thống bảo vệ dữ liệu mạnh mẽ không chỉ bảo vệ quyền lợi \ncủa công dân mà còn xây dựng lòng tin trong xã hội về việc phát triển và ứng dụng AI. \nThứ năm, Đạo đức và hội nhập \nCuối cùng, vấn đề đạo đức và hội nhập trong phát triển AI cũng cần được quan tâm. Các \nứng dụng của trí tuệ nhân tạo có thể ảnh hưởng đến nhiều khía cạnh của đời sống xã hội như \nviệc làm, bình đ ẳng xã hội, và quyền lợi"
+  },
+  {
+    "id": "chunk_166",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hể ảnh hưởng đến nhiều khía cạnh của đời sống xã hội như \nviệc làm, bình đ ẳng xã hội, và quyền lợi của người tiêu dùng. C ần có một bộ tiêu chuẩn đạo \n \n \n26 \n \n \nđức rõ ràng và minh b ạch để đảm bảo rằng công ngh ệ này được phát tri ển và ứng dụng một \ncách công bằng và có trách nhiệm. \nViệt Nam cần chủ động tham gia vào các diễn đàn quốc tế để xây dựng quy chuẩn về đạo \nđức trong phát triển AI, từ đó thúc đẩy sự phát triển bền vững và trách nhiệm xã hội của công \nnghệ này. \nNhư vậy, việc phát"
+  },
+  {
+    "id": "chunk_167",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "từ đó thúc đẩy sự phát triển bền vững và trách nhiệm xã hội của công \nnghệ này. \nNhư vậy, việc phát triển trí tuệ nhân tạo ở Việt Nam không chỉ đơn thuần là một bài toán \ncông nghệ mà còn là một thách thức pháp lý lớn. Các vấn đề về sở hữu trí tuệ, trách nhiệm pháp \nlý, bảo vệ dữ liệu và đạo đức là những yếu tố quan trọng cần được giải quyết để tối ưu hóa lợi \ních từ AI. Để đáp ứng được hết những thách thức này, Việt Nam cần có một hành lang pháp lý \nđồng bộ và thông thoáng nhằm hỗ trợ cho việc"
+  },
+  {
+    "id": "chunk_168",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thách thức này, Việt Nam cần có một hành lang pháp lý \nđồng bộ và thông thoáng nhằm hỗ trợ cho việc phát triển AI, đồng thời bảo vệ quyền lợi của cá \nnhân và xã hội. \n \nTÀI LIỆU THAM KHẢO \n1. Asia: different approaches to the risk-reward balance https://www.lexology.com. \n2. Wang, Z. (2023). Legal regulation of artificial intelligence: Experience of Chin a. \nResearch Gate. \nhttps://www.researchgate.net/publication/379147422_Legal_Regulation_of_Artificial_Int\nelligence_Experience_of_China#pf5."
+  },
+  {
+    "id": "chunk_169",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "te.net/publication/379147422_Legal_Regulation_of_Artificial_Int\nelligence_Experience_of_China#pf5. \n3. Gallo, V., & Nair, S. (2 024). “The UK’s framework for AI regulation: Agility is \nprioritised, but future legislation is likely to be needed”. Deloitte. \nhttps://www.deloitte.com/uk/en/Industries/financial-services/blogs/the-uks-framework-\nfor-ai-regulation.html. \n4. The White House. (2023).  Executive Order on the Safe, Secure, and Trustworthy \nDevelopment and Use of Artificial Intelligence. h"
+  },
+  {
+    "id": "chunk_170",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "cutive Order on the Safe, Secure, and Trustworthy \nDevelopment and Use of Artificial Intelligence. https://www.whitehouse.gov4. \n5. Dai J. (2022). “China’s surveillance state should not be a model for the rest of the \nworld”, The Guardian. https://www.theguardian.com/commentisfree/2022/jul/25/china-\nsurveillance-state-model-world accessed 20 August 2024. \n6. Nghị quyết số 23-NQ/TW, ngày 22-3-2018, của Bộ Chính trị, về định hướng xây dựng \nchính sách phát triển công nghiệp quốc gia đến năm 2030,"
+  },
+  {
+    "id": "chunk_171",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "của Bộ Chính trị, về định hướng xây dựng \nchính sách phát triển công nghiệp quốc gia đến năm 2030, tầm nhìn đến năm 2045. \n7. Nghị quyết số 52-NQ/TW, ngày 27 -9-2019, của Bộ Chính trị, về một số chủ trương, \nchính sách chủ động tham gia cuộc Cách mạng công nghiệp lần thứ tư. \n8. Nghị quyết số 50/NQ-CP, ngày 17-4-2020, của Chính phủ, ban hành Chương trình hành \nđộng của Chính phủ thực hiện Nghị quyết số 52-NQ/TW, ngày 27-9-2019, của Bộ Chính \n \n \n27 \n \n \ntrị, về một số chủ trương, chính sách chủ"
+  },
+  {
+    "id": "chunk_172",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "yết số 52-NQ/TW, ngày 27-9-2019, của Bộ Chính \n \n \n27 \n \n \ntrị, về một số chủ trương, chính sách chủ động tham gia cuộc Cách mạng công nghiệp lần \nthứ tư. \n9. Quyết định số 127/QĐ-TTg ban hành Chiến lược quốc gia về nghiên cứu, phát triển và \nứng dụng trí tuệ nhân tạo đến năm 2030. \n10. Viện Công nghệ số và Chuyển đổi số Quốc gia – Bộ Thông tin và Truyền thông, “Phát \ntriển và ứng dụng trí tuệ nhân tạo – Kinh nghiệm thế giới và thực tiễn Việt Nam”, Tham \nluận trình bày tại Hội thảo “Pháp luật tr"
+  },
+  {
+    "id": "chunk_173",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "n tạo – Kinh nghiệm thế giới và thực tiễn Việt Nam”, Tham \nluận trình bày tại Hội thảo “Pháp luật trí tuệ nhân tạo: Kinh nghiệm quốc tế và các khuyến \nnghị chính sách cho Việt Nam”, Hà Nội, tháng 5-2024, tr. 5. \n11. TS Nguyễn Thị Thu Vân, Tạp chí Cộng sản 9.2024: “Xây dựng, hoàn thiện chính sách, \npháp luật về trí tuệ nhân tạo ở Việt Nam” . \n12. TS. Nguyễn Hùng & ThS. Vũ Hùng Cường, T/c Dân chủ Pháp luật 22/8/2024 : “Xây \ndựng pháp luật về trí tuệ nhân tạo có trách nhiệm ở một số quốc gia và khu"
+  },
+  {
+    "id": "chunk_174",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "áp luật 22/8/2024 : “Xây \ndựng pháp luật về trí tuệ nhân tạo có trách nhiệm ở một số quốc gia và khuyến nghị đối với \nViệt Nam”.  \n \n \n28 \n \n \nPhụ lục  \nDự thảo \nLuật công nghiệp công nghệ số \n“Mục 5. Trí tuệ nhân tạo \nĐiều 81. Thúc đẩy phát triển và ứng dụng trí tuệ nhân tạo \n1. Nhà nước khuyến khích doanh nghiệp, tổ chức, cá nhân phát triển, cung cấp, triển khai \nvà sử dụng hệ thống trí tuệ nhân tạo đáng tin cậy và lấy con người làm trung tâm. \n2. Nhà nước khuyến khích các công ty v ừa và nhỏ"
+  },
+  {
+    "id": "chunk_175",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "tạo đáng tin cậy và lấy con người làm trung tâm. \n2. Nhà nước khuyến khích các công ty v ừa và nhỏ trong việc cung cấp hệ thống trí tuệ \nnhân tham gia cơ chế thử nghiệm sản phẩm, dịch vụ công nghệ số quy định tại Mục 3 Chương \nIV. \n3. Bộ Thông tin và Truyền thông xây dựng, trình Thủ tướng phê duyệt Chương trình thúc \nđẩy phát triển và ứng dụng trí tuệ nhân tạo theo từng thời kỳ 05 năm và kế hoạch hằng năm. \nĐiều 82. Xây d ựng nguyên t ắc đạo đức trong phát tri ển, triển khai và ứng dụng trí tu"
+  },
+  {
+    "id": "chunk_176",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "hằng năm. \nĐiều 82. Xây d ựng nguyên t ắc đạo đức trong phát tri ển, triển khai và ứng dụng trí tu ệ \nnhân tạo \n1. Bộ Thông tin và Truyền thông ban hành nguyên tắc đạo đức trong phát triển, triển khai \nvà ứng dụng trí tuệ nhân tạo. \n2. Các bộ chuyên ngành căn c ứ vào tình hình th ực tế để xây dựng ban hành hư ớng dẫn \nquy định đạo đức cho việc sử dụng sản phẩm công nghệ số ứng dụng trí tuệ nhân tạo trong \nlĩnh vực phụ trách dựa trên các nguyên tắc đạo đức được ban hành. \nĐiều 83. Các hoạt động"
+  },
+  {
+    "id": "chunk_177",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ạo trong \nlĩnh vực phụ trách dựa trên các nguyên tắc đạo đức được ban hành. \nĐiều 83. Các hoạt động trí tuệ nhân tạo bị nghiêm cấm \n1. Đưa ra thị trường, đưa vào sử dụng hoặc sử dụng hệ thống trí tuệ nhân tạo triển khai \ncác kỹ thuật nhằm mục đích gây ảnh hưởng đến hành vi của cá nhân mà cá nhân đó không thể \nnhận thức được hoặc sử dụng các kỹ thuật lôi kéo hoặc lừa đảo nhằm bóp méo hành vi của cá \nnhân đó một cách nghiêm trọng bằng cách làm suy giảm khả năng đưa ra quyết định dẫn đến \ntổn hại đ"
+  },
+  {
+    "id": "chunk_178",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "nhân đó một cách nghiêm trọng bằng cách làm suy giảm khả năng đưa ra quyết định dẫn đến \ntổn hại đáng kể. \n2. Đưa ra th ị trường, đưa vào s ử dụng hoặc sử dụng hệ thống trí tuệ nhân tạo khai thác \nnhững điểm yếu của cá nhân hoặc nhóm người người do tuổi tác, tình tr ạng khuyết tật hoặc \nhoàn cảnh kinh tế hoặc xã hội làm bóp méo nghiêm trọng hành vi và gây tổn hạn đáng kể cho \ncá nhân hoặc nhóm người đó. \n3. Đưa ra thị trường, đưa vào sử dụng hoặc sử dụng hệ thống trí tuệ nhân tạo được dùng \nđể"
+  },
+  {
+    "id": "chunk_179",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "gười đó. \n3. Đưa ra thị trường, đưa vào sử dụng hoặc sử dụng hệ thống trí tuệ nhân tạo được dùng \nđể đánh giá hoặc phân loại cá nhân dựa trên hành vi xă h ội hoặc các đặc điểm cá nhân hoặc \ntính cách được suy luận hoặc dự đoán dẫn đến một hoặc cả hai trường hợp sau: \n \n \n29 \n \n \n a) Đối xử bất lợi trong bối cảnh xã hội không liên quan đến bối cảnh mà dữ liệu ban đầu \nđược tạo ra hoặc thu thập;  \n b) Tổn hại bất lợi đối với cá nhân hoặc nhóm người không chính đáng hoặc không tương \nxứng với hành"
+  },
+  {
+    "id": "chunk_180",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "b) Tổn hại bất lợi đối với cá nhân hoặc nhóm người không chính đáng hoặc không tương \nxứng với hành vi xã hội hoặc hoặc mức độ nghiêm trọng của hành vi đó. \n4. Đưa ra thị trường, đưa vào sử dụng hệ thống trí tuệ nhân tạo được sử dụng để đánh giá \nrủi ro của cá nhân nhằm xác định hoặc dự đoán nguy cơ một cá nhân sẽ phạm tội hình sự chỉ \ndựa trên hồ sơ hoặc đánh giá tính cách và đ ặc điểm; không áp dụng cho các hệ thống trí tuệ \nnhân tạo được sử dụng để hỗ trợ đánh giá liên quan trực tiếp đến hoạt"
+  },
+  {
+    "id": "chunk_181",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "dụng cho các hệ thống trí tuệ \nnhân tạo được sử dụng để hỗ trợ đánh giá liên quan trực tiếp đến hoạt động phòng, chống tội \nphạm theo quy định pháp luật hiện hành. \n5. Đưa ra thị trường, đưa vào sử dụng hoặc sử dụng hệ thống trí tuệ nhân tạo tạo hoặc mở \nrộng cơ sở dữ liệu nhận dạng khuôn mặt thông qua việc thu thập hình ảnh khuôn mặt không \ncó mục tiêu từ Internet hoặc đoạn phim CCTV. \n6. Đưa ra thị trường, đưa vào sử dụng hệ thống trí tuệ nhân tạo suy đoán cảm xúc của con \nngười trong khu vực"
+  },
+  {
+    "id": "chunk_182",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "thị trường, đưa vào sử dụng hệ thống trí tuệ nhân tạo suy đoán cảm xúc của con \nngười trong khu vực nơi làm việc và cơ sở giáo dục, ngoại trừ hệ thống trí tuệ nhân tạo được \ndùng cho y tế và an toàn. \n7. Đưa ra thị trường, đưa vào sử dụng hệ thống trí tuệ nhân tạo phân loại sinh trắc học để \nphân loại các cá nhân dựa trên dữ liệu sinh trắc học để suy luận ra dữ liệu cá nhân nhạy cảm; \nkhông bao gồm việc dán nhãn hoặc lọc các tập dữ liệu sinh trắc học được thu thập hợp pháp. \nĐiều 84. Quản lý rủi"
+  },
+  {
+    "id": "chunk_183",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "m việc dán nhãn hoặc lọc các tập dữ liệu sinh trắc học được thu thập hợp pháp. \nĐiều 84. Quản lý rủi ro đối với hệ thống trí tuệ nhân tạo \n1. Hệ thống trí tuệ nhân tạo được phân loại theo cấp độ rủi ro ảnh hưởng đến sức khỏe, \nquyền và lợi ích hợp pháp của tổ chức, cá nhân, sự an toàn của con người hoặc tài sản; an toàn \nhệ thống thông tin quan tr ọng quốc gia, cơ sở hạ tầng trọng yếu; có phạm vi, ảnh hưởng tác \nđộng lớn để áp dụng biện pháp quản lý và kỹ thuật nhằm kiểm soát rủi ro theo cấp độ."
+  },
+  {
+    "id": "chunk_184",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ảnh hưởng tác \nđộng lớn để áp dụng biện pháp quản lý và kỹ thuật nhằm kiểm soát rủi ro theo cấp độ.   \n2. Bộ Thông tin và Truy ền thông hư ớng dẫn phân lo ại cấp độ rủi ro, các bi ện pháp và \nnghĩa vụ, trách nhiệm bảo đảm giảm thiểu rủi ro của hệ thống trí tuệ nhân tạo theo từng cấp \nđộ. \nĐiều 85. Quy định đối với sản phẩm công nghệ số tạo ra bởi trí tuệ nhân tạo \n1. Các sản phẩm công nghệ số tạo ra bởi trí tuệ nhân tạo phải dán nhãn nhận dạng để bảo \nđảm rằng đầu ra c ủa hệ thống trí tu ệ nhân"
+  },
+  {
+    "id": "chunk_185",
+    "source": "Bai-2-HT-1.-SIU.pdf",
+    "doc_type": "academic_paper",
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "text": "ra bởi trí tuệ nhân tạo phải dán nhãn nhận dạng để bảo \nđảm rằng đầu ra c ủa hệ thống trí tu ệ nhân tạo được đánh d ấu ở định dạng có th ể đọc được \nbằng máy và có thể phát hiện được tạo hoặc thao tác nhân tạo.  \n2. Bộ Thông tin và Truyền thông hướng dẫn về việc dán nhãn sản phẩm công nghệ số tạo \nra bởi trí tuệ nhân tạo”./."
+  }
+]
