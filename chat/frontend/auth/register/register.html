@@ -4,35 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng ký</title>
-
     <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="../../components/header/header.css">
     <link rel="stylesheet" href="register.css">
 </head>
 
 <body>
-
     <div id="header"></div>
-
     <div class="auth-container">
-        <form class="auth-box" onsubmit="register(event)">
-            <h2>Đăng ký</h2>
-
-            <input type="text" placeholder="Họ và tên" required>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Mật khẩu" required>
-
+        <form class="auth-box" id="registerForm">
+            <h2>Đăng ký</h2> <input type="text" placeholder="Họ và tên" required> 
+            <input type="email" placeholder="Email" required> 
+            <input type="password" placeholder="Mật khẩu" required> 
             <button type="submit">Đăng ký</button>
-
-            <p>
-                Đã có tài khoản?
-                <a href="../login/login.html">Đăng nhập</a>
-            </p>
+            <p> Đã có tài khoản? <a href="../login/login.html">Đăng nhập</a> </p>
         </form>
     </div>
-
     <script src="../../components/header/header.js"></script>
-    <script src="register.js"></script>
+    <script type="module" src="register.js"></script>
 </body>
 
 </html>

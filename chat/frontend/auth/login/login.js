@@ -1,19 +1,34 @@
-function login(event) {
+import { auth, db } from "../../firebase.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const form = document.getElementById("loginForm");
+form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    // MOCK login thành công
-    const user = {
-        id: Date.now(),
-        name: email.split("@")[0],
-        email
-    };
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("user", JSON.stringify(user));
+        const uid = userCredential.user.uid;
 
-    alert("Đăng nhập thành công");
-    window.location.href = "/frontend/index.html";
-}
+        const userDoc = await getDoc(doc(db, "users", uid));
+        const userData = userDoc.exists() ? userDoc.data() : {};
+
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify({
+            id: uid,
+            email,
+            ...userData
+        }));
+
+        alert("Đăng nhập thành công");
+        window.location.href = "/frontend/index.html";
+    } catch (err) {
+        console.error(err);
+        alert("Sai email hoặc mật khẩu");
+    }
+});
+

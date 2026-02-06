@@ -1,29 +1,35 @@
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) location.href = "/frontend/auth/login/login.html";
-
-document.getElementById("name").value = user.name;
-document.getElementById("email").value = user.email;
-document.getElementById("avatarPreview").src =
-    user.avatar || "/frontend/assets/default-avatar.png";
-
-document.getElementById("avatarInput").addEventListener("change", e => {
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const passInput = document.getElementById("password");
+const avatarInput = document.getElementById("avatarInput");
+const avatarPreview = document.getElementById("avatarPreview");
+// load data
+nameInput.value = user.name || "";
+emailInput.value = user.email || "";
+avatarPreview.src = user.avatar || "/frontend/assets/default-avatar.png";
+// chọn avatar
+avatarInput.addEventListener("change", e => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = () => {
-        document.getElementById("avatarPreview").src = reader.result;
+        avatarPreview.src = reader.result;
         user.avatar = reader.result;
+        localStorage.setItem("user", JSON.stringify(user));
     };
     reader.readAsDataURL(file);
 });
-
+// cập nhật profile
 function updateProfile() {
-    user.name = document.getElementById("name").value;
-    const pass = document.getElementById("password").value;
-    if (pass) user.password = pass;
-
+    user.name = nameInput.value;
+    if (passInput.value) {
+        user.password = passInput.value;
+    }
+    if (avatarInput.value) {
+        user.avatar = avatarInput.value;
+    }
     localStorage.setItem("user", JSON.stringify(user));
     alert("Cập nhật thành công");
-    location.reload();
 }

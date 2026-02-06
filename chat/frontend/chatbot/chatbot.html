@@ -9,22 +9,16 @@
 </head>
 
 <body>
-
     <!-- HEADER -->
     <div id="header"></div>
-
     <!-- APP -->
     <div class="app">
-
-        <!-- ========== SIDEBAR ========== -->
+    <!-- ========== SIDEBAR ========== -->
         <aside class="sidebar">
-
             <div class="sidebar-search">
                 <input type="text" placeholder="🔍 Tìm cuộc hội thoại..." />
             </div>
-
             <button class="new-chat-btn">➕ Cuộc hội thoại mới</button>
-
             <div class="sidebar-section">
                 <h4>📁 Chủ đề</h4>
                 <ul class="folder-list" id="workspaceSelect">
@@ -33,7 +27,6 @@
                 </ul>
                 <button class="add-folder" onclick="createWorkspace()">+ Thêm chủ đề</button>
             </div>
-
             <div class="sidebar-section bottom">
                 <h4>📚 Dữ liệu đã học</h4>
                 <ul class="knowledge-list">
@@ -42,50 +35,35 @@
                     <li>🎥 machine_learning.mp4</li>
                 </ul>
             </div>
-
         </aside>
-
         <!-- ========== CHAT AREA ========== -->
         <main class="chat">
-
             <!-- CHAT HEADER -->
             <div class="chat-header">
                 <h3>AI Chatbot</h3>
             </div>
-
             <!-- CHAT MESSAGES -->
             <div class="chat-messages">
                 <div class="chat-messages-inner" id="chatMessages">
-
                     <div class="message bot">
                         Xin chào 👋 Tôi có thể giúp gì cho bạn?
                     </div>
-
                 </div>
             </div>
-
             <!-- CHAT INPUT -->
             <div class="chat-input">
                 <div class="chat-input-inner">
-
                     <input type="file" id="mediaInput" accept="image/*,video/*,.pdf,.doc,.docx" hidden>
-
                     <button class="attach-btn" onclick="document.getElementById('mediaInput').click()">➕</button>
-
                     <input type="text" id="question" placeholder="Nhập câu hỏi..." onkeydown="handleEnter(event)">
-
                     <button onclick="sendMessage()">Gửi</button>
-
                 </div>
             </div>
-
         </main>
     </div>
-
     <!-- JS -->
     <script src="../components/header/header.js"></script>
     <script src="chatbot.js"></script>
-
 </body>
 
 </html>

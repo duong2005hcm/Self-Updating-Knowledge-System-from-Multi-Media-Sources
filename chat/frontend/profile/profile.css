@@ -29,3 +29,25 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+.btn-update {
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px;
+
+    background: #2563eb;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-update:hover {
+    background: #1d4ed8;
+}
+
+.btn-update:active {
+    transform: scale(0.98);
+}
