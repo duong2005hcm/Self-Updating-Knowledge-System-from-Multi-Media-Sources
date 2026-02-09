@@ -1,17 +1,50 @@
-import React from "react";
+import { useState } from "react";
+import { sendMessage } from "../api/ragapi";
+import "../styles/styles.css";
 
-export default function ChatInput() {
+export default function ChatInput({ setMessages }) {
+  const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = async () => {
+    if (!text.trim()) return;
+
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: text },
+    ]);
+
+    setLoading(true);
+
+    try {
+      const data = await sendMessage(text);
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: data.answer },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Lỗi gọi API" },
+      ]);
+      console.error(err);
+    } finally {
+      setLoading(false);
+      setText("");
+    }
+  };
+
   return (
-    <div className="chat-input-root">
-      <div className="chat-input-inner">
-        <textarea placeholder="Gõ để trò chuyện..." rows={1} />
-        <button className="send-circle" title="Gửi">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M22 2L11 13" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M22 2L15 22l-4-9-9-4L22 2z" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.2"/>
-          </svg>
-        </button>
-      </div>
+    <div className="chat-input-inner">
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Gõ để trò chuyện..."
+      />
+      <button onClick={handleSend} disabled={loading}>
+        {loading ? "..." : "➤"}
+      </button>
     </div>
   );
 }

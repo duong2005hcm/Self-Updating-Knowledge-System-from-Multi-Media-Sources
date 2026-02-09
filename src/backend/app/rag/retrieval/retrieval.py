@@ -4,10 +4,10 @@ from typing import List, Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import uuid
 
-from rag.retrieval.reranker import ResultReranker
-from rag.embeddings.local_embbeder import OptimizedLocalEmbedder
-from rag.retrieval.multi_query import generate_multi_queries
-from client.database import initialize_chroma_client
+from backend.app.rag.retrieval.reranker import ResultReranker
+from backend.app.rag.embeddings.local_embbeder import OptimizedLocalEmbedder
+from backend.app.rag.retrieval.multi_query import generate_multi_queries
+from backend.app.client.database import initialize_chroma_client
 
 
 class MultiQueryRetriever:

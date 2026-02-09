@@ -2,9 +2,9 @@
 import os, json, uuid
 from urllib.parse import urlparse
 
-from html_clean import clean_docs, clean_news, clean_ecommerce
-from chunker import chunk_text
-from web_classifiers import classify_web
+from backend.app.rag.chunking.web.html_clean import clean_docs, clean_news, clean_ecommerce
+from backend.app.rag.chunking.web.chunker import chunk_text
+from backend.app.rag.chunking.web.web_classifiers import classify_web
 
 
 class WebChunker:

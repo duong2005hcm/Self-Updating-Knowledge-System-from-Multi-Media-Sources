@@ -2,7 +2,7 @@
 import re
 from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
-from fetch_web import fetch_html
+from backend.app.rag.chunking.web.fetch_web import fetch_html
 
 
 def crawl_article_links_optimized(home_url, limit=10):

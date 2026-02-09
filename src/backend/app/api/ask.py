@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from rag.retrieval.retrieval import MultiQueryRetriever
-from rag.llm.prompt import build_rag_prompt
-from rag.llm.openai_client import generate_answer
+from backend.app.rag.retrieval.retrieval import MultiQueryRetriever
+from backend.app.rag.llm.prompt import build_rag_prompt
+from backend.app.rag.llm.openai_client import generate_answer
 
 router = APIRouter(tags=["RAG"])
 
@@ -27,9 +27,13 @@ class AskResponse(BaseModel):
 
 @router.post("/ask", response_model=AskResponse)
 def ask_rag(req: AskRequest):
+    # 1. Retrieve context
     contexts = retriever.retrieve(req.question)
 
+    # 2. Build prompt
     prompt = build_rag_prompt(contexts, req.question)
+
+    # 3. Call LLM
     answer = generate_answer(prompt)
 
     return {

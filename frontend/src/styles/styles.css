@@ -162,3 +162,93 @@
     .welcome-wrap{width:100%;padding:20px}
     .chat-input-inner{padding:0 12px}
     }
+
+    /* ===== CHAT BODY ===== */
+.chat-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== CHAT ROW ===== */
+.chat-row {
+  display: flex;
+  width: 100%;
+}
+
+.chat-row.user {
+  justify-content: flex-end;
+}
+
+.chat-row.assistant {
+  justify-content: flex-start;
+}
+
+/* ===== CHAT BUBBLE ===== */
+.chat-bubble {
+  max-width: 65%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* User bubble */
+.chat-row.user .chat-bubble {
+  background: #2563eb;        /* xanh như ChatGPT */
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* Assistant bubble */
+.chat-row.assistant .chat-bubble {
+  background: #f1f5f9;        /* xám nhạt */
+  color: #0f172a;
+  border-bottom-left-radius: 4px;
+}
+
+/* ===== INPUT FIXED BOTTOM ===== */
+.chat-input-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.chat-input-inner textarea {
+  flex: 1;
+  resize: none;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 12px 14px;
+  font-size: 14px;
+  outline: none;
+}
+
+.chat-input-inner textarea:focus {
+  border-color: #2563eb;
+}
+
+.chat-input-inner button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-input-inner button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
