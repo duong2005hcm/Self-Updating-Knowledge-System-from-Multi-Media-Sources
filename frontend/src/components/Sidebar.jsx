@@ -1,35 +1,41 @@
-import React from "react";
-
-export default function Sidebar() {
+export default function Sidebar({ onSelectTool }) {
   return (
     <aside className="sidebar">
-      <div className="sidebar-top">
-        <div className="brand">
-          <div className="logo">🐟</div>
-          <div className="brand-name">SMILESI</div>
-        </div>
+      {/* ... giữ nguyên phần header */}
 
-        <button className="new-chat">+ Chat mới</button>
-
-        <div className="history">
-          <div className="history-title">LỊCH SỬ TRÒ CHUYỆN</div>
-          <div className="history-empty">
-            Không có cuộc trò chuyện nào
-            <br />
-            <span className="muted">Bắt đầu cuộc trò chuyện mới!</span>
-          </div>
-        </div>
+      <div className="sidebar-section">
+        <button
+          className="new-chat-btn"
+          onClick={() => onSelectTool("chat")}
+        >
+          ＋ Chat mới
+        </button>
       </div>
 
-      <div className="sidebar-bottom">
-        <div className="user-preview">
-          <div className="avatar">🐟</div>
-          <div className="user-info">
-            <div className="user-name">admin</div>
-            <div className="user-email">admin@example.com</div>
-          </div>
-        </div>
+      <div className="sidebar-section">
+        <p className="sidebar-title">LỊCH SỬ TRÒ CHUYỆN</p>
+        <p className="sidebar-empty">Chưa có cuộc trò chuyện</p>
       </div>
+      
+      <div className="sidebar-section">
+        <p className="sidebar-title">📄 TÀI LIỆU RAG</p>
+
+        <button
+          className="sidebar-action"
+          onClick={() => onSelectTool("ingest-doc")}
+        >
+          Upload tài liệu (PDF/DOC)
+        </button>
+
+        <button
+          className="sidebar-action"
+          onClick={() => onSelectTool("ingest-web")}
+        >
+          Nhập URL trang web
+        </button>
+      </div>
+
+      {/* ... giữ nguyên footer */}
     </aside>
   );
 }

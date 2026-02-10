@@ -12,16 +12,16 @@ app = FastAPI(title="RAG Backend API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173/"],  # khi deploy thì set domain frontend
+    allow_origins=["http://localhost:5173"],  # khi deploy thì set domain frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(health_router)
-app.include_router(doc_router)
-app.include_router(web_router)
-app.include_router(ask_router)
+app.include_router(health_router, prefix="/api")
+app.include_router(doc_router, prefix="/api")
+app.include_router(web_router, prefix="/api")
+app.include_router(ask_router, prefix="/api")
 
 class Chatrequest(BaseModel):
     question: str

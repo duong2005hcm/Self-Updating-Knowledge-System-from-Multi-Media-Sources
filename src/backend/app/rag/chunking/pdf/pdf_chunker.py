@@ -72,6 +72,62 @@ def chunk_text(
 
     return chunks
 
+def process_single_pdf(pdf_path: str) -> str:
+    """
+    Xử lý 1 file PDF (dùng cho API upload)
+    Trả về path tới file chunks.json
+    """
+    os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
+
+    print(f"\nĐang xử lý PDF upload: {pdf_path}")
+
+    # Profile PDF
+    profile = profile_pdf(pdf_path)
+
+    # Load text
+    full_text = load_pdf_text(pdf_path)
+    if not full_text.strip():
+        raise ValueError("PDF không có text (có thể là scan)")
+
+    sample_text = full_text[:2000]
+
+    # Classify
+    doc_type = classify_document(profile, sample_text)
+
+    # Chunk config
+    chunk_config = select_chunk_config(doc_type)
+    chunk_size = chunk_config["chunk_size"]
+    chunk_overlap = chunk_config["overlap"]
+
+    chunks = chunk_text(
+        full_text,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap
+    )
+
+    all_chunks = []
+    for i, chunk in enumerate(chunks):
+        all_chunks.append({
+            "id": f"chunk_{i}",
+            "source": os.path.basename(pdf_path),
+            "doc_type": doc_type,
+            "chunk_size": chunk_size,
+            "chunk_overlap": chunk_overlap,
+            "text": chunk
+        })
+
+    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
+    output_file = f"{base_name}_chunks.json"
+    output_path = os.path.join(PROCESSED_DATA_DIR, output_file)
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(all_chunks, f, ensure_ascii=False, indent=2)
+
+    print(f" Chunk xong: {len(all_chunks)} chunks")
+    print(f" Lưu tại: {output_path}")
+
+    return output_path
+
 
 def process_pdfs():
     os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { sendMessage } from "../api/ragapi";
-import "../styles/styles.css";
+import { askRAG } from "../api/ragapi";
 
 export default function ChatInput({ setMessages }) {
   const [text, setText] = useState("");
@@ -17,18 +16,20 @@ export default function ChatInput({ setMessages }) {
     setLoading(true);
 
     try {
-      const data = await sendMessage(text);
+      const res = await askRAG(text);
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.answer },
+        {
+          role: "assistant",
+          content: res.answer || "Không có câu trả lời",
+        },
       ]);
-    } catch (err) {
+    } catch (e) {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Lỗi gọi API" },
+        { role: "assistant", content: "Lỗi gọi RAG backend" },
       ]);
-      console.error(err);
     } finally {
       setLoading(false);
       setText("");
@@ -40,7 +41,7 @@ export default function ChatInput({ setMessages }) {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Gõ để trò chuyện..."
+        placeholder="Gõ câu hỏi cho tớ nào..."
       />
       <button onClick={handleSend} disabled={loading}>
         {loading ? "..." : "➤"}

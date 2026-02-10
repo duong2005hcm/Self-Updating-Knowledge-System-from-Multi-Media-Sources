@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile, File
 import os
 import uuid
 
-from backend.app.rag.chunking.pdf.pdf_chunker import process_pdfs
+from backend.app.rag.chunking.pdf.pdf_chunker import process_single_pdf
 from backend.app.rag.ingestion.embedding_store import embed_and_store_chunks
 
 router = APIRouter(prefix="/ingest", tags=["Ingest"])
@@ -11,7 +11,7 @@ UPLOAD_DIR = "data/uploads/pdf"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@router.post("/document")
+@router.post("/doc")
 async def ingest_document(file: UploadFile = File(...)):
     """
     Upload PDF → chunk → embed → store ChromaDB
@@ -27,7 +27,7 @@ async def ingest_document(file: UploadFile = File(...)):
         f.write(await file.read())
 
     # 2. Chunk PDF
-    chunks_json_path = process_pdfs(pdf_path)
+    chunks_json_path = process_single_pdf(pdf_path)
 
     # 3. Embed & store
     result = embed_and_store_chunks(

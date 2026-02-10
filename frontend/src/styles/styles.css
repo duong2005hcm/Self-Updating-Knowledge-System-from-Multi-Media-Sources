@@ -94,6 +94,7 @@
     display:flex;
     justify-content:center;
     align-items:center;
+    margin: auto;
     }
 
     .welcome-content{max-width:680px;text-align:center;padding-top:60px}
@@ -128,33 +129,6 @@
     }
 
     .mock-text{color:#8b98a3;font-size:15px;text-align:left}
-
-    /* bottom input area fixed style inside main-area flow */
-    .chat-input-root{
-    border-top:1px solid rgba(0,0,0,0.04);
-    padding:18px 24px;
-    background:transparent;
-    }
-    .chat-input-inner{
-    max-width:980px;
-    margin:0 auto;
-    display:flex;
-    gap:12px;
-    align-items:center;
-    }
-    .chat-input-inner textarea{
-    flex:1;
-    padding:14px 18px;
-    border-radius:12px;
-    border:1px solid rgba(0,0,0,0.06);
-    resize:none;
-    font-size:15px;
-    min-height:56px;
-    background:#f3f7fb;
-    }
-    .send-circle{
-    width:48px;height:48px;border-radius:50%;border:none;background:var(--primary);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 18px rgba(47,128,237,0.18)
-    }
 
     /* small screens */
     @media (max-width:900px){
