@@ -57,6 +57,7 @@ class WebChunker:
             "doc_id": doc_id,
             "source_type": source_type,
             "url": url,
+            "data_type": "web",
             "chunk_index": i,
             "text": c
         } for i, c in enumerate(chunks)]

@@ -171,6 +171,7 @@ def process_pdfs():
                 "id": f"chunk_{chunk_id}",
                 "source": os.path.basename(pdf_path),
                 "doc_type": doc_type,
+                "data_type": "pdf",
                 "chunk_size": chunk_size,
                 "chunk_overlap": chunk_overlap,
                 "text": chunk
