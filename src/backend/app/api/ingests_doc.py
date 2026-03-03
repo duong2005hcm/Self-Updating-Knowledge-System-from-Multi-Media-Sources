@@ -1,9 +1,10 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, HTTPException
 import os
 import uuid
 
 from backend.app.rag.chunking.pdf.pdf_chunker import process_single_pdf
 from backend.app.rag.ingestion.embedding_store import embed_and_store_chunks
+
 
 router = APIRouter(prefix="/ingest", tags=["Ingest"])
 
@@ -11,32 +12,52 @@ UPLOAD_DIR = "data/uploads/pdf"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@router.post("/doc")
-async def ingest_document(file: UploadFile = File(...)):
+@router.post("/pdf")
+async def ingest_pdf(file: UploadFile = File(...)):
     """
-    Upload PDF → chunk → embed → store ChromaDB
+    Upload PDF → Page-aware chunk → Embed → Store ChromaDB (rag_pdf)
     """
-    if not file.filename.lower().endswith(".pdf"):
-        return {"status": "error", "message": "Only PDF files are supported"}
 
-    # 1. Save file
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail="Only PDF files are supported"
+        )
+
+    # Save uploaded file
     file_id = str(uuid.uuid4())
     pdf_path = os.path.join(UPLOAD_DIR, f"{file_id}_{file.filename}")
 
     with open(pdf_path, "wb") as f:
         f.write(await file.read())
 
-    # 2. Chunk PDF
-    chunks_json_path = process_single_pdf(pdf_path)
+    # Page-aware chunking
+    try:
+        chunks_json_path = process_single_pdf(pdf_path)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Chunking failed: {str(e)}"
+        )
 
-    # 3. Embed & store
-    result = embed_and_store_chunks(
-        chunks_json_path=chunks_json_path,
-        data_type="pdf"
-    )
+    # Embed + Store (rag_pdf collection)
+    try:
+        result = embed_and_store_chunks(
+            chunks_json_path=chunks_json_path,
+            collection_name="rag_pdf",
+            data_type="pdf",
+            allow_duplicates=False
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Embedding failed: {str(e)}"
+        )
 
     return {
         "status": "ok",
         "filename": file.filename,
-        "chunks_inserted": result.get("inserted", 0)
+        "collection": "rag_pdf",
+        "chunks_inserted": result.get("inserted", 0),
+        "chunks_skipped": result.get("skipped", 0)
     }

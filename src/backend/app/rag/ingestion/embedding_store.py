@@ -30,7 +30,7 @@ def embed_and_store_chunks(
     if not chunks:
         return {"status": "empty", "inserted": 0}
 
-    # 🔥 Compute file-level hash
+    # Compute file-level hash
     file_hash = compute_file_hash_from_chunks(chunks)
 
     # 2. Group theo data_type
@@ -55,7 +55,7 @@ def embed_and_store_chunks(
         collection_name = f"rag_{data_type}"
         collection = client.get_or_create_collection(collection_name)
 
-        # 🔥 FILE-LEVEL DUPLICATE CHECK
+        # FILE-LEVEL DUPLICATE CHECK
         if not allow_duplicates:
             existing_file = collection.get(
                 where={"file_hash": file_hash},
@@ -129,7 +129,7 @@ def embed_and_store_chunks(
 
         total_inserted += len(texts)
 
-        print(f"✅ Stored {len(texts)} into {collection_name}")
+        print(f" Stored {len(texts)} into {collection_name}")
 
     return {
         "status": "ok",

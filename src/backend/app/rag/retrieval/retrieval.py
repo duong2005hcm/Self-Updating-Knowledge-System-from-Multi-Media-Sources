@@ -1,8 +1,5 @@
-# rag/retrieval/retriever.py
-
 from typing import List, Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import uuid
 
 from backend.app.rag.retrieval.reranker import ResultReranker
 from backend.app.rag.embeddings.local_embbeder import OptimizedLocalEmbedder
@@ -11,21 +8,31 @@ from backend.app.client.database import initialize_chroma_client
 
 
 class MultiQueryRetriever:
-    """Retriever that uses multiple query variations to improve document retrieval."""
+    """
+    Multi-collection + Multi-query retriever
+    """
 
     def __init__(
         self,
-        collection_name: str = "rag_knowledge",
+        collection_names: List[str] = None,
         top_k_per_query: int = 3,
         max_total_results: int = 10,
         enable_parallel: bool = True,
         max_workers: int = 4,
     ):
         self.embedder = OptimizedLocalEmbedder()
-        self.collection = (
-            initialize_chroma_client()
-            .get_or_create_collection(collection_name)
-        )
+        self.client = initialize_chroma_client()
+
+        # Nếu không truyền collection → mặc định search cả pdf + web
+        if collection_names is None:
+            collection_names = ["rag_pdf", "rag_web"]
+
+        self.collections = [
+            self.client.get_or_create_collection(name)
+            for name in collection_names
+        ]
+
+        self.collection_names = collection_names
 
         self.top_k_per_query = top_k_per_query
         self.max_total_results = max_total_results
@@ -39,9 +46,6 @@ class MultiQueryRetriever:
     # ---------- PUBLIC API ----------
 
     def retrieve(self, question: str) -> List[Dict]:
-        """
-        Main retrieval entrypoint
-        """
         queries = generate_multi_queries(question)
 
         if self.enable_parallel:
@@ -49,11 +53,13 @@ class MultiQueryRetriever:
         else:
             results = self._retrieve_sequential(queries)
 
-        ranked = self._deduplicate_and_rerank(results)
-        
+        # Deduplicate + score
+        ranked = self._deduplicate_and_score(results)
+
+        # Final rerank layer
         reranker = ResultReranker()
-        ranked = reranker.rerank(results)
-        
+        ranked = reranker.rerank(ranked)
+
         return ranked[: self.max_total_results]
 
     # ---------- RETRIEVAL MODES ----------
@@ -79,46 +85,49 @@ class MultiQueryRetriever:
     # ---------- CORE SEARCH ----------
 
     def _retrieve_single(self, query: str, priority: int) -> List[Dict]:
-        """
-        Run a single vector search for one query variant
-        """
+
         query_embedding = self.embedder.embed_query(query)
 
-        res = self.collection.query(
-            query_embeddings=[query_embedding],
-            n_results=self.top_k_per_query,
-            include=["documents", "metadatas", "distances"],
-        )
+        all_results = []
 
-        results = []
-        for doc, meta, dist in zip(
-            res["documents"][0],
-            res["metadatas"][0],
-            res["distances"][0],
-        ):
-            # Chroma cosine distance ∈ [0, 2] → similarity ∈ [1, -1]
-            similarity = 1.0 - dist
+        for collection, cname in zip(self.collections, self.collection_names):
 
-            results.append(
-                {
-                    "id": meta.get("chunk_id") or str(uuid.uuid4()),
-                    "text": doc,
-                    "metadata": meta,
-                    "similarity": similarity,
-                    "query_priority": priority,
-                }
+            res = collection.query(
+                query_embeddings=[query_embedding],
+                n_results=self.top_k_per_query,
+                include=["documents", "metadatas", "distances", "ids"],
             )
 
-        return results
+            for doc, meta, dist, cid in zip(
+                res["documents"][0],
+                res["metadatas"][0],
+                res["distances"][0],
+                res["ids"][0],
+            ):
+                similarity = 1.0 - dist
 
-    # ---------- RERANKING ----------
+                all_results.append(
+                    {
+                        "id": cid,
+                        "text": doc,
+                        "metadata": meta,
+                        "similarity": similarity,
+                        "query_priority": priority,
+                        "collection": cname,
+                    }
+                )
 
-    def _deduplicate_and_rerank(self, results: List[Dict]) -> List[Dict]:
+        return all_results
+
+    # ---------- MERGE + SCORING ----------
+
+    def _deduplicate_and_score(self, results: List[Dict]) -> List[Dict]:
         """
-        Deduplicate by chunk_id and rerank by:
-        - vector similarity
-        - query priority (original query > derived queries)
+        Deduplicate by ID and compute score using:
+        - similarity
+        - query priority
         """
+
         best_by_id: Dict[str, Dict] = {}
 
         for r in results:
@@ -128,6 +137,7 @@ class MultiQueryRetriever:
             )
 
             rid = r["id"]
+
             if rid not in best_by_id or score > best_by_id[rid]["score"]:
                 r["score"] = score
                 best_by_id[rid] = r
@@ -144,31 +154,14 @@ class MultiQueryRetriever:
 def multi_query_retrieve(
     question: str,
     top_k: int = 5,
-    collection_name: str = "rag_knowledge",
+    collection_names: List[str] = None,
 ) -> List[Dict]:
+
     retriever = MultiQueryRetriever(
-        collection_name=collection_name,
+        collection_names=collection_names,
         top_k_per_query=max(1, top_k // 2),
         max_total_results=top_k,
         enable_parallel=True,
     )
+
     return retriever.retrieve(question)
-
-
-# # ---------- MANUAL TEST ----------
-
-# if __name__ == "__main__":
-#     retriever = MultiQueryRetriever(
-#         collection_name="rag_knowledge",
-#         top_k_per_query=3,
-#         max_total_results=8,
-#         enable_parallel=True,
-#     )
-
-#     results = retriever.retrieve("Máy tính là gì?")
-
-#     print(f"Found {len(results)} results")
-#     for i, r in enumerate(results[:3], 1):
-#         print(f"\n{i}. score={r['score']:.3f}")
-#         print(f"   text={r['text'][:120]}...")
-#         print(f"   priority={r['query_priority']}")
