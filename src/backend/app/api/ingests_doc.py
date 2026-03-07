@@ -44,8 +44,6 @@ async def ingest_pdf(file: UploadFile = File(...)):
     try:
         result = embed_and_store_chunks(
             chunks_json_path=chunks_json_path,
-            collection_name="rag_pdf",
-            data_type="pdf",
             allow_duplicates=False
         )
     except Exception as e:

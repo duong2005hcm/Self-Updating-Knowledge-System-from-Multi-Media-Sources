@@ -26,7 +26,7 @@ export async function ingestDoc(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch("/api/ingest/doc", {
+  const res = await fetch("/api/ingest/pdf", {
     method: "POST",
     body: formData,
   });
