@@ -58,8 +58,7 @@ def embed_and_store_chunks(
         # FILE-LEVEL DUPLICATE CHECK
         if not allow_duplicates:
             existing_file = collection.get(
-                where={"file_hash": file_hash},
-                limit=1
+                where={"file_hash": file_hash}
             )
 
             if existing_file.get("ids"):
