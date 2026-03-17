@@ -10,6 +10,9 @@ from backend.app.rag.agent.response_generator import (
     generate_web_answer
 )
 
+# MEMORY
+from backend.app.rag.memory.chat_memory import get_history, add_message
+
 router = APIRouter(tags=["RAG"])
 
 retriever = MultiQueryRetriever(
@@ -22,6 +25,7 @@ retriever = MultiQueryRetriever(
 
 class AskRequest(BaseModel):
     question: str
+    session_id: str
 
 
 class AskResponse(BaseModel):
@@ -31,53 +35,60 @@ class AskResponse(BaseModel):
     contexts: list
 
 
-
 @router.post("/ask", response_model=AskResponse)
 def ask_rag(req: AskRequest):
 
     question = req.question
+    session_id = req.session_id
+
+    # LOAD MEMORY
+    history = get_history(session_id)
 
     # ROUTER AGENT
-    route = route_mode(question)
+    try:
+        route = route_mode(question)
+    except:
+        route = {"mode": "professional", "confidence": 0.5}
 
     mode = route.get("mode", "professional")
     confidence = route.get("confidence", 0.5)
 
-    # fallback
     if confidence < 0.6:
         mode = "professional"
 
-    print(f"[ROUTER] mode={mode} confidence={confidence}")
+    print(f"[ROUTER] mode={mode} | session={session_id}")
 
     contexts = []
     answer = ""
 
-    # CASUAL
-    if mode == "casual":
-        answer = generate_casual_answer(question)
 
-    # PROFESSIONAL
+    if mode == "casual":
+        answer = generate_casual_answer(question, history)
+
+
     elif mode == "professional":
         contexts = retriever.retrieve(question, mode="professional")
+        contexts = contexts[:5]
 
         answer = generate_professional_answer(
             question,
-            contexts
+            contexts,
+            history
         )
 
-    # WEB (WEB ONLY)
+
     elif mode == "web":
         contexts = retriever.retrieve(question, mode="web")
 
-        # filter extra
         contexts = [
             c for c in contexts
             if "web" in c.get("collection", "")
-        ]
+        ][:5]
 
         answer = generate_web_answer(
             question,
-            contexts
+            contexts,
+            history
         )
 
 
@@ -86,8 +97,13 @@ def ask_rag(req: AskRequest):
 
         answer = generate_professional_answer(
             question,
-            contexts
+            contexts,
+            history
         )
+
+
+    add_message(session_id, "user", question)
+    add_message(session_id, "assistant", answer)
 
 
     return {
