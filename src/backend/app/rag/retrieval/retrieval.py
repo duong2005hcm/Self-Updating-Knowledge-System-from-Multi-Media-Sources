@@ -1,16 +1,15 @@
 from typing import List, Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from backend.app.rag.retrieval.reranker import ResultReranker
 from backend.app.rag.embeddings.local_embbeder import OptimizedLocalEmbedder
-from backend.app.rag.retrieval.multi_query import generate_multi_queries
 from backend.app.client.database import initialize_chroma_client
+
+from backend.app.rag.retrieval.multi_query import generate_multi_queries
+from backend.app.rag.retrieval.reranker import ResultReranker
+from backend.app.rag.retrieval.hybrid_llm import keyword_score
 
 
 class MultiQueryRetriever:
-    """
-    Multi-collection + Multi-query retriever
-    """
 
     def __init__(
         self,
@@ -23,7 +22,6 @@ class MultiQueryRetriever:
         self.embedder = OptimizedLocalEmbedder()
         self.client = initialize_chroma_client()
 
-        # Nếu không truyền collection → mặc định search cả pdf + web
         if collection_names is None:
             collection_names = ["rag_pdf", "rag_web"]
 
@@ -33,7 +31,6 @@ class MultiQueryRetriever:
         ]
 
         self.collection_names = collection_names
-
         self.top_k_per_query = top_k_per_query
         self.max_total_results = max_total_results
         self.enable_parallel = enable_parallel
@@ -43,36 +40,46 @@ class MultiQueryRetriever:
             if enable_parallel else None
         )
 
-    # ---------- PUBLIC API ----------
 
-    def retrieve(self, question: str) -> List[Dict]:
+    def retrieve(self, question: str, mode: str = "professional") -> List[Dict]:
+
         queries = generate_multi_queries(question)
 
-        if self.enable_parallel:
-            results = self._retrieve_parallel(queries)
-        else:
-            results = self._retrieve_sequential(queries)
+        selected = self._select_collections(mode)
 
-        # Deduplicate + score
+        if self.enable_parallel:
+            results = self._retrieve_parallel(queries, selected)
+        else:
+            results = self._retrieve_sequential(queries, selected)
+
         ranked = self._deduplicate_and_score(results)
 
-        # Final rerank layer
+        if mode == "web":
+            ranked = [
+                r for r in ranked
+                if "web" in r.get("collection", "")
+            ]
+
         reranker = ResultReranker()
-        ranked = reranker.rerank(ranked)
+        ranked = reranker.rerank(question, ranked, top_k=5)
 
         return ranked[: self.max_total_results]
 
-    # ---------- RETRIEVAL MODES ----------
 
-    def _retrieve_sequential(self, queries: List[str]) -> List[Dict]:
-        all_results = []
-        for priority, q in enumerate(queries):
-            all_results.extend(self._retrieve_single(q, priority))
-        return all_results
+    def _select_collections(self, mode: str):
+        if mode == "web":
+            return [
+                (c, name)
+                for c, name in zip(self.collections, self.collection_names)
+                if name == "rag_web"
+            ]
+        else:
+            return list(zip(self.collections, self.collection_names))
 
-    def _retrieve_parallel(self, queries: List[str]) -> List[Dict]:
+
+    def _retrieve_parallel(self, queries, selected):
         futures = [
-            self.executor.submit(self._retrieve_single, q, priority)
+            self.executor.submit(self._retrieve_single, q, priority, selected)
             for priority, q in enumerate(queries)
         ]
 
@@ -82,15 +89,21 @@ class MultiQueryRetriever:
 
         return all_results
 
-    # ---------- CORE SEARCH ----------
 
-    def _retrieve_single(self, query: str, priority: int) -> List[Dict]:
+    def _retrieve_sequential(self, queries, selected):
+        all_results = []
+        for priority, q in enumerate(queries):
+            all_results.extend(self._retrieve_single(q, priority, selected))
+        return all_results
+
+
+    def _retrieve_single(self, query: str, priority: int, selected) -> List[Dict]:
 
         query_embedding = self.embedder.embed_query(query)
 
         all_results = []
 
-        for collection, cname in zip(self.collections, self.collection_names):
+        for collection, cname in selected:
 
             res = collection.query(
                 query_embeddings=[query_embedding],
@@ -106,12 +119,17 @@ class MultiQueryRetriever:
             ):
                 similarity = 1.0 - dist
 
+                bm25 = keyword_score(query, doc)
+                final_score = 0.7 * similarity + 0.3 * bm25
+
                 all_results.append(
                     {
                         "id": cid,
                         "text": doc,
                         "metadata": meta,
                         "similarity": similarity,
+                        "bm25": bm25,
+                        "score": final_score,
                         "query_priority": priority,
                         "collection": cname,
                     }
@@ -119,27 +137,15 @@ class MultiQueryRetriever:
 
         return all_results
 
-    # ---------- MERGE + SCORING ----------
 
     def _deduplicate_and_score(self, results: List[Dict]) -> List[Dict]:
-        """
-        Deduplicate by ID and compute score using:
-        - similarity
-        - query priority
-        """
 
         best_by_id: Dict[str, Dict] = {}
 
         for r in results:
-            score = (
-                r["similarity"] * 0.7
-                + (1.0 / (1 + r["query_priority"])) * 0.3
-            )
-
             rid = r["id"]
 
-            if rid not in best_by_id or score > best_by_id[rid]["score"]:
-                r["score"] = score
+            if rid not in best_by_id or r["score"] > best_by_id[rid]["score"]:
                 best_by_id[rid] = r
 
         return sorted(
@@ -149,12 +155,11 @@ class MultiQueryRetriever:
         )
 
 
-# ---------- BACKWARD-COMPAT WRAPPER ----------
-
 def multi_query_retrieve(
     question: str,
     top_k: int = 5,
     collection_names: List[str] = None,
+    mode: str = "professional",
 ) -> List[Dict]:
 
     retriever = MultiQueryRetriever(
@@ -164,4 +169,4 @@ def multi_query_retrieve(
         enable_parallel=True,
     )
 
-    return retriever.retrieve(question)
+    return retriever.retrieve(question, mode=mode)

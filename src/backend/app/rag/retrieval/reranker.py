@@ -1,12 +1,11 @@
-
 from typing import List, Dict
+from openai import OpenAI
+import re
+
+client = OpenAI()
 
 
 class ResultReranker:
-    """
-    Lightweight reranker for RAG retrieval results.
-    Designed to be fast, interpretable, and extensible.
-    """
 
     def __init__(
         self,
@@ -18,30 +17,44 @@ class ResultReranker:
         self.w_qp = weight_query_priority
         self.w_meta = weight_metadata
 
-    def rerank(self, results: List[Dict]) -> List[Dict]:
-        """
-        Rerank results based on:
-        - vector similarity
-        - query priority
-        - metadata signals
-        """
+
+    def rerank(self, question: str, results: List[Dict], top_k=5) -> List[Dict]:
+
+        if not results:
+            return []
+
         best_by_id = {}
 
         for r in results:
             score = self._score(r)
 
             rid = r["id"]
-            if rid not in best_by_id or score > best_by_id[rid]["score"]:
+            if rid not in best_by_id or score > best_by_id[rid].get("score", 0):
                 r["score"] = score
                 best_by_id[rid] = r
 
-        return sorted(
+        ranked = sorted(
             best_by_id.values(),
             key=lambda x: x["score"],
             reverse=True,
         )
 
-    # ---------- INTERNAL SCORING ----------
+        # LẤY TOP N ĐỂ LLM RERANK
+        top_candidates = ranked[:10]
+
+        # LLM RERANK - chọn top K từ top candidates
+        try:
+            reranked = self._llm_rerank(question, top_candidates, top_k)
+
+            if not reranked:
+                return ranked[:top_k]
+
+            return reranked
+
+        except Exception as e:
+            print("LLM rerank failed:", str(e))
+            return ranked[:top_k]
+
 
     def _score(self, r: Dict) -> float:
         sim_score = r.get("similarity", 0.0)
@@ -55,16 +68,9 @@ class ResultReranker:
         )
 
     def _query_priority_score(self, priority: int) -> float:
-        """
-        Lower priority value = more important query
-        """
         return 1.0 / (1 + priority)
 
     def _metadata_score(self, meta: Dict) -> float:
-        """
-        Score based on metadata signals.
-        Customize freely per project.
-        """
         score = 0.0
 
         if meta.get("data_type") == "news":
@@ -76,7 +82,53 @@ class ResultReranker:
         if meta.get("doc_type") == "official":
             score += 0.3
 
-        # Feedback từ user (nếu có)
         score += meta.get("feedback_score", 0.0)
 
         return min(score, 1.0)
+
+
+    def _llm_rerank(self, question: str, results: List[Dict], top_k=5):
+
+        if not results:
+            return []
+
+        context_text = "\n\n".join([
+            f"[{i}] {r['text'][:300]}"
+            for i, r in enumerate(results)
+        ])
+
+        prompt = f"""
+        You are a ranking system.
+
+        Select the {top_k} most relevant contexts for answering the question.
+
+        Return ONLY numbers (no explanation).
+        Example: 0 2 3
+
+        Question:
+        {question}
+
+        Contexts:
+        {context_text}
+        """
+
+        res = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0
+        )
+
+        content = res.choices[0].message.content
+
+        indices = list(map(int, re.findall(r"\d+", content)))
+
+        if not indices:
+            return results[:top_k]
+
+        selected = [
+            results[i]
+            for i in indices
+            if 0 <= i < len(results)
+        ]
+
+        return selected[:top_k]

@@ -1,5 +1,3 @@
-# rag/llm/openai_client.py
-
 from openai import OpenAI
 import os
 
