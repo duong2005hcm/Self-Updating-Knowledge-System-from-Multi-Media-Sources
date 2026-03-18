@@ -26,11 +26,5 @@ app.include_router(ask_router, prefix="/api")
 class Chatrequest(BaseModel):
     question: str
 
-@app.post("/api/chat")
-async def chat_rag(req: Chatrequest):
-    return {
-        "answer": f"RAG trả lời{req.question}"
-    }
-
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
