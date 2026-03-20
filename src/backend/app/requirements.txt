@@ -1,0 +1,13 @@
+beautifulsoup4==4.14.3
+chromadb==1.5.5
+fastapi==0.135.1
+langchain_text_splitters==1.1.1
+openai==2.29.0
+pydantic==2.12.5
+pypdf==6.9.1
+python-dotenv==1.2.2
+rag_ai==0.1.0
+rag_ai.egg==info
+readability_lxml==0.8.4.1
+Requests==2.32.5
+uvicorn==0.42.0
