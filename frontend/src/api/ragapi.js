@@ -1,16 +1,36 @@
+function getSessionId() {
+  let sessionId = localStorage.getItem("session_id");
+
+  if (!sessionId) {
+    sessionId = "session_" + Math.random().toString(36).substring(2);
+    localStorage.setItem("session_id", sessionId);
+  }
+
+  return sessionId;
+}
+
+
 export async function checkHealth() {
   const res = await fetch("/api/health");
+
   if (!res.ok) throw new Error("Health check failed");
+
   return res.json();
 }
 
+
 export async function askRAG(question) {
+  const session_id = getSessionId();
+
   const res = await fetch("/api/ask", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({
+      question,
+      session_id,
+    }),
   });
 
   if (!res.ok) {
@@ -18,9 +38,15 @@ export async function askRAG(question) {
     throw new Error("Ask RAG failed: " + err);
   }
 
-  return res.json(); 
-  // expect: { answer: string, sources?: [] }
+  const data = await res.json();
+
+  return {
+    answer: data.answer,
+    mode: data.mode,
+    contexts: data.contexts || [],
+  };
 }
+
 
 export async function ingestDoc(file) {
   const formData = new FormData();
@@ -38,6 +64,7 @@ export async function ingestDoc(file) {
 
   return res.json();
 }
+
 
 export async function ingestWeb(url) {
   const res = await fetch("/api/ingest/web", {

@@ -108,7 +108,7 @@ class MultiQueryRetriever:
             res = collection.query(
                 query_embeddings=[query_embedding],
                 n_results=self.top_k_per_query,
-                include=["documents", "metadatas", "distances", "ids"],
+                include=["documents", "metadatas", "distances"],
             )
 
             for doc, meta, dist, cid in zip(

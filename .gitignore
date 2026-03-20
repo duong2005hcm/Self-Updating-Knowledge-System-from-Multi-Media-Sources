@@ -247,3 +247,11 @@ dist/
 # Misc
 ####################################
 coverage/
+
+# Uploads
+data/
+# Ignore PDF files
+*.pdf
+
+# Ignore JSON files
+*.json

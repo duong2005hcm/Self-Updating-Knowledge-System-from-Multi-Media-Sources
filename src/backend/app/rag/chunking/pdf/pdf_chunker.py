@@ -2,24 +2,16 @@ import os
 import json
 from typing import List, Dict, Tuple
 from pypdf import PdfReader
-from tqdm import tqdm
 
 from .document_profiler import profile_pdf
 from .document_classifier import classify_document
 from .chunk_strategy import select_chunk_config
 
-
 RAW_DATA_DIR = "data/raw"
 PROCESSED_DATA_DIR = "data/processed"
 
 
-
 def load_pdf_pages_with_offsets(pdf_path: str) -> Tuple[str, List[Dict]]:
-    """
-    Trả về:
-        - full_text (string toàn bộ PDF)
-        - page_map: mapping offset -> page_number
-    """
     reader = PdfReader(pdf_path)
 
     full_text = ""
@@ -35,21 +27,17 @@ def load_pdf_pages_with_offsets(pdf_path: str) -> Tuple[str, List[Dict]]:
         start_offset = current_offset
         full_text += page_text + "\n"
         current_offset += len(page_text) + 1
-        end_offset = current_offset
 
         page_map.append({
             "page_number": i + 1,
             "start": start_offset,
-            "end": end_offset
+            "end": current_offset
         })
 
     return full_text.strip(), page_map
 
-# MAP CHUNK TO PAGE
-def get_pages_for_chunk(chunk_start: int,
-                        chunk_end: int,
-                        page_map: List[Dict]) -> Tuple[int, int, List[int]]:
 
+def get_pages_for_chunk(chunk_start, chunk_end, page_map):
     pages = []
 
     for page in page_map:
@@ -62,7 +50,6 @@ def get_pages_for_chunk(chunk_start: int,
     return pages[0], pages[-1], pages
 
 
-# PAGE-AWARE CHUNKING
 def chunk_text_page_aware(full_text: str,
                         page_map: List[Dict],
                         chunk_size: int,
@@ -77,6 +64,7 @@ def chunk_text_page_aware(full_text: str,
     chunk_index = 0
 
     while start < text_length:
+
         end = min(start + chunk_size, text_length)
         chunk_text_part = full_text[start:end].strip()
 
@@ -91,107 +79,81 @@ def chunk_text_page_aware(full_text: str,
                 "chunk_end_char": end,
                 "page_start": page_start,
                 "page_end": page_end,
-                "page_numbers": page_numbers,
+
+                "page_numbers": ",".join(map(str, page_numbers)) if page_numbers else "",
+
                 "text": chunk_text_part
             })
 
             chunk_index += 1
 
-        start = end - chunk_overlap
+        if end == text_length:
+            break
+
+        new_start = end - chunk_overlap
+
+        if new_start <= start:
+            new_start = start + 1
+
+        start = new_start
 
     return chunks
 
 
-# PROCESS SINGLE PDF (UPLOAD API)
 def process_single_pdf(pdf_path: str) -> str:
 
     os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 
-    print(f"\nĐang xử lý PDF upload: {pdf_path}")
+    print(f"\n Processing: {pdf_path}")
 
-    # Profile
     profile = profile_pdf(pdf_path)
-
-    # Load + Page Map
     full_text, page_map = load_pdf_pages_with_offsets(pdf_path)
 
     if not full_text.strip():
-        raise ValueError("PDF không có text (có thể là scan)")
+        raise ValueError("PDF không có text")
 
-    sample_text = full_text[:2000]
+    doc_type = classify_document(profile, full_text[:2000])
 
-    # Classify
-    doc_type = classify_document(profile, sample_text)
+    config = select_chunk_config(doc_type)
+    chunk_size = config["chunk_size"]
+    overlap = config["overlap"]
 
-    # Chunk config
-    chunk_config = select_chunk_config(doc_type)
-    chunk_size = chunk_config["chunk_size"]
-    chunk_overlap = chunk_config["overlap"]
-
-    print(f" Loại tài liệu: {doc_type}")
-    print(f" Chunk size: {chunk_size}, Overlap: {chunk_overlap}")
-
-    # Page-aware chunking
-    raw_chunks = chunk_text_page_aware(
-        full_text,
-        page_map,
-        chunk_size,
-        chunk_overlap
-    )
-
-    all_chunks = []
-
-    for chunk in raw_chunks:
-        all_chunks.append({
-            "id": f"chunk_{chunk['chunk_index']}",
-            "source": os.path.basename(pdf_path),
-            "doc_type": doc_type,
-            "data_type": "pdf",
-            "chunk_size": chunk_size,
-            "chunk_overlap": chunk_overlap,
-
-            "chunk_start_char": chunk["chunk_start_char"],
-            "chunk_end_char": chunk["chunk_end_char"],
-            "page_start": chunk["page_start"],
-            "page_end": chunk["page_end"],
-            "page_numbers": chunk["page_numbers"],
-
-            "text": chunk["text"]
-        })
+    print(f" Type: {doc_type} | chunk={chunk_size}")
 
     base_name = os.path.splitext(os.path.basename(pdf_path))[0]
-    output_file = f"{base_name}_chunks.json"
-    output_path = os.path.join(PROCESSED_DATA_DIR, output_file)
+    output_path = os.path.join(PROCESSED_DATA_DIR, f"{base_name}_chunks.json")
 
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(all_chunks, f, ensure_ascii=False, indent=2)
+        f.write("[\n")
 
-    print(f" Chunk xong: {len(all_chunks)} chunks")
-    print(f" Lưu tại: {output_path}")
+        first = True
+        count = 0
+
+        for chunk in chunk_text_page_aware(full_text, page_map, chunk_size, overlap):
+
+            chunk_data = {
+                "id": f"chunk_{chunk['chunk_index']}",
+                "source": os.path.basename(pdf_path),
+                "doc_type": doc_type,
+                "data_type": "pdf",
+
+                "page_start": chunk["page_start"],
+                "page_end": chunk["page_end"],
+                "page_numbers": chunk["page_numbers"],
+
+                "text": chunk["text"]
+            }
+
+            if not first:
+                f.write(",\n")
+            else:
+                first = False
+
+            f.write(json.dumps(chunk_data, ensure_ascii=False))
+            count += 1
+
+        f.write("\n]")
+
+    print(f" {count} chunks saved")
 
     return output_path
-
-
-# BATCH PROCESS
-def process_pdfs():
-
-    os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
-
-    pdf_files = [
-        os.path.join(RAW_DATA_DIR, f)
-        for f in os.listdir(RAW_DATA_DIR)
-        if f.lower().endswith(".pdf")
-    ]
-
-    if not pdf_files:
-        raise FileNotFoundError("Không tìm thấy file PDF trong data/raw")
-
-    for pdf_path in pdf_files:
-        process_single_pdf(pdf_path)
-
-    print("\n Hoàn tất chunking PDF")
-    print(" Sẵn sàng cho embedding local & ChromaDB")
-
-
-if __name__ == "__main__":
-    process_pdfs()

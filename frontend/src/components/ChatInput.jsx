@@ -14,30 +14,47 @@ export default function ChatInput({ setMessages }) {
       typeof crypto !== "undefined" && crypto.randomUUID
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
     const pendingId = `${userId}-pending`;
 
     setMessages((prev) => [
       ...prev,
       { id: userId, role: "user", content: question },
-      { id: pendingId, role: "assistant", content: "Đang trả lời…", pending: true },
+      {
+        id: pendingId,
+        role: "assistant",
+        content: "Đang trả lời…",
+        pending: true,
+      },
     ]);
 
     setLoading(true);
 
     try {
+      console.log(" CALLING API /api/ask");
+
       const res = await askRAG(question);
       const answer = res?.answer || "Không có câu trả lời";
 
       setMessages((prev) =>
         prev.map((m) =>
-          m.id === pendingId ? { ...m, content: answer, pending: false } : m
+          m.id === pendingId
+            ? { ...m, content: answer, pending: false }
+            : m
         )
       );
-    } catch {
+    } catch (err) {
+      console.error(" API ERROR:", err);
+
       setMessages((prev) =>
         prev.map((m) =>
           m.id === pendingId
-            ? { ...m, content: "Lỗi gọi RAG backend", pending: false, error: true }
+            ? {
+                ...m,
+                content: "Lỗi gọi RAG backend",
+                pending: false,
+                error: true,
+              }
             : m
         )
       );
@@ -48,7 +65,10 @@ export default function ChatInput({ setMessages }) {
   };
 
   return (
-    <div className="chat-input-inner">
+    <div
+      className="chat-input-inner"
+      onSubmit={(e) => e.preventDefault()}
+    >
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -62,7 +82,12 @@ export default function ChatInput({ setMessages }) {
         aria-label="Chat message"
         id={`chat-input-${rid}`}
       />
-      <button onClick={handleSend} disabled={loading}>
+
+      <button
+        type="button"
+        onClick={handleSend}
+        disabled={loading}
+      >
         {loading ? "..." : "➤"}
       </button>
     </div>
