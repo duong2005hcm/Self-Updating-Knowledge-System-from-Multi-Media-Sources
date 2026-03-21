@@ -1,3 +1,5 @@
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 function getSessionId() {
   let sessionId = localStorage.getItem("session_id");
 
@@ -9,20 +11,18 @@ function getSessionId() {
   return sessionId;
 }
 
-
 export async function checkHealth() {
-  const res = await fetch("/api/health");
+  const res = await fetch(`${BASE_URL}/api/health`);
 
   if (!res.ok) throw new Error("Health check failed");
 
   return res.json();
 }
 
-
 export async function askRAG(question) {
   const session_id = getSessionId();
 
-  const res = await fetch("/api/ask", {
+  const res = await fetch(`${BASE_URL}/api/ask`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,12 +47,11 @@ export async function askRAG(question) {
   };
 }
 
-
 export async function ingestDoc(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch("/api/ingest/pdf", {
+  const res = await fetch(`${BASE_URL}/api/ingest/pdf`, {
     method: "POST",
     body: formData,
   });
@@ -65,9 +64,8 @@ export async function ingestDoc(file) {
   return res.json();
 }
 
-
 export async function ingestWeb(url) {
-  const res = await fetch("/api/ingest/web", {
+  const res = await fetch(`${BASE_URL}/api/ingest/web`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
