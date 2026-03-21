@@ -24,6 +24,3 @@ dist-ssr
 *.sw?
 # Ignore PDF files
 *.pdf
-
-# Ignore JSON files
-*.json
