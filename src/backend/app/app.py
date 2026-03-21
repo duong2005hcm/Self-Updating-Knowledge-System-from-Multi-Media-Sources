@@ -12,7 +12,7 @@ app = FastAPI(title="RAG Backend API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://self-updating-knowledge-system-from-pink.vercel.app/"],  # khi deploy thì set domain frontend
+    allow_origins=["https://self-updating-knowledge-system-from-pink.vercel.app"],  # khi deploy thì set domain frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
