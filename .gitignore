@@ -252,6 +252,3 @@ coverage/
 data/
 # Ignore PDF files
 *.pdf
-
-# Ignore JSON files
-*.json
