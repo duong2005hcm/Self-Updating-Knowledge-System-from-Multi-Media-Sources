@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { loginUser, registerUser } from "../auth/users";
+import LightRays from "./LightRays";
 
 function isEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s).trim());
@@ -47,10 +48,19 @@ export default function AuthPage({ onAuthed }) {
 
   return (
     <div className="auth-page">
+      <LightRays
+        raysOrigin="top-center"
+        raysColor="#04000d"
+        raysSpeed={1}
+        lightSpread={1}
+        rayLength={2}
+        followMouse
+        mouseInfluence={0.1}
+      />
       <div className="auth-card" role="dialog" aria-label="Authentication">
         <div className="auth-head">
           <div className="auth-brand">
-            <div className="auth-dot" aria-hidden="true" />
+            <div className="auth-dot" />
             <div>
               <div className="auth-app">RAG AI</div>
               <div className="auth-sub">Đăng nhập để bắt đầu chat</div>
@@ -121,7 +131,7 @@ export default function AuthPage({ onAuthed }) {
 
         <div className="auth-foot">
           <span className="auth-foot-muted">
-            (Demo FE) Tài khoản lưu trong trình duyệt của bạn.
+            Bản quyền &copy; 2024 - RAG AI. All rights reserved.
           </span>
         </div>
       </div>
