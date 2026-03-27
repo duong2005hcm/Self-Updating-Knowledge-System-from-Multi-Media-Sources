@@ -1,0 +1,206 @@
+{
+  "name": "Image Generator - Return URL",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.output[0].content[0].text }}",
+        "options": {
+          "dalleQuality": "hd"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1840,
+        -160
+      ],
+      "id": "adfbfb9e-3d86-400c-984b-ba48372400a2",
+      "name": "Generate Image",
+      "credentials": {
+        "openAiApi": {
+          "id": "rWDwBoowCVxqllPe",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-image",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        -160
+      ],
+      "id": "92ea5752-d659-4c3f-a57c-d50654e82daf",
+      "name": "Webhook1",
+      "webhookId": "a4fe188d-9abf-451c-80d3-75b90d583c5e"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "fileName",
+                "value": "generated-image.png"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2096,
+        -160
+      ],
+      "id": "0a96b8f4-3373-4665-9bf8-df16d1d64d50",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.body.prompt }}",
+              "type": "string",
+              "id": "862d4aef-6c2e-4991-8756-e0e6a6225bf3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1424,
+        -160
+      ],
+      "id": "0b7d6590-f454-4a11-9a91-34948ac776c2",
+      "name": "set prompt"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert AI image prompt engineer. \nYour task is to enhance the user's prompt for generating high-quality AI images.\nAdd details about style, lighting, composition, mood, colors, quality, and cinematic feel.\nMake the prompt much more vivid and detailed.\nReturn ONLY the enhanced prompt. Do not add any explanation or extra text."
+            },
+            {
+              "content": "={{$json.prompt}}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1568,
+        -160
+      ],
+      "id": "ab09dc2a-0ba2-4398-a077-3ac2bda3a80b",
+      "name": "Enhance Prompt",
+      "credentials": {
+        "openAiApi": {
+          "id": "rWDwBoowCVxqllPe",
+          "name": "OpenAi account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook1": [
+      {
+        "json": {
+          "body": {
+            "prompt": "một con chó dễ thương đang ngồi trong công viên, phong cách hoạt hình, chất lượng cao"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "set prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set prompt": {
+      "main": [
+        [
+          {
+            "node": "Enhance Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook1": {
+      "main": [
+        []
+      ]
+    },
+    "Enhance Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 300
+  },
+  "versionId": "01b28b31-7eb1-44e5-a0c3-e3006e6bcb90",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "549f951728b4cb93cf1c66e38895d964e2cd62a26b6fb17c76412d29b78517f0"
+  },
+  "id": "Q_0D1M7ZbImUqfPGs8kP7",
+  "tags": []
+}
