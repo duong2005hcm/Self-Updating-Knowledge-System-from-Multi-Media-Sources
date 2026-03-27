@@ -1,2 +1,0 @@
-“Hệ thống AI tự động thu thập, chuẩn hóa và truy vấn tri thức
-đa nguồn từ Web, PDF và Video theo mô hình RAG.”
