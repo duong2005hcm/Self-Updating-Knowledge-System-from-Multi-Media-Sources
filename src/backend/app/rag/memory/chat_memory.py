@@ -1,80 +1,137 @@
-from typing import Dict, List
+from typing import List, Dict
 from datetime import datetime, timezone
 
-from backend.app.rag.memory.storage_json import load_memory, save_memory
-
-_memory_store: Dict[str, Dict] = load_memory()
+from backend.app.rag.memory.firebase_init import db
 
 MAX_HISTORY = 6
-SUMMARY_TRIGGER = 10
+SUMMARY_TRIGGER = 12
 
 
-def get_history(session_id: str) -> List[Dict]:
+def get_history(conversation_id: str) -> List[Dict]:
 
-    session = _memory_store.get(session_id, {})
-    history = session.get("history", [])
-    summary = session.get("summary", "")
+    convo_ref = db.collection("conversations").document(conversation_id)
+    doc = convo_ref.get()
 
-    messages = []
+    if not doc.exists:
+        return []
+
+    data = doc.to_dict()
+    summary = data.get("summary", "")
+
+    messages_ref = (
+        convo_ref.collection("messages")
+        .order_by("timestamp")
+        .limit(MAX_HISTORY)
+    )
+
+    messages = [m.to_dict() for m in messages_ref.stream()]
+
+    result = []
 
     if summary:
-        messages.append({
+        result.append({
             "role": "system",
             "content": f"Conversation summary:\n{summary}"
         })
 
-    messages.extend(history)
+    result.extend(messages)
 
-    return messages
+    return result
 
 
-def add_message(session_id: str, role: str, content: str):
+def add_message(conversation_id: str, user_id: str, role: str, content: str):
 
-    if session_id not in _memory_store:
-        _memory_store[session_id] = {
-            "history": [],
-            "summary": ""
-        }
+    convo_ref = db.collection("conversations").document(conversation_id)
 
-    session = _memory_store[session_id]
+    convo_ref.set({
+        "user_id": user_id,
+        "updated_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(timezone.utc)
+    }, merge=True)
 
-    session["history"].append({
+    convo_ref.collection("messages").add({
         "role": role,
         "content": content,
-        "timestamp": datetime.now(timezone.utc).isoformat()
+        "timestamp": datetime.now(timezone.utc)
     })
 
-    if len(session["history"]) > SUMMARY_TRIGGER:
-        _summarize(session_id)
+    messages = list(
+        convo_ref.collection("messages")
+        .order_by("timestamp")
+        .stream()
+    )
 
-    if len(session["history"]) > MAX_HISTORY:
-        session["history"] = session["history"][-MAX_HISTORY:]
+    if len(messages) > SUMMARY_TRIGGER:
+        _summarize(conversation_id)
 
-    save_memory(_memory_store)
+    elif len(messages) > MAX_HISTORY:
+        _trim_messages(conversation_id)
+
+def _trim_messages(conversation_id: str):
+
+    convo_ref = db.collection("conversations").document(conversation_id)
+
+    messages = list(
+        convo_ref.collection("messages")
+        .order_by("timestamp")
+        .stream()
+    )
+
+    for msg in messages[:-MAX_HISTORY]:
+        msg.reference.delete()
 
 
-def _summarize(session_id: str):
+def _summarize(conversation_id: str):
 
     from backend.app.rag.llm.openai_client import generate_answer
 
-    session = _memory_store[session_id]
-    history = session["history"]
+    convo_ref = db.collection("conversations").document(conversation_id)
+
+    messages = list(
+        convo_ref.collection("messages")
+        .order_by("timestamp")
+        .stream()
+    )
+
+    if not messages:
+        return
 
     text = "\n".join([
-        f"{m['role']}: {m['content']}"
-        for m in history
+        f"{m.to_dict()['role']}: {m.to_dict()['content']}"
+        for m in messages
     ])
 
     prompt = f"""
-    Summarize the conversation.
-    Keep important facts.
+Summarize this conversation.
+Keep important facts and context.
 
-    {text}
-    """
+{text}
+"""
 
     try:
         summary = generate_answer(prompt)
-        session["summary"] = summary
-        session["history"] = []
-    except:
-        pass
+
+        convo_ref.set({
+            "summary": summary
+        }, merge=True)
+
+        for msg in messages:
+            msg.reference.delete()
+
+    except Exception as e:
+        print("Summary error:", e)
+
+def validate_conversation(conversation_id: str, user_id: str):
+
+    convo_ref = db.collection("conversations").document(conversation_id)
+    doc = convo_ref.get()
+
+    if not doc.exists:
+        return True  # cho phép tạo mới
+
+    data = doc.to_dict()
+
+    if data.get("user_id") != user_id:
+        raise Exception("Unauthorized access")
+
+    return True
