@@ -11,3 +11,4 @@ Requests==2.32.5
 uvicorn==0.42.0
 python-multipart
 youtube-transcript-api
+firebase-admin
