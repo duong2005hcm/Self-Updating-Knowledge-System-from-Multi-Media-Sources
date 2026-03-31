@@ -52,8 +52,8 @@ def generate_casual_answer(question: str, history: list):
 def generate_professional_answer(question: str, contexts: list, history: list):
 
     context_text = "\n\n".join([
-        f"[{i}] {c['text']}"
-        for i, c in enumerate(contexts)
+    f"[{i}] {c['text']} (source: {c['metadata'].get('url', '')})"
+    for i, c in enumerate(contexts)
     ])
 
     messages = build_messages(

@@ -3,47 +3,20 @@ import json
 
 client = OpenAI()
 
-
-def route_mode(question: str) -> dict:
+def route_mode(question: str):
 
     prompt = f"""
-    You are a conversation mode selector.
+Classify query:
 
-    Choose ONE mode:
+1. casual → greeting
+2. simple → factual, 1-step
+3. complex → multi-step reasoning
 
-    1. casual:
-    - Friendly conversation
-    - General knowledge
+Return JSON:
+{{"mode": "..."}}
 
-    2. professional:
-    - Needs accurate info from documents
-    - Use knowledge base (RAG)
-
-    3. web:
-    - Needs recent info / news
-
-    ------------------------
-
-    RULES:
-    - Return ONLY JSON
-    - No explanation
-
-    Format:
-    {{"mode": "casual | professional | web", "confidence": 0.0-1.0}}
-
-    ------------------------
-
-    Guidelines:
-    - Mention document → professional
-    - General question → casual
-    - Recent info → web
-    - If unsure → professional
-
-    ------------------------
-
-    Question:
-    {question}
-    """
+Question: {question}
+"""
 
     res = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -55,4 +28,4 @@ def route_mode(question: str) -> dict:
     try:
         return json.loads(res.choices[0].message.content)
     except:
-        return {"mode": "professional", "confidence": 0.5}
+        return {"mode": "simple"}

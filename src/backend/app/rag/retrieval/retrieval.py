@@ -8,6 +8,11 @@ from backend.app.rag.retrieval.multi_query import generate_multi_queries
 from backend.app.rag.retrieval.reranker import ResultReranker
 from backend.app.rag.retrieval.hybrid_llm import keyword_score
 
+from backend.app.rag.tools.web_tool import web_retrieve
+from backend.app.rag.tools.youtube_tool import youtube_retrieve
+
+from backend.app.rag.logs.retrieval_logger import log_retrieval
+
 
 class MultiQueryRetriever:
 
@@ -23,7 +28,7 @@ class MultiQueryRetriever:
         self.client = initialize_chroma_client()
 
         if collection_names is None:
-            collection_names = ["rag_pdf", "rag_web"]
+            collection_names = ["rag_pdf"]
 
         self.collections = [
             self.client.get_or_create_collection(name)
@@ -44,13 +49,62 @@ class MultiQueryRetriever:
     def retrieve(self, question: str, mode: str = "professional") -> List[Dict]:
 
         queries = generate_multi_queries(question)
-
         selected = self._select_collections(mode)
 
         if self.enable_parallel:
-            results = self._retrieve_parallel(queries, selected)
+            pdf_results = self._retrieve_parallel(queries, selected)
         else:
-            results = self._retrieve_sequential(queries, selected)
+            pdf_results = self._retrieve_sequential(queries, selected)
+
+        pdf_ranked = self._deduplicate_and_score(pdf_results)
+
+        if pdf_ranked and pdf_ranked[0]["score"] > 0.85:
+            print("🔥 HIGH CONFIDENCE PDF → SKIP WEB + YT")
+
+            reranker = ResultReranker()
+            ranked = reranker.rerank(question, pdf_ranked, top_k=self.max_total_results)
+
+            log_retrieval(question, ranked)
+
+            return ranked[: self.max_total_results]
+
+        web_results, yt_results = [], []
+
+        if self.enable_parallel and self.executor:
+            futures = {
+                self.executor.submit(web_retrieve, question, 12): "web",
+                self.executor.submit(youtube_retrieve, question): "yt",
+            }
+
+            for future in as_completed(futures):
+                source = futures[future]
+                try:
+                    result = future.result(timeout=6)
+
+                    if source == "web":
+                        web_results = result or []
+                    elif source == "yt":
+                        yt_results = result or []
+
+                except Exception as e:
+                    print(f"{source} retrieval failed:", e)
+
+        else:
+            try:
+                web_results = web_retrieve(question, num_results=12)
+            except Exception as e:
+                print("web error:", e)
+
+            try:
+                yt_results = youtube_retrieve(question)
+            except Exception as e:
+                print("yt error:", e)
+
+        print("PDF:", len(pdf_results))
+        print("WEB:", len(web_results))
+        print("YT:", len(yt_results))
+
+        results = pdf_results + web_results + yt_results
 
         ranked = self._deduplicate_and_score(results)
 
@@ -61,20 +115,20 @@ class MultiQueryRetriever:
             ]
 
         reranker = ResultReranker()
-        ranked = reranker.rerank(question, ranked, top_k=5)
+        ranked = reranker.rerank(
+            question,
+            ranked,
+            top_k=self.max_total_results
+        )
 
-        return ranked[: self.max_total_results]
+        final_results = ranked
 
+        log_retrieval(question, final_results)
+
+        return final_results[: self.max_total_results]
 
     def _select_collections(self, mode: str):
-        if mode == "web":
-            return [
-                (c, name)
-                for c, name in zip(self.collections, self.collection_names)
-                if name == "rag_web"
-            ]
-        else:
-            return list(zip(self.collections, self.collection_names))
+        return list(zip(self.collections, self.collection_names))
 
 
     def _retrieve_parallel(self, queries, selected):
@@ -100,7 +154,6 @@ class MultiQueryRetriever:
     def _retrieve_single(self, query: str, priority: int, selected) -> List[Dict]:
 
         query_embedding = self.embedder.embed_query(query)
-
         all_results = []
 
         for collection, cname in selected:
@@ -118,15 +171,22 @@ class MultiQueryRetriever:
                 res["ids"][0],
             ):
                 similarity = 1.0 - dist
-
                 bm25 = keyword_score(query, doc)
                 final_score = 0.7 * similarity + 0.3 * bm25
+
+                metadata = meta or {}
+
+                if "file_name" not in metadata:
+                    metadata["file_name"] = "unknown.pdf"
+
+                if "url" not in metadata:
+                    metadata["url"] = f"file://{metadata.get('file_name', '')}"
 
                 all_results.append(
                     {
                         "id": cid,
                         "text": doc,
-                        "metadata": meta,
+                        "metadata": metadata,
                         "similarity": similarity,
                         "bm25": bm25,
                         "score": final_score,
@@ -144,6 +204,13 @@ class MultiQueryRetriever:
 
         for r in results:
             rid = r["id"]
+
+            if "pdf" in r.get("collection", ""):
+                r["score"] += 0.2
+            elif "web" in r.get("collection", ""):
+                r["score"] += 0.1
+            elif "youtube" in r.get("collection", ""):
+                r["score"] += 0.05
 
             if rid not in best_by_id or r["score"] > best_by_id[rid]["score"]:
                 best_by_id[rid] = r

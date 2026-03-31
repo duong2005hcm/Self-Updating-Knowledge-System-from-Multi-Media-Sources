@@ -1,31 +1,20 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from backend.app.rag.retrieval.retrieval import MultiQueryRetriever
-
 from backend.app.rag.agent.query_router import route_mode
-from backend.app.rag.agent.response_generator import (
-    generate_casual_answer,
-    generate_professional_answer,
-    generate_web_answer
-)
+from backend.app.rag.agent.agent_loop import agent_loop
+from backend.app.rag.agent.simple_rag import simple_rag
+from backend.app.rag.agent.response_generator import generate_casual_answer
 
-# MEMORY
 from backend.app.rag.memory.chat_memory import get_history, add_message
 
 router = APIRouter(tags=["RAG"])
 
-retriever = MultiQueryRetriever(
-    collection_names=["rag_pdf", "rag_web"],
-    top_k_per_query=3,
-    max_total_results=5,
-    enable_parallel=True
-)
-
 
 class AskRequest(BaseModel):
     question: str
-    session_id: str
+    user_id: str
+    conversation_id: str
 
 
 class AskResponse(BaseModel):
@@ -39,84 +28,37 @@ class AskResponse(BaseModel):
 def ask_rag(req: AskRequest):
 
     question = req.question
-    session_id = req.session_id
+    user_id = req.user_id
+    conversation_id = req.conversation_id
 
-    # LOAD MEMORY
-    history = get_history(session_id)
+    history = get_history(conversation_id)
 
-    # ROUTER AGENT
     try:
         route = route_mode(question)
     except:
-        route = {"mode": "professional", "confidence": 0.5}
+        route = {"mode": "simple"}
 
-    mode = route.get("mode", "professional")
-    confidence = route.get("confidence", 0.5)
+    mode = route.get("mode", "simple")
 
-    if confidence < 0.6:
-        mode = "professional"
+    print(f"[USER={user_id}] convo={conversation_id} | mode={mode}")
 
-    print(f"[ROUTER] mode={mode} | session={session_id}")
-
-    contexts = []
     answer = ""
-
 
     if mode == "casual":
         answer = generate_casual_answer(question, history)
 
-
-    elif mode == "professional":
-        contexts = retriever.retrieve(question, mode="professional")
-        contexts = contexts[:5]
-
-        answer = generate_professional_answer(
-            question,
-            contexts,
-            history
-        )
-
-
-    elif mode == "web":
-        contexts = retriever.retrieve(question, mode="web")
-
-        contexts = [
-            c for c in contexts
-            if "web" in c.get("collection", "")
-        ][:5]
-
-        answer = generate_web_answer(
-            question,
-            contexts,
-            history
-        )
-
+    elif mode == "simple":
+        answer = simple_rag(question, history)
 
     else:
-        contexts = retriever.retrieve(question, mode="professional")
+        answer = agent_loop(question, history)
 
-        answer = generate_professional_answer(
-            question,
-            contexts,
-            history
-        )
-
-
-    add_message(session_id, "user", question)
-    add_message(session_id, "assistant", answer)
-
+    add_message(conversation_id, "user", question)
+    add_message(conversation_id, "assistant", answer)
 
     return {
         "question": question,
         "mode": mode,
         "answer": answer,
-        "contexts": [
-            {
-                "text": c["text"],
-                "metadata": c.get("metadata", {}),
-                "score": c.get("score", 0),
-                "collection": c.get("collection", "")
-            }
-            for c in contexts
-        ]
+        "contexts": []  # optional
     }
