@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-
+from backend.app.api.user_upload import USER_TEMP_DATA
 from backend.app.rag.agent.query_router import route_mode
 from backend.app.rag.agent.agent_loop import agent_loop
 from backend.app.rag.agent.simple_rag import simple_rag
@@ -32,6 +32,18 @@ def ask_rag(req: AskRequest):
     conversation_id = req.conversation_id
 
     history = get_history(conversation_id)
+    
+    user_docs = USER_TEMP_DATA.get(conversation_id, [])
+    user_context = "\n\n".join(user_docs)
+
+    if user_context:
+        question = f"""
+User question:
+{question}
+
+User uploaded documents:
+{user_context[:3000]}
+"""
 
     try:
         route = route_mode(question)
@@ -53,8 +65,8 @@ def ask_rag(req: AskRequest):
     else:
         answer = agent_loop(question, history)
 
-    add_message(conversation_id, "user", question)
-    add_message(conversation_id, "assistant", answer)
+    add_message(conversation_id,user_id , "user", question)
+    add_message(conversation_id,user_id , "assistant", answer)
 
     return {
         "question": question,
