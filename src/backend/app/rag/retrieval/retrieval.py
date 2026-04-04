@@ -58,15 +58,15 @@ class MultiQueryRetriever:
 
         pdf_ranked = self._deduplicate_and_score(pdf_results)
 
-        if pdf_ranked and pdf_ranked[0]["score"] > 0.85:
-            print("🔥 HIGH CONFIDENCE PDF → SKIP WEB + YT")
+        # if pdf_ranked and pdf_ranked[0]["score"] > 0.85:
+        #     print("🔥 HIGH CONFIDENCE PDF → SKIP WEB + YT")
 
-            reranker = ResultReranker()
-            ranked = reranker.rerank(question, pdf_ranked, top_k=self.max_total_results)
+        #     reranker = ResultReranker()
+        #     ranked = reranker.rerank(question, pdf_ranked, top_k=self.max_total_results)
 
-            log_retrieval(question, ranked)
+        #     log_retrieval(question, ranked)
 
-            return ranked[: self.max_total_results]
+        #     return ranked[: self.max_total_results]
 
         web_results, yt_results = [], []
 
@@ -79,7 +79,7 @@ class MultiQueryRetriever:
             for future in as_completed(futures):
                 source = futures[future]
                 try:
-                    result = future.result(timeout=6)
+                    result = future.result(timeout=15)
 
                     if source == "web":
                         web_results = result or []

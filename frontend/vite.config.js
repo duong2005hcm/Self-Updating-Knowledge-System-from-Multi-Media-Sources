@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://self-updating-knowledge-system-from.onrender.com/",
+        target: "https://self-updating-knowledge-system-from.onrender.com",
         changeOrigin: true,
         secure: false,
       },

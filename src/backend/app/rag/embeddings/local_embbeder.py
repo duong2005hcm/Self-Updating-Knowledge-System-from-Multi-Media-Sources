@@ -13,7 +13,7 @@ class OptimizedLocalEmbedder:
         self.client = OpenAI()
 
         # dimension của model
-        self.dimension = 3072
+        self.dimension = 1536
 
     @lru_cache(maxsize=200)
     def _embed_query_cached(self, text: str) -> tuple:

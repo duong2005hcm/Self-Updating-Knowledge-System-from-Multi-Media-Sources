@@ -1,16 +1,29 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-function getSessionId() {
-  let sessionId = localStorage.getItem("session_id");
+// ====== ID helpers ======
+function getUserId() {
+  let userId = localStorage.getItem("user_id");
 
-  if (!sessionId) {
-    sessionId = "session_" + Math.random().toString(36).substring(2);
-    localStorage.setItem("session_id", sessionId);
+  if (!userId) {
+    userId = "user_" + Math.random().toString(36).substring(2);
+    localStorage.setItem("user_id", userId);
   }
 
-  return sessionId;
+  return userId;
 }
 
+function getConversationId() {
+  let convoId = localStorage.getItem("conversation_id");
+
+  if (!convoId) {
+    convoId = "convo_" + Math.random().toString(36).substring(2);
+    localStorage.setItem("conversation_id", convoId);
+  }
+
+  return convoId;
+}
+
+// ====== Health ======
 export async function checkHealth() {
   const res = await fetch(`${BASE_URL}/api/health`);
 
@@ -19,8 +32,10 @@ export async function checkHealth() {
   return res.json();
 }
 
+// ====== ASK RAG ======
 export async function askRAG(question) {
-  const session_id = getSessionId();
+  const user_id = getUserId();
+  const conversation_id = getConversationId();
 
   const res = await fetch(`${BASE_URL}/api/ask`, {
     method: "POST",
@@ -29,7 +44,8 @@ export async function askRAG(question) {
     },
     body: JSON.stringify({
       question,
-      session_id,
+      user_id,
+      conversation_id,
     }),
   });
 
@@ -47,12 +63,16 @@ export async function askRAG(question) {
   };
 }
 
+// ====== ADMIN INGEST PDF ======
 export async function ingestDoc(file) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(`${BASE_URL}/api/ingest/pdf`, {
+  const res = await fetch(`${BASE_URL}/api/admin/ingest/pdf`, {
     method: "POST",
+    headers: {
+      Authorization: "Bearer super_secret_admin",
+    },
     body: formData,
   });
 
@@ -64,11 +84,13 @@ export async function ingestDoc(file) {
   return res.json();
 }
 
+// ====== ADMIN INGEST WEB ======
 export async function ingestWeb(url) {
-  const res = await fetch(`${BASE_URL}/api/ingest/web`, {
+  const res = await fetch(`${BASE_URL}/api/admin/ingest/web`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer super_secret_admin",
     },
     body: JSON.stringify({ url }),
   });
@@ -76,6 +98,29 @@ export async function ingestWeb(url) {
   if (!res.ok) {
     const err = await res.text();
     throw new Error("Ingest web failed: " + err);
+  }
+
+  return res.json();
+}
+
+// ====== USER UPLOAD PDF (temporary context) ======
+export async function uploadUserPDF(file) {
+  const formData = new FormData();
+  const conversation_id = getConversationId();
+
+  formData.append("file", file);
+
+  const res = await fetch(
+    `${BASE_URL}/api/user/upload/pdf?conversation_id=${conversation_id}`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error("Upload user PDF failed: " + err);
   }
 
   return res.json();

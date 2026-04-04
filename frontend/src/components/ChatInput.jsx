@@ -8,18 +8,15 @@ export default function ChatInput({ setMessages }) {
 
   const handleSend = async () => {
     const question = text.trim();
-    if (!question) return;
+    if (!question || loading) return;
 
-    const userId =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const msgId = `${Date.now()}`;
+    const pendingId = `${msgId}-pending`;
 
-    const pendingId = `${userId}-pending`;
-
+    // add user + pending assistant
     setMessages((prev) => [
       ...prev,
-      { id: userId, role: "user", content: question },
+      { id: msgId, role: "user", content: question },
       {
         id: pendingId,
         role: "assistant",
@@ -31,27 +28,33 @@ export default function ChatInput({ setMessages }) {
     setLoading(true);
 
     try {
-      console.log(" CALLING API /api/ask");
+      console.log("🚀 CALLING API /api/ask");
 
       const res = await askRAG(question);
-      const answer = res?.answer || "Không có câu trả lời";
 
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === pendingId
-            ? { ...m, content: answer, pending: false }
-            : m
-        )
-      );
-    } catch (err) {
-      console.error(" API ERROR:", err);
+      const answer = res?.answer || "Không có câu trả lời";
+      const mode = res?.mode || "unknown";
 
       setMessages((prev) =>
         prev.map((m) =>
           m.id === pendingId
             ? {
                 ...m,
-                content: "Lỗi gọi RAG backend",
+                content: `${answer}\n\n🧠 Mode: ${mode}`,
+                pending: false,
+              }
+            : m
+        )
+      );
+    } catch (err) {
+      console.error("❌ API ERROR:", err);
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === pendingId
+            ? {
+                ...m,
+                content: " Lỗi gọi RAG backend",
                 pending: false,
                 error: true,
               }
@@ -72,8 +75,9 @@ export default function ChatInput({ setMessages }) {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
+        disabled={loading}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
+          if (e.key === "Enter" && !e.shiftKey && !loading) {
             e.preventDefault();
             handleSend();
           }
