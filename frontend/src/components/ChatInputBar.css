@@ -1,0 +1,358 @@
+/* ============================================
+   ChatInputBar — ChatGPT-style Pill Input
+   ============================================ */
+
+/* ─── Area container (centers the pill) ─── */
+.ci-area {
+  padding: 12px 24px 16px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ci-pill {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: 6px;
+  border-radius: 26px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ci-pill.has-files {
+  border-radius: 20px;
+}
+
+.ci-pill:focus-within {
+  border-color: #a5b4fc;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.06);
+  background: #ffffff;
+}
+
+/* ─── "+" Button ─── */
+.ci-plus-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ci-plus-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid #d1d5db;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.ci-plus-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.ci-plus-btn.is-open {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+  transform: rotate(45deg);
+}
+
+/* ─── Textarea ─── */
+.ci-textarea {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  min-height: 22px;
+  max-height: 150px;
+  color: #0f172a;
+  background: transparent;
+}
+
+.ci-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.ci-textarea:disabled {
+  opacity: 0.6;
+}
+
+/* ─── Content column (tags + textarea) ─── */
+.ci-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── File Tags ─── */
+.ci-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 8px 4px;
+}
+
+.ci-file-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: #374151;
+  max-width: 200px;
+  transition: background 0.12s ease;
+  animation: ciTagIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ciTagIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ci-file-tag:hover {
+  background: #e5e7eb;
+}
+
+.ci-file-tag-icon {
+  font-size: 14px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ci-file-tag-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.ci-file-tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.12s ease;
+  padding: 0;
+}
+
+.ci-file-tag-remove:hover {
+  background: #d1d5db;
+  color: #374151;
+}
+
+/* ─── Send Button ─── */
+.ci-send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #d1d5db;
+  color: #ffffff;
+  font-size: 15px;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.ci-send-btn.is-ready {
+  background: #0f172a;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+}
+
+.ci-send-btn.is-ready:hover {
+  background: #1e293b;
+  transform: scale(1.05);
+}
+
+.ci-send-btn.is-ready:active {
+  transform: scale(0.95);
+}
+
+.ci-send-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Hint text ─── */
+.ci-hint {
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* ============================================
+   DROPDOWN MENU
+   ============================================ */
+.ci-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  padding: 6px;
+  z-index: 50;
+  animation: ciMenuIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ciMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ─── Menu Item ─── */
+.ci-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #374151;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s ease;
+}
+
+.ci-menu-item:hover {
+  background: #f3f4f6;
+}
+
+.ci-menu-item.is-active {
+  background: #f1f5f9;
+}
+
+.ci-menu-icon {
+  font-size: 16px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.ci-menu-item:hover .ci-menu-icon {
+  color: #374151;
+}
+
+/* ─── Divider ─── */
+.ci-menu-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 4px 8px;
+}
+
+/* ─── "More" + Chevron ─── */
+.ci-menu-item--more {
+  position: relative;
+}
+
+.ci-menu-chevron {
+  margin-left: auto;
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+/* ─── Submenu ─── */
+.ci-menu-more-wrap {
+  position: relative;
+}
+
+.ci-submenu {
+  position: absolute;
+  left: calc(100% + 6px);
+  bottom: 0;
+  min-width: 190px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  padding: 6px;
+  z-index: 51;
+  animation: ciMenuIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 640px) {
+  .ci-area {
+    padding: 10px 12px 14px;
+  }
+
+  .ci-pill {
+    border-radius: 22px;
+    padding: 5px;
+  }
+
+  .ci-menu {
+    min-width: 200px;
+  }
+
+  .ci-submenu {
+    left: 0;
+    bottom: calc(100% + 4px);
+  }
+}
