@@ -72,14 +72,14 @@ class MultiQueryRetriever:
 
         if self.enable_parallel and self.executor:
             futures = {
-                self.executor.submit(web_retrieve, question, 12): "web",
+                self.executor.submit(web_retrieve, question, 6): "web",
                 self.executor.submit(youtube_retrieve, question): "yt",
             }
 
             for future in as_completed(futures):
                 source = futures[future]
                 try:
-                    result = future.result(timeout=15)
+                    result = future.result(timeout=10)
 
                     if source == "web":
                         web_results = result or []
@@ -91,7 +91,7 @@ class MultiQueryRetriever:
 
         else:
             try:
-                web_results = web_retrieve(question, num_results=12)
+                web_results = web_retrieve(question, num_results=6)
             except Exception as e:
                 print("web error:", e)
 
