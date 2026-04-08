@@ -1,6 +1,7 @@
 from typing import List, Dict
 from datetime import datetime, timezone
 
+from firebase_admin import firestore
 from backend.app.rag.memory.firebase_init import db
 
 MAX_HISTORY = 6
@@ -20,11 +21,12 @@ def get_history(conversation_id: str) -> List[Dict]:
 
     messages_ref = (
         convo_ref.collection("messages")
-        .order_by("timestamp")
+        .order_by("timestamp", direction=firestore.Query.DESCENDING)
         .limit(MAX_HISTORY)
     )
 
     messages = [m.to_dict() for m in messages_ref.stream()]
+    messages.reverse()
 
     result = []
 

@@ -1,7 +1,7 @@
-from openai import OpenAI
 import json
+from backend.app.config.openai_factory import get_openai_client
 
-client = OpenAI()
+client = get_openai_client()
 
 SYSTEM_PROMPT = """
 You are an AI agent.

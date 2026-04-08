@@ -1,3 +1,5 @@
+from typing import AsyncGenerator
+
 from backend.app.rag.agent.planner import plan_step
 from backend.app.rag.agent.response_generator import generate_professional_answer
 from backend.app.rag.retrieval.retrieval import multi_query_retrieve
@@ -21,7 +23,7 @@ def build_observation(results):
     return "\n".join(obs)
 
 
-def agent_loop(question, history):
+def agent_loop(question: str, history: list) -> AsyncGenerator[str, None]:
 
     all_contexts = []
     observation = None

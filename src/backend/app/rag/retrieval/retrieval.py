@@ -1,8 +1,7 @@
 from typing import List, Dict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from backend.app.rag.embeddings.local_embbeder import OptimizedLocalEmbedder
-from backend.app.client.database import initialize_chroma_client
+from backend.app.chroma_manager import get_chroma_manager
 
 from backend.app.rag.retrieval.multi_query import generate_multi_queries
 from backend.app.rag.retrieval.reranker import ResultReranker
@@ -24,8 +23,9 @@ class MultiQueryRetriever:
         enable_parallel: bool = True,
         max_workers: int = 4,
     ):
-        self.embedder = OptimizedLocalEmbedder()
-        self.client = initialize_chroma_client()
+        manager = get_chroma_manager()
+        self.embedder = manager.embedder
+        self.client = manager.client
 
         if collection_names is None:
             collection_names = ["rag_pdf"]
@@ -58,21 +58,21 @@ class MultiQueryRetriever:
 
         pdf_ranked = self._deduplicate_and_score(pdf_results)
 
-        # if pdf_ranked and pdf_ranked[0]["score"] > 0.85:
-        #     print("🔥 HIGH CONFIDENCE PDF → SKIP WEB + YT")
+        if pdf_ranked and pdf_ranked[0]["score"] > 0.75:
+            print("🔥 HIGH CONFIDENCE PDF → SKIP WEB + YT")
 
-        #     reranker = ResultReranker()
-        #     ranked = reranker.rerank(question, pdf_ranked, top_k=self.max_total_results)
+            reranker = ResultReranker()
+            ranked = reranker.rerank(question, pdf_ranked, top_k=self.max_total_results)
 
-        #     log_retrieval(question, ranked)
+            log_retrieval(question, ranked)
 
-        #     return ranked[: self.max_total_results]
+            return ranked[: self.max_total_results]
 
         web_results, yt_results = [], []
 
         if self.enable_parallel and self.executor:
             futures = {
-                self.executor.submit(web_retrieve, question, 6): "web",
+                self.executor.submit(web_retrieve, question, 3): "web",
                 self.executor.submit(youtube_retrieve, question): "yt",
             }
 
@@ -91,7 +91,7 @@ class MultiQueryRetriever:
 
         else:
             try:
-                web_results = web_retrieve(question, num_results=6)
+                web_results = web_retrieve(question, num_results=3)
             except Exception as e:
                 print("web error:", e)
 

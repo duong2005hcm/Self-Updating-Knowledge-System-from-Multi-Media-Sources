@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Header
+from fastapi import APIRouter, UploadFile, File, Depends
 from pydantic import BaseModel
 import os, uuid, time
 
@@ -9,27 +9,22 @@ from backend.app.rag.chunking.web.web_classifiers import classify_web
 from backend.app.rag.chunking.web.filter_news import crawl_article_links_optimized
 from backend.app.rag.chunking.web.fetch_web import fetch_html
 from backend.app.rag.chunking.web.web_chunker import WebChunker
+from backend.app.api.dependencies.admin_auth import verify_admin_token
 
-router = APIRouter(prefix="/admin", tags=["Admin Ingest"])
-
-ADMIN_TOKEN = "super_secret_admin"
+router = APIRouter(
+    prefix="/admin",
+    tags=["Admin Ingest"],
+    dependencies=[Depends(verify_admin_token)],
+)
 
 UPLOAD_DIR = "data/uploads/pdf"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-def check_admin(auth):
-    if auth != f"Bearer {ADMIN_TOKEN}":
-        raise HTTPException(403, "Admin only")
-
-
 @router.post("/ingest/pdf")
 async def ingest_pdf(
-    file: UploadFile = File(...),
-    authorization: str = Header(None)
+    file: UploadFile = File(...)
 ):
-    check_admin(authorization)
-
     file_bytes = await file.read()
 
     file_id = str(uuid.uuid4())
@@ -54,8 +49,7 @@ class WebIngestRequest(BaseModel):
 
 
 @router.post("/ingest/web")
-def ingest_web(req: WebIngestRequest, authorization: str = Header(None)):
-    check_admin(authorization)
+def ingest_web(req: WebIngestRequest):
 
     url = req.url
     web_type = classify_web(url)

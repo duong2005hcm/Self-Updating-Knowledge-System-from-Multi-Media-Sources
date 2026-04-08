@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from backend.app.rag.chunking.web.web_classifiers import classify_web
@@ -6,8 +6,13 @@ from backend.app.rag.chunking.web.filter_news import crawl_article_links_optimiz
 from backend.app.rag.chunking.web.fetch_web import fetch_html
 from backend.app.rag.chunking.web.web_chunker import WebChunker
 from backend.app.rag.ingestion.embedding_store import embed_and_store_chunks
+from backend.app.api.dependencies.admin_auth import verify_admin_token
 
-router = APIRouter(prefix="/ingest", tags=["Ingest"])
+router = APIRouter(
+    prefix="/ingest",
+    tags=["Ingest"],
+    dependencies=[Depends(verify_admin_token)],
+)
 
 
 class WebIngestRequest(BaseModel):

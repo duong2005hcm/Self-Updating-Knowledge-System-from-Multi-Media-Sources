@@ -1,10 +1,10 @@
-from openai import OpenAI
 import json
 from dotenv import load_dotenv
+from backend.app.config.openai_factory import get_openai_client
 
 load_dotenv()
 
-client = OpenAI()
+client = get_openai_client()
 
 def route_mode(question: str):
 

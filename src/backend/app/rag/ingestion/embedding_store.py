@@ -2,9 +2,9 @@ import json
 import uuid
 import hashlib
 from datetime import datetime, timezone
+from typing import Optional
 
-from backend.app.rag.embeddings.local_embbeder import OptimizedLocalEmbedder
-from backend.app.client.database import initialize_chroma_client
+from backend.app.chroma_manager import get_chroma_manager
 
 
 BATCH_SIZE = 32
@@ -21,7 +21,8 @@ def compute_file_hash_from_chunks(chunks: list) -> str:
 
 def embed_and_store_chunks(
     chunks_json_path: str,
-    allow_duplicates: bool = False
+    allow_duplicates: bool = False,
+    data_type: Optional[str] = None
 ):
 
     with open(chunks_json_path, "r", encoding="utf-8") as f:
@@ -37,22 +38,23 @@ def embed_and_store_chunks(
     grouped_by_type = {}
 
     for c in chunks:
-        data_type = c.get("data_type", "unknown")
+        chunk_type = data_type or c.get("data_type", "unknown")
 
-        if data_type not in grouped_by_type:
-            grouped_by_type[data_type] = []
+        if chunk_type not in grouped_by_type:
+            grouped_by_type[chunk_type] = []
 
-        grouped_by_type[data_type].append(c)
+        grouped_by_type[chunk_type].append(c)
 
-    embedder = OptimizedLocalEmbedder()
-    client = initialize_chroma_client()
+    manager = get_chroma_manager()
+    embedder = manager.embedder
+    client = manager.client
 
     total_inserted = 0
 
 
-    for data_type, items in grouped_by_type.items():
+    for chunk_type, items in grouped_by_type.items():
 
-        collection_name = f"rag_{data_type}"
+        collection_name = f"rag_{chunk_type}"
         collection = client.get_or_create_collection(collection_name)
 
         if not allow_duplicates:
@@ -72,6 +74,7 @@ def embed_and_store_chunks(
                 normalized_text = normalize_text(c["text"])
 
                 metadata = {k: v for k, v in c.items() if k != "text"}
+                metadata["data_type"] = chunk_type
 
                 metadata.update({
                     "file_hash": file_hash,
@@ -85,7 +88,7 @@ def embed_and_store_chunks(
                 deterministic_id = str(
                     uuid.uuid5(
                         uuid.NAMESPACE_DNS,
-                        f"{data_type}:{c.get('source','')}:{normalized_text}"
+                        f"{chunk_type}:{c.get('source','')}:{normalized_text}"
                     )
                 )
 

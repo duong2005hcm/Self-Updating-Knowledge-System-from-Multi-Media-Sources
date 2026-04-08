@@ -1,6 +1,10 @@
-from openai import OpenAI
+import logging
+from typing import AsyncGenerator
 
-client = OpenAI()
+from backend.app.config.openai_factory import get_openai_client
+
+client = get_openai_client()
+logger = logging.getLogger(__name__)
 
 
 def build_messages(system_prompt: str, question: str, history: list):
@@ -49,7 +53,11 @@ def generate_casual_answer(question: str, history: list):
     ).choices[0].message.content
 
 
-def generate_professional_answer(question: str, contexts: list, history: list):
+async def generate_professional_answer(
+    question: str,
+    contexts: list,
+    history: list
+) -> AsyncGenerator[str, None]:
 
     context_text = "\n\n".join([
     f"[{i}] {c['text']} (source: {c['metadata'].get('url', '')})"
@@ -74,10 +82,23 @@ def generate_professional_answer(question: str, contexts: list, history: list):
         history=history
     )
 
-    return client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=messages
-    ).choices[0].message.content
+    try:
+        stream = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=messages,
+            stream=True
+        )
+
+        for chunk in stream:
+            delta = ""
+            if chunk.choices and chunk.choices[0].delta:
+                delta = chunk.choices[0].delta.content or ""
+
+            if delta:
+                yield delta
+    except Exception as e:
+        logger.exception("Streaming professional answer failed: %s", str(e))
+        raise
 
 
 def generate_web_answer(question: str, contexts: list, history: list):

@@ -1,7 +1,7 @@
-from openai import OpenAI
 from typing import List
+from backend.app.config.openai_factory import get_openai_client
 
-client = OpenAI()
+client = get_openai_client()
 
 def generate_multi_queries(question: str, max_queries: int = 3) -> List[str]:
     """

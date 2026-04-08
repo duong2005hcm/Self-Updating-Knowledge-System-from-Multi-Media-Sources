@@ -1,6 +1,7 @@
 from typing import List
 from functools import lru_cache
-from openai import OpenAI
+
+from backend.app.config.openai_factory import get_openai_client
 
 
 class OptimizedLocalEmbedder:
@@ -10,7 +11,7 @@ class OptimizedLocalEmbedder:
 
     def __init__(self, model_name: str = "text-embedding-3-small"):
         self.model_name = model_name
-        self.client = OpenAI()
+        self.client = get_openai_client()
 
         # dimension của model
         self.dimension = 1536

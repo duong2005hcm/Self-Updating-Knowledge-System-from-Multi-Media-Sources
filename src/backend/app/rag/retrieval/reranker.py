@@ -1,8 +1,9 @@
 from typing import List, Dict
-from openai import OpenAI
 import re
 
-client = OpenAI()
+from backend.app.config.openai_factory import get_openai_client
+
+client = get_openai_client()
 
 
 class ResultReranker:

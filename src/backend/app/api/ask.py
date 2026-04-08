@@ -1,14 +1,25 @@
-from fastapi import APIRouter
+import asyncio
+import json
+import logging
+from typing import Any, AsyncGenerator
+
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from backend.app.api.user_upload import USER_TEMP_DATA
+from backend.app.api.user_upload import get_temp_upload_texts
 from backend.app.rag.agent.query_router import route_mode
 from backend.app.rag.agent.agent_loop import agent_loop
 from backend.app.rag.agent.simple_rag import simple_rag
 from backend.app.rag.agent.response_generator import generate_casual_answer
 
-from backend.app.rag.memory.chat_memory import get_history, add_message
+from backend.app.rag.memory.chat_memory import (
+    get_history,
+    add_message,
+    validate_conversation,
+)
 
 router = APIRouter(tags=["RAG"])
+logger = logging.getLogger(__name__)
 
 
 class AskRequest(BaseModel):
@@ -24,20 +35,36 @@ class AskResponse(BaseModel):
     contexts: list
 
 
-@router.post("/ask", response_model=AskResponse)
-def ask_rag(req: AskRequest):
+def _to_sse(event: str, data: Any) -> str:
+    payload = json.dumps(data, ensure_ascii=False)
+    return f"event: {event}\ndata: {payload}\n\n"
+
+
+@router.post("/ask")
+async def ask_rag(req: AskRequest):
 
     question = req.question
     user_id = req.user_id
     conversation_id = req.conversation_id
 
-    history = get_history(conversation_id)
-    
-    user_docs = USER_TEMP_DATA.get(conversation_id, [])
-    user_context = "\n\n".join(user_docs)
+    try:
+        await asyncio.to_thread(validate_conversation, conversation_id, user_id)
+    except Exception as exc:
+        logger.exception(
+            "Conversation validation failed: user_id=%s conversation_id=%s",
+            user_id,
+            conversation_id,
+        )
+        raise HTTPException(status_code=403, detail=str(exc))
 
-    if user_context:
-        question = f"""
+    try:
+        history = await asyncio.to_thread(get_history, conversation_id)
+        
+        user_docs = await asyncio.to_thread(get_temp_upload_texts, conversation_id)
+        user_context = "\n\n".join(user_docs)
+
+        if user_context:
+            question = f"""
 User question:
 {question}
 
@@ -45,32 +72,78 @@ User uploaded documents:
 {user_context[:3000]}
 """
 
-    try:
-        route = route_mode(question)
-    except:
-        route = {"mode": "simple"}
+        try:
+            route = await asyncio.to_thread(route_mode, question)
+        except Exception as e:
+            logger.exception(
+                "Route mode failed (%s), fallback to simple mode: user_id=%s conversation_id=%s",
+                str(e),
+                user_id,
+                conversation_id,
+            )
+            route = {"mode": "simple"}
 
-    mode = route.get("mode", "simple")
+        mode = route.get("mode", "simple")
 
-    print(f"[USER={user_id}] convo={conversation_id} | mode={mode}")
+        logger.info("[USER=%s] convo=%s | mode=%s", user_id, conversation_id, mode)
 
-    answer = ""
+        answer_stream = None
+        fallback_answer = None
 
-    if mode == "casual":
-        answer = generate_casual_answer(question, history)
+        if mode == "casual":
+            fallback_answer = await asyncio.to_thread(generate_casual_answer, question, history)
+        elif mode == "simple":
+            answer_stream = await asyncio.to_thread(simple_rag, question, history)
+        else:
+            answer_stream = await asyncio.to_thread(agent_loop, question, history)
 
-    elif mode == "simple":
-        answer = simple_rag(question, history)
+        async def event_generator() -> AsyncGenerator[str, None]:
+            answer_parts = []
 
-    else:
-        answer = agent_loop(question, history)
+            try:
+                await asyncio.to_thread(add_message, conversation_id, user_id, "user", question)
+                yield _to_sse("meta", {"mode": mode, "conversation_id": conversation_id})
 
-    add_message(conversation_id,user_id , "user", question)
-    add_message(conversation_id,user_id , "assistant", answer)
+                if answer_stream is not None:
+                    async for chunk in answer_stream:
+                        if not chunk:
+                            continue
+                        answer_parts.append(chunk)
+                        yield _to_sse("token", {"text": chunk})
+                elif fallback_answer:
+                    answer_parts.append(fallback_answer)
+                    yield _to_sse("token", {"text": fallback_answer})
 
-    return {
-        "question": question,
-        "mode": mode,
-        "answer": answer,
-        "contexts": []  # optional
-    }
+                final_answer = "".join(answer_parts).strip()
+                await asyncio.to_thread(add_message, conversation_id, user_id, "assistant", final_answer)
+                yield _to_sse("done", {"mode": mode})
+            except Exception as e:
+                logger.exception(
+                    "SSE stream failed: user_id=%s conversation_id=%s error=%s",
+                    user_id,
+                    conversation_id,
+                    str(e),
+                )
+                yield _to_sse("error", {"message": str(e)})
+
+        return StreamingResponse(
+            event_generator(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(
+            "Ask endpoint failed: user_id=%s conversation_id=%s",
+            user_id,
+            conversation_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process question: {str(e)}"
+        )

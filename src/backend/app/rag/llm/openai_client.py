@@ -1,7 +1,6 @@
-from openai import OpenAI
-import os
+from backend.app.config.openai_factory import get_openai_client
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = get_openai_client()
 
 def generate_answer(prompt: str, model: str = "gpt-4o-mini") -> str:
     response = client.chat.completions.create(

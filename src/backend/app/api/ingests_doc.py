@@ -1,13 +1,19 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 import os
 import uuid
-import traceback
 import time
+import logging
 
 from backend.app.rag.chunking.pdf.pdf_chunker import process_single_pdf
 from backend.app.rag.ingestion.embedding_store import embed_and_store_chunks
+from backend.app.api.dependencies.admin_auth import verify_admin_token
 
-router = APIRouter(prefix="/ingest", tags=["Ingest"])
+router = APIRouter(
+    prefix="/ingest",
+    tags=["Ingest"],
+    dependencies=[Depends(verify_admin_token)],
+)
+logger = logging.getLogger(__name__)
 
 UPLOAD_DIR = "data/uploads/pdf"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -49,7 +55,7 @@ async def ingest_pdf(file: UploadFile = File(...)):
         with open(pdf_path, "wb") as f:
             f.write(file_bytes)
 
-        print(f"[INGEST] Saved: {pdf_path} ({file_size_mb:.2f}MB)")
+        logger.info("[INGEST] Saved: %s (%.2fMB)", pdf_path, file_size_mb)
 
 
         chunk_start = time.time()
@@ -59,7 +65,7 @@ async def ingest_pdf(file: UploadFile = File(...)):
         if not chunks_json_path or not os.path.exists(chunks_json_path):
             raise Exception("Chunk JSON file was not created")
 
-        print(f"[INGEST] Chunk done in {time.time() - chunk_start:.2f}s")
+        logger.info("[INGEST] Chunk done in %.2fs", time.time() - chunk_start)
 
 
         embed_start = time.time()
@@ -69,16 +75,20 @@ async def ingest_pdf(file: UploadFile = File(...)):
             allow_duplicates=False
         )
 
-        print(f"[INGEST] Embed done in {time.time() - embed_start:.2f}s")
+        logger.info("[INGEST] Embed done in %.2fs", time.time() - embed_start)
 
         total_time = time.time() - start_time
 
-        print(f"[INGEST] TOTAL TIME: {total_time:.2f}s")
+        logger.info("[INGEST] TOTAL TIME: %.2fs", total_time)
 
         try:
             os.remove(chunks_json_path)
-        except:
-            pass
+        except Exception as e:
+            logger.exception(
+                "Failed to remove temporary chunk file '%s': %s",
+                chunks_json_path,
+                str(e),
+            )
 
         return {
             "status": "ok",
@@ -92,8 +102,7 @@ async def ingest_pdf(file: UploadFile = File(...)):
         raise
 
     except Exception as e:
-        traceback.print_exc()
-
+        logger.exception("Ingest PDF pipeline failed: %s", str(e))
         raise HTTPException(
             status_code=500,
             detail=f"Ingest pipeline failed: {str(e)}"

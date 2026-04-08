@@ -2,10 +2,13 @@ import os
 import requests
 import asyncio
 import re
+import logging
+from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
@@ -42,7 +45,7 @@ def search_youtube(query, num_results=2):
         return video_ids
 
     except Exception as e:
-        print("YT search error:", e)
+        logger.exception("YT search error for query='%s': %s", query, str(e))
         return []
 
 
@@ -52,7 +55,8 @@ def fetch_transcript(video_id):
             return YouTubeTranscriptApi.get_transcript(video_id, languages=["vi"])
         except NoTranscriptFound:
             return YouTubeTranscriptApi.get_transcript(video_id, languages=["en"])
-    except Exception:
+    except Exception as e:
+        logger.exception("Fetch transcript failed for video_id=%s: %s", video_id, str(e))
         return None
 
 
@@ -129,15 +133,24 @@ def jina_fallback(video_id):
             "score": 0.3,
             "collection": "youtube"
         }]
-    except:
+    except Exception as e:
+        logger.exception("Jina fallback failed for video_id=%s: %s", video_id, str(e))
         return []
 
 
-async def fetch_all(video_ids):
-    loop = asyncio.get_event_loop()
+def _fetch_transcripts_sync(video_ids):
+    if not video_ids:
+        return []
 
+    worker_count = max(1, min(len(video_ids), 4))
+
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        return list(executor.map(fetch_transcript, video_ids))
+
+
+async def _fetch_transcripts_async(video_ids):
     tasks = [
-        loop.run_in_executor(None, fetch_transcript, vid)
+        asyncio.to_thread(fetch_transcript, vid)
         for vid in video_ids
     ]
 
@@ -154,7 +167,7 @@ def youtube_retrieve(query, num_results=2):
     if not video_ids:
         return []
 
-    transcripts = asyncio.run(fetch_all(video_ids))
+    transcripts = _fetch_transcripts_sync(video_ids)
 
     results = []
 
@@ -164,5 +177,30 @@ def youtube_retrieve(query, num_results=2):
             results.extend(build_chunks(transcript, vid))
         else:
             results.extend(jina_fallback(vid))
+
+    return results
+
+
+async def youtube_retrieve_async(query, num_results=2):
+
+    if not should_use_youtube(query):
+        return []
+
+    video_ids = await asyncio.to_thread(search_youtube, query, num_results)
+
+    if not video_ids:
+        return []
+
+    transcripts = await _fetch_transcripts_async(video_ids)
+
+    results = []
+
+    for vid, transcript in zip(video_ids, transcripts):
+
+        if transcript:
+            results.extend(build_chunks(transcript, vid))
+        else:
+            fallback_chunks = await asyncio.to_thread(jina_fallback, vid)
+            results.extend(fallback_chunks)
 
     return results

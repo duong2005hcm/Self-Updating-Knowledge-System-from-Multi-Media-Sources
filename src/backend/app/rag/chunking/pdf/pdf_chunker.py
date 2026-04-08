@@ -1,24 +1,51 @@
-import os
 import json
-from typing import List, Dict, Tuple
+import logging
+import os
+from datetime import datetime, timezone
+from typing import Dict, List, Optional, Tuple
+
 from pypdf import PdfReader
 
-from .document_profiler import profile_pdf
-from .document_classifier import classify_document
 from .chunk_strategy import select_chunk_config
+from .document_classifier import classify_document
 
 RAW_DATA_DIR = "data/raw"
 PROCESSED_DATA_DIR = "data/processed"
 
+logger = logging.getLogger(__name__)
 
-def load_pdf_pages_with_offsets(pdf_path: str) -> Tuple[str, List[Dict]]:
-    reader = PdfReader(pdf_path)
 
+def format_document_name(file_name: str) -> str:
+    """Convert raw file names into display-friendly titles."""
+    base_name = os.path.splitext(os.path.basename(file_name))[0]
+    normalized = base_name.replace("_", " ").replace("-", " ")
+    return " ".join(word.capitalize() for word in normalized.split())
+
+
+def profile_pdf(reader: PdfReader) -> Dict[str, float]:
+    total_pages = len(reader.pages)
+    total_chars = 0
+
+    for page in reader.pages:
+        text = page.extract_text()
+        if text:
+            total_chars += len(text)
+
+    chars_per_page = total_chars / max(total_pages, 1)
+
+    return {
+        "pages": total_pages,
+        "total_chars": total_chars,
+        "chars_per_page": chars_per_page,
+    }
+
+
+def load_pdf_pages_with_offsets(reader: PdfReader) -> Tuple[str, List[Dict[str, int]]]:
     full_text = ""
-    page_map = []
+    page_map: List[Dict[str, int]] = []
     current_offset = 0
 
-    for i, page in enumerate(reader.pages):
+    for index, page in enumerate(reader.pages):
         page_text = page.extract_text()
 
         if not page_text:
@@ -28,17 +55,23 @@ def load_pdf_pages_with_offsets(pdf_path: str) -> Tuple[str, List[Dict]]:
         full_text += page_text + "\n"
         current_offset += len(page_text) + 1
 
-        page_map.append({
-            "page_number": i + 1,
-            "start": start_offset,
-            "end": current_offset
-        })
+        page_map.append(
+            {
+                "page_number": index + 1,
+                "start": start_offset,
+                "end": current_offset,
+            }
+        )
 
     return full_text.strip(), page_map
 
 
-def get_pages_for_chunk(chunk_start, chunk_end, page_map):
-    pages = []
+def get_pages_for_chunk(
+    chunk_start: int,
+    chunk_end: int,
+    page_map: List[Dict[str, int]],
+) -> Tuple[Optional[int], Optional[int], List[int]]:
+    pages: List[int] = []
 
     for page in page_map:
         if not (chunk_end < page["start"] or chunk_start > page["end"]):
@@ -50,40 +83,38 @@ def get_pages_for_chunk(chunk_start, chunk_end, page_map):
     return pages[0], pages[-1], pages
 
 
-def chunk_text_page_aware(full_text: str,
-                        page_map: List[Dict],
-                        chunk_size: int,
-                        chunk_overlap: int) -> List[Dict]:
-
+def chunk_text_page_aware(
+    full_text: str,
+    page_map: List[Dict[str, int]],
+    chunk_size: int,
+    chunk_overlap: int,
+) -> List[Dict[str, object]]:
     if chunk_size <= chunk_overlap:
-        raise ValueError("chunk_size phải lớn hơn chunk_overlap")
+        raise ValueError("chunk_size must be greater than chunk_overlap")
 
-    chunks = []
+    chunks: List[Dict[str, object]] = []
     start = 0
     text_length = len(full_text)
     chunk_index = 0
 
     while start < text_length:
-
         end = min(start + chunk_size, text_length)
         chunk_text_part = full_text[start:end].strip()
 
         if chunk_text_part:
-            page_start, page_end, page_numbers = get_pages_for_chunk(
-                start, end, page_map
+            page_start, page_end, page_numbers = get_pages_for_chunk(start, end, page_map)
+
+            chunks.append(
+                {
+                    "chunk_index": chunk_index,
+                    "chunk_start_char": start,
+                    "chunk_end_char": end,
+                    "page_start": page_start,
+                    "page_end": page_end,
+                    "page_numbers": ",".join(map(str, page_numbers)) if page_numbers else "",
+                    "text": chunk_text_part,
+                }
             )
-
-            chunks.append({
-                "chunk_index": chunk_index,
-                "chunk_start_char": start,
-                "chunk_end_char": end,
-                "page_start": page_start,
-                "page_end": page_end,
-
-                "page_numbers": ",".join(map(str, page_numbers)) if page_numbers else "",
-
-                "text": chunk_text_part
-            })
 
             chunk_index += 1
 
@@ -101,59 +132,64 @@ def chunk_text_page_aware(full_text: str,
 
 
 def process_single_pdf(pdf_path: str) -> str:
+    try:
+        os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
+        logger.info("Processing PDF: %s", pdf_path)
 
-    os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
+        reader = PdfReader(pdf_path)
+        profile = profile_pdf(reader)
+        full_text, page_map = load_pdf_pages_with_offsets(reader)
 
-    print(f"\n Processing: {pdf_path}")
+        if not full_text.strip():
+            raise ValueError("PDF has no extractable text")
 
-    profile = profile_pdf(pdf_path)
-    full_text, page_map = load_pdf_pages_with_offsets(pdf_path)
+        doc_type = classify_document(profile, full_text[:2000])
 
-    if not full_text.strip():
-        raise ValueError("PDF không có text")
+        config = select_chunk_config(doc_type)
+        chunk_size = config["chunk_size"]
+        overlap = config["overlap"]
+        created_at = datetime.now(timezone.utc).isoformat()
 
-    doc_type = classify_document(profile, full_text[:2000])
+        source_file_name = os.path.basename(pdf_path)
+        document_name = format_document_name(source_file_name)
 
-    config = select_chunk_config(doc_type)
-    chunk_size = config["chunk_size"]
-    overlap = config["overlap"]
+        logger.info("Document type=%s chunk_size=%s", doc_type, chunk_size)
 
-    print(f" Type: {doc_type} | chunk={chunk_size}")
+        base_name = os.path.splitext(source_file_name)[0]
+        output_path = os.path.join(PROCESSED_DATA_DIR, f"{base_name}_chunks.json")
 
-    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
-    output_path = os.path.join(PROCESSED_DATA_DIR, f"{base_name}_chunks.json")
+        with open(output_path, "w", encoding="utf-8") as output_file:
+            output_file.write("[\n")
 
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write("[\n")
+            first = True
+            count = 0
 
-        first = True
-        count = 0
+            for chunk in chunk_text_page_aware(full_text, page_map, chunk_size, overlap):
+                chunk_data = {
+                    "id": f"chunk_{chunk['chunk_index']}",
+                    "source": source_file_name,
+                    "document_name": document_name,
+                    "doc_type": doc_type,
+                    "data_type": "pdf",
+                    "created_at": created_at,
+                    "page_start": chunk["page_start"],
+                    "page_end": chunk["page_end"],
+                    "page_numbers": chunk["page_numbers"],
+                    "text": chunk["text"],
+                }
 
-        for chunk in chunk_text_page_aware(full_text, page_map, chunk_size, overlap):
+                if not first:
+                    output_file.write(",\n")
+                else:
+                    first = False
 
-            chunk_data = {
-                "id": f"chunk_{chunk['chunk_index']}",
-                "source": os.path.basename(pdf_path),
-                "doc_type": doc_type,
-                "data_type": "pdf",
+                output_file.write(json.dumps(chunk_data, ensure_ascii=False))
+                count += 1
 
-                "page_start": chunk["page_start"],
-                "page_end": chunk["page_end"],
-                "page_numbers": chunk["page_numbers"],
+            output_file.write("\n]")
 
-                "text": chunk["text"]
-            }
-
-            if not first:
-                f.write(",\n")
-            else:
-                first = False
-
-            f.write(json.dumps(chunk_data, ensure_ascii=False))
-            count += 1
-
-        f.write("\n]")
-
-    print(f" {count} chunks saved")
-
-    return output_path
+        logger.info("Saved %s chunks to %s", count, output_path)
+        return output_path
+    except Exception as e:
+        logger.exception("Failed to process PDF '%s': %s", pdf_path, str(e))
+        raise RuntimeError(f"Failed to process PDF: {str(e)}")
