@@ -1,29 +1,47 @@
-from typing import List
 from functools import lru_cache
+from typing import List
 
 from backend.app.config.openai_factory import get_openai_client
 
 
 class OptimizedLocalEmbedder:
     """
-    Dùng model: text-embedding-3-large
+    Embedder using OpenAI text-embedding-3-small.
     """
 
     def __init__(self, model_name: str = "text-embedding-3-small"):
         self.model_name = model_name
         self.client = get_openai_client()
-
-        # dimension của model
         self.dimension = 1536
+
+    @staticmethod
+    def _clean_text(text: str) -> str:
+        if text is None:
+            return ""
+        return str(text).strip()
+
+    def _clean_texts(self, texts: List[str]) -> List[str]:
+        cleaned_texts: List[str] = []
+        for text in texts:
+            cleaned = self._clean_text(text)
+            if cleaned:
+                cleaned_texts.append(cleaned)
+        return cleaned_texts
 
     @lru_cache(maxsize=200)
     def _embed_query_cached(self, text: str) -> tuple:
         """
-        Cache query embedding để giảm API call
+        Cache query embedding to reduce API calls.
         """
+        question = self._clean_text(text)
+        if not question:
+            question = (text or "").strip()
+        if not question:
+            raise ValueError("Query is empty after filtering")
+
         response = self.client.embeddings.create(
             model=self.model_name,
-            input=[text]
+            input=[question],
         )
 
         embedding = response.data[0].embedding
@@ -31,38 +49,46 @@ class OptimizedLocalEmbedder:
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """
-        Embed nhiều documents cùng lúc để tối ưu hiệu suất
+        Embed multiple documents in one API call.
         """
-        if not texts:
+        cleaned_texts = self._clean_texts(texts)
+
+        if not cleaned_texts:
             return []
 
         response = self.client.embeddings.create(
             model=self.model_name,
-            input=texts
+            input=cleaned_texts,
         )
 
         return [d.embedding for d in response.data]
 
     def embed_query(self, text: str, use_cache: bool = True) -> List[float]:
         """
-        Embed query
+        Embed one query.
         """
+        question = self._clean_text(text)
+        if not question:
+            question = (text or "").strip()
+        if not question:
+            raise ValueError("Query is empty after filtering")
+
         if use_cache:
-            return list(self._embed_query_cached(text))
+            return list(self._embed_query_cached(question))
 
         response = self.client.embeddings.create(
             model=self.model_name,
-            input=[text]
+            input=[question],
         )
 
         return response.data[0].embedding
 
     def get_info(self) -> dict:
         """
-        Metadata model
+        Embedder metadata.
         """
         return {
             "provider": "openai",
             "model": self.model_name,
-            "dimension": self.dimension
+            "dimension": self.dimension,
         }

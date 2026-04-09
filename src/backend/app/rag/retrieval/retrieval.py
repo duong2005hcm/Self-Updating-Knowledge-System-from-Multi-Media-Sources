@@ -49,6 +49,18 @@ class MultiQueryRetriever:
     def retrieve(self, question: str, mode: str = "professional") -> List[Dict]:
 
         queries = generate_multi_queries(question)
+        queries = [
+            q.strip()
+            for q in queries
+            if isinstance(q, str) and q.strip()
+        ]
+
+        if not queries:
+            fallback_query = (question or "").strip()
+            if not fallback_query:
+                raise ValueError("Question is empty after filtering")
+            queries = [fallback_query]
+
         selected = self._select_collections(mode)
 
         if self.enable_parallel:

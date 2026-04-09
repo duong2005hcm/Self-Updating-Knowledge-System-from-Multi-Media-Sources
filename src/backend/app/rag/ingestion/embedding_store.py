@@ -72,6 +72,8 @@ def embed_and_store_chunks(
 
             for c in batch:
                 normalized_text = normalize_text(c["text"])
+                if not normalized_text:
+                    continue
 
                 metadata = {k: v for k, v in c.items() if k != "text"}
                 metadata["data_type"] = chunk_type
