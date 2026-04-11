@@ -7,7 +7,7 @@ export default defineConfig({
     proxy: {
       // Mọi request bắt đầu bằng /api sẽ được đẩy sang Node.js
       "/api": {
-        target: "http://localhost:5001",
+        target: "https://self-updating-knowledge-system-from-98qj.onrender.com",
         changeOrigin: true,
         secure: false,
       },
