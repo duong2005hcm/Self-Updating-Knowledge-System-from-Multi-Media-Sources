@@ -1,6 +1,6 @@
-﻿import React from "react";
+import React from "react";
 import { Check } from "lucide-react";
-import { BENEFITS, IMPACT_METRICS } from "../../data/landingData";
+import { BENEFITS, IMPACT_METRICS } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
 import SectionReveal from "./SectionReveal";
 
@@ -10,9 +10,9 @@ export default function BenefitsSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="Giá trị nhận được"
-            title="Lợi ích mang lại cho doanh nghiệp"
-            desc="Tập trung tăng tốc vận hành, tăng độ chính xác và chuẩn hóa tri thức dùng chung."
+            badge="Gi� tr? nh?n du?c"
+            title="L?i �ch mang l?i cho doanh nghi?p"
+            desc="T?p trung tang t?c v?n h�nh, tang d? ch�nh x�c v� chu?n h�a tri th?c d�ng chung."
           />
         </SectionReveal>
 
@@ -20,11 +20,11 @@ export default function BenefitsSection() {
           <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.15fr]">
             <div>
               <h3 className="m-0 text-2xl font-black leading-tight text-slate-900 md:text-3xl">
-                Tri thức đúng, ngay thời điểm cần
+                Tri th?c d�ng, ngay th?i di?m c?n
               </h3>
               <p className="mt-4 text-base leading-relaxed text-slate-600">
-                SIMLESI AI giúp đội ngũ truy cập tri thức nhất quán, giảm lệch thông tin giữa các phòng ban và rút ngắn
-                đáng kể thời gian xử lý các yêu cầu lặp lại.
+                SIMLESI AI gi�p d?i ngu truy c?p tri th?c nh?t qu�n, gi?m l?ch th�ng tin gi?a c�c ph�ng ban v� r�t ng?n
+                d�ng k? th?i gian x? l� c�c y�u c?u l?p l?i.
               </p>
 
               <div className="mt-6 space-y-3">
@@ -51,3 +51,4 @@ export default function BenefitsSection() {
     </section>
   );
 }
+

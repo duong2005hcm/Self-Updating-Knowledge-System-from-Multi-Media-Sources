@@ -1,6 +1,6 @@
-﻿import React from "react";
+import React from "react";
 import { Building2 } from "lucide-react";
-import { USE_CASES } from "../../data/landingData";
+import { USE_CASES } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
 import SectionReveal from "./SectionReveal";
 
@@ -10,9 +10,9 @@ export default function UseCasesSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="Đối tượng phù hợp"
-            title="Ai nên triển khai SIMLESI AI?"
-            desc="Phù hợp cho tổ chức cần quản trị tri thức tập trung và khai thác nhanh trong vận hành."
+            badge="�?i tu?ng ph� h?p"
+            title="Ai n�n tri?n khai SIMLESI AI?"
+            desc="Ph� h?p cho t? ch?c c?n qu?n tr? tri th?c t?p trung v� khai th�c nhanh trong v?n h�nh."
           />
         </SectionReveal>
 
@@ -32,3 +32,4 @@ export default function UseCasesSection() {
     </section>
   );
 }
+

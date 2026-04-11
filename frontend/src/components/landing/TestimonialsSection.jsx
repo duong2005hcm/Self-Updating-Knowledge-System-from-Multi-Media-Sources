@@ -1,6 +1,6 @@
-﻿import React from "react";
+import React from "react";
 import { Quote } from "lucide-react";
-import { TESTIMONIALS } from "../../data/landingData";
+import { TESTIMONIALS } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
 import SectionReveal from "./SectionReveal";
 
@@ -10,9 +10,9 @@ export default function TestimonialsSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="Phản hồi khách hàng"
-            title="Đánh giá từ đội ngũ đã trải nghiệm"
-            desc="Một vài nhận xét giả lập theo bối cảnh triển khai thực tế tại doanh nghiệp."
+            badge="Ph?n h?i kh�ch h�ng"
+            title="��nh gi� t? d?i ngu d� tr?i nghi?m"
+            desc="M?t v�i nh?n x�t gi? l?p theo b?i c?nh tri?n khai th?c t? t?i doanh nghi?p."
           />
         </SectionReveal>
 
@@ -25,7 +25,7 @@ export default function TestimonialsSection() {
                 <div className="mt-5 border-t border-slate-100 pt-4">
                   <p className="m-0 text-sm font-black text-slate-900">{item.name}</p>
                   <p className="m-0 mt-1 text-xs font-semibold text-slate-500">
-                    {item.role} · {item.company}
+                    {item.role} � {item.company}
                   </p>
                 </div>
               </article>
@@ -36,3 +36,4 @@ export default function TestimonialsSection() {
     </section>
   );
 }
+

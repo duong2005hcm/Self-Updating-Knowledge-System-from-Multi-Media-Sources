@@ -1,6 +1,6 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { FAQS } from "../../data/landingData";
+import { FAQS } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
 import SectionReveal from "./SectionReveal";
 
@@ -13,8 +13,8 @@ export default function FAQSection() {
         <SectionReveal>
           <SectionTitle
             badge="FAQ"
-            title="Câu hỏi thường gặp"
-            desc="Thông tin ngắn gọn để bạn đánh giá nhanh mức độ phù hợp của giải pháp."
+            title="C�u h?i thu?ng g?p"
+            desc="Th�ng tin ng?n g?n d? b?n d�nh gi� nhanh m?c d? ph� h?p c?a gi?i ph�p."
           />
         </SectionReveal>
 
@@ -45,3 +45,4 @@ export default function FAQSection() {
     </section>
   );
 }
+

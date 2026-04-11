@@ -3,7 +3,7 @@ import axiosClient from "./axiosClient.js";
 
 function resolveAuthUrl() {
   const fallback = import.meta.env.PROD
-    ? "https://self-updating-knowledge-system-from-6dk8.onrender.com"
+    ? "https://self-updating-knowledge-system-from-98qj.onrender.com"
     : "http://localhost:5001";
   const raw =
     import.meta.env.VITE_API_URL ||
@@ -56,3 +56,4 @@ const adminApi = {
 };
 
 export default adminApi;
+

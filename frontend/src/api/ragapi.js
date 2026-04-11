@@ -2,7 +2,7 @@ import axios from "axios";
 import { auth } from "../auth/firebase";
 import { DEFAULT_SYSTEM_PROMPT, getSystemPrompt } from "../chat/systemPrompt";
 
-const DEPLOY_AUTH_API = "https://self-updating-knowledge-system-from-6dk8.onrender.com";
+const DEPLOY_AUTH_API = "https://self-updating-knowledge-system-from-98qj.onrender.com";
 const DEPLOY_RAG_API = "https://self-updating-knowledge-system-from.onrender.com";
 
 function resolveNodeApiBase() {
@@ -577,4 +577,5 @@ export async function adminDeleteUser(uid) {
   if (!res.ok) throw new Error(out.message || "Xóa thất bại");
   return out;
 }
+
 

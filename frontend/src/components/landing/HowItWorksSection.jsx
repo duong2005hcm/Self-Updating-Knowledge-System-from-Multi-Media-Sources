@@ -1,5 +1,5 @@
-﻿import React from "react";
-import { WORKFLOW_STEPS } from "../../data/landingData";
+import React from "react";
+import { WORKFLOW_STEPS } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
 import SectionReveal from "./SectionReveal";
 
@@ -9,9 +9,9 @@ export default function HowItWorksSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="Quy trình"
-            title="Cách hệ thống hoạt động"
-            desc="Luồng xử lý 4 bước rõ ràng, dễ mở rộng và phù hợp triển khai doanh nghiệp."
+            badge="Quy tr�nh"
+            title="C�ch h? th?ng ho?t d?ng"
+            desc="Lu?ng x? l� 4 bu?c r� r�ng, d? m? r?ng v� ph� h?p tri?n khai doanh nghi?p."
           />
         </SectionReveal>
 
@@ -47,3 +47,4 @@ export default function HowItWorksSection() {
     </section>
   );
 }
+

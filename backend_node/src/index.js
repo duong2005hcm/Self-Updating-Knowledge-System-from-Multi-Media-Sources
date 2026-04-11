@@ -11,14 +11,20 @@ const ragUserUploadRoute = require("./routes/rag/userUploadRoute");
 const contactRoute = require("./routes/contact");
 
 const app = express();
+const defaultCorsOrigins = [
+  "http://localhost:5173",
+  "https://rag-knowledge-system.web.app",
+  "https://rag-knowledge-system.firebaseapp.com",
+];
+const corsOrigins = String(process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((item) => item.trim())
+  .filter(Boolean);
+const allowedOrigins = corsOrigins.length > 0 ? corsOrigins : defaultCorsOrigins;
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://rag-knowledge-system.web.app",
-      "https://rag-knowledge-system.firebaseapp.com",
-    ],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Firebase-Id-Token"],
   })
