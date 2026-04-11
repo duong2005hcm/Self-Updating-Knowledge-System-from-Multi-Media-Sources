@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { CONTACT, FOOTER_LINKS } from "../../constants/landingData";
 
 function FooterColumn({ title, items, onOpenContact }) {
@@ -7,7 +7,7 @@ function FooterColumn({ title, items, onOpenContact }) {
       <p className="m-0 text-sm font-black text-slate-900">{title}</p>
       <ul className="mt-3 list-none space-y-2 p-0">
         {items.map((item) => {
-          const isContact = item === "Li�n h? tu v?n";
+          const isContact = item === "Liên hệ tư vấn";
           if (isContact) {
             return (
               <li key={item}>
@@ -50,11 +50,11 @@ export default function LandingFooter({ onOpenContact }) {
               <p className="m-0 text-xl font-black tracking-tight text-slate-900">SIMLESI AI</p>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-slate-600">
-              N?n t?ng AI t? d?ng thu th?p v� c?p nh?t tri th?c da ngu?n, t?i uu h?i d�p n?i b? theo m� h�nh RAG.
+              Nền tảng AI tự động thu thập và cập nhật tri thức đa nguồn, tối ưu hỏi đáp nội bộ theo mô hình RAG.
             </p>
             <div className="mt-4 space-y-2 text-sm text-slate-600">
               <p className="m-0">
-                �i?n tho?i:{" "}
+                Điện thoại:{" "}
                 <a href={`tel:${CONTACT.phone}`} className="font-semibold text-blue-700 no-underline">
                   {CONTACT.phone}
                 </a>
@@ -65,7 +65,7 @@ export default function LandingFooter({ onOpenContact }) {
                   {CONTACT.email}
                 </a>
               </p>
-              <p className="m-0">�?a ch?: {CONTACT.address}</p>
+              <p className="m-0">Địa chỉ: {CONTACT.address}</p>
             </div>
             <div className="mt-4 flex flex-wrap gap-2 text-sm">
               <a
@@ -95,20 +95,19 @@ export default function LandingFooter({ onOpenContact }) {
             </div>
           </div>
 
-          <FooterColumn title="S?n ph?m" items={FOOTER_LINKS.product} />
-          <FooterColumn title="Gi?i ph�p" items={FOOTER_LINKS.solution} />
+          <FooterColumn title="Sản phẩm" items={FOOTER_LINKS.product} />
+          <FooterColumn title="Giải pháp" items={FOOTER_LINKS.solution} />
           <FooterColumn
-            title="T�i nguy�n"
+            title="Tài nguyên"
             items={FOOTER_LINKS.resources}
             onOpenContact={onOpenContact}
           />
         </div>
 
         <div className="mt-8 border-t border-slate-200 pt-4 text-xs font-semibold text-slate-500">
-          � 2026 SIMLESI AI. All rights reserved.
+          © 2026 SIMLESI AI. All rights reserved.
         </div>
       </div>
     </footer>
   );
 }
-

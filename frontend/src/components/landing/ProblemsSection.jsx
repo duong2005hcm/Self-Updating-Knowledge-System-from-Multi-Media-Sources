@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { AlertTriangle } from "lucide-react";
 import { PROBLEMS } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
@@ -10,9 +10,9 @@ export default function ProblemsSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="N?i dau th?c t?"
-            title="V?n d? doanh nghi?p dang g?p ph?i"
-            desc="Tri th?c n?m kh?p noi, kh� truy xu?t v� kh� ki?m ch?ng khi?n v?n h�nh m?t t?c d?."
+            badge="Nỗi đau thực tế"
+            title="Vấn đề doanh nghiệp đang gặp phải"
+            desc="Tri thức nằm khắp nơi, khó truy xuất và khó kiểm chứng khiến vận hành mất tốc độ."
           />
         </SectionReveal>
 
@@ -36,4 +36,3 @@ export default function ProblemsSection() {
     </section>
   );
 }
-

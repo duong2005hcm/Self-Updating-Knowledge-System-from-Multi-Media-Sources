@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { NAV_ITEMS } from "../../constants/landingData";
@@ -44,14 +44,14 @@ export default function LandingHeader({ onOpenContact }) {
               to="/login"
               className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 no-underline transition hover:border-blue-200 hover:text-blue-700"
             >
-              �ang nh?p
+              Đăng nhập
             </Link>
             <button
               type="button"
               onClick={openConsultation}
               className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-500 px-4 py-2 text-sm font-bold text-white no-underline shadow-[0_12px_30px_rgba(37,99,235,0.32)] transition hover:translate-y-[-1px] hover:shadow-[0_15px_34px_rgba(37,99,235,0.38)]"
             >
-              �ang k�
+              Đăng ký
             </button>
           </div>
 
@@ -59,7 +59,7 @@ export default function LandingHeader({ onOpenContact }) {
             type="button"
             onClick={() => setOpen((v) => !v)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 md:hidden"
-            aria-label="M? menu"
+            aria-label="Mở menu"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -84,14 +84,14 @@ export default function LandingHeader({ onOpenContact }) {
                 to="/login"
                 className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-center text-sm font-bold text-slate-700 no-underline"
               >
-                �ang nh?p
+                Đăng nhập
               </Link>
               <button
                 type="button"
                 onClick={openConsultation}
                 className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 px-3 py-2 text-center text-sm font-bold text-white"
               >
-                �ang k�
+                Đăng ký
               </button>
             </div>
           </div>
@@ -100,4 +100,3 @@ export default function LandingHeader({ onOpenContact }) {
     </header>
   );
 }
-

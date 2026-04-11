@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import {
   BrainCircuit,
   DatabaseZap,
@@ -26,9 +26,9 @@ export default function FeaturesSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="T�nh nang"
-            title="C�c nang l?c n?i b?t c?a SIMLESI AI"
-            desc="T?p trung v�o kh? nang tri?n khai th?c t?, truy xu?t ch�nh x�c v� m? r?ng linh ho?t."
+            badge="Tính năng"
+            title="Các năng lực nổi bật của SIMLESI AI"
+            desc="Tập trung vào khả năng triển khai thực tế, truy xuất chính xác và mở rộng linh hoạt."
           />
         </SectionReveal>
 
@@ -55,4 +55,3 @@ export default function FeaturesSection() {
     </section>
   );
 }
-

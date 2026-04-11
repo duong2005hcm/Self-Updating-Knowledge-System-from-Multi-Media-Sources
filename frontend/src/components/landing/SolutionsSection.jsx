@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { SOLUTION_POINTS } from "../../constants/landingData";
 import SectionTitle from "./SectionTitle";
@@ -12,9 +12,9 @@ export default function SolutionsSection() {
       <div className="mx-auto max-w-7xl">
         <SectionReveal>
           <SectionTitle
-            badge="Gi?i ph�p"
-            title="SIMLESI AI gi?i quy?t nhu th? n�o?"
-            desc="M?t ki?n tr�c AI SaaS g?n, chu?n v� b?n v?ng cho qu?n tr? tri th?c doanh nghi?p."
+            badge="Giải pháp"
+            title="SIMLESI AI giải quyết như thế nào?"
+            desc="Một kiến trúc AI SaaS gọn, chuẩn và bền vững cho quản trị tri thức doanh nghiệp."
           />
         </SectionReveal>
 
@@ -22,11 +22,11 @@ export default function SolutionsSection() {
           <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.2fr]">
             <div>
               <h3 className="m-0 text-2xl font-black leading-tight text-slate-900 md:text-3xl">
-                T? d? li?u r?i r?c th�nh tri th?c c� th? h?i d�p ngay
+                Từ dữ liệu rời rạc thành tri thức có thể hỏi đáp ngay
               </h3>
               <p className="mt-4 text-base leading-relaxed text-slate-600">
-                SIMLESI AI t? ch?c l?i to�n b? d? li?u ph�n t�n th�nh m?t lu?ng tri th?c th?ng nh?t.
-                D? li?u du?c thu th?p, chu?n h�a, c?p nh?t d?nh k? v� ph?c v? h?i d�p theo ng? c?nh.
+                SIMLESI AI tổ chức lại toàn bộ dữ liệu phân tán thành một luồng tri thức thống nhất.
+                Dữ liệu được thu thập, chuẩn hóa, cập nhật định kỳ và phục vụ hỏi đáp theo ngữ cảnh.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2">
@@ -55,4 +55,3 @@ export default function SolutionsSection() {
     </section>
   );
 }
-
