@@ -13,7 +13,7 @@ const contactRoute = require("./routes/contact");
 const app = express();
 const defaultCorsOrigins = [
   "http://localhost:5173",
-  "https://rag-knowledge-system.web.app",
+  "https://self-updating-knowledge-system-from-three.vercel.app",
   "https://rag-knowledge-system.firebaseapp.com",
 ];
 const corsOrigins = String(process.env.CORS_ORIGINS || "")
