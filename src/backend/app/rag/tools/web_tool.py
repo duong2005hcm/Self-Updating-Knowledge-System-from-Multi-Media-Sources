@@ -8,7 +8,7 @@ load_dotenv()
 
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
-def search_serper(query, num_results=5):
+def search_serper(query, num_results=3):
     try:
         res = requests.post(
             "https://google.serper.dev/search",
@@ -54,7 +54,7 @@ def fetch_jina(url):
     if not url: 
         return ""
     try:
-        res = requests.get(f"https://r.jina.ai/{url}", timeout=10)
+        res = requests.get(f"https://r.jina.ai/{url}", timeout=20)
 
         if res.status_code != 200:
             return ""

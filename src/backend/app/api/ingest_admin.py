@@ -1,5 +1,6 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, Form
 from pydantic import BaseModel
+from typing import Any, Optional
 import os, uuid, time
 
 from backend.app.rag.chunking.pdf.pdf_chunker import process_single_pdf
@@ -23,7 +24,14 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/ingest/pdf")
 async def ingest_pdf(
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    domain: str = Form(default="general"),
+    topic: str = Form(default="general"),
+    priority: str = Form(default="normal"),
+    status: str = Form(default="active"),
+    source_type: str = Form(default="PDF"),
+    created_by: Optional[str] = Form(default=None),
+    decoded_token: dict[str, Any] = Depends(verify_admin_token),
 ):
     file_bytes = await file.read()
 
@@ -35,7 +43,23 @@ async def ingest_pdf(
 
     chunks_json_path = process_single_pdf(path)
 
-    result = embed_and_store_chunks(chunks_json_path)
+    actor = (
+        (created_by or "").strip()
+        or str(decoded_token.get("uid") or "")
+        or str(decoded_token.get("email") or "")
+        or "admin"
+    )
+    result = embed_and_store_chunks(
+        chunks_json_path,
+        extra_metadata={
+            "domain": domain.strip() or "general",
+            "topic": topic.strip() or "general",
+            "priority": priority.strip() or "normal",
+            "status": status.strip() or "active",
+            "source_type": source_type.strip() or "PDF",
+            "created_by": actor,
+        },
+    )
 
     return {
         "status": "ok",
@@ -46,14 +70,37 @@ async def ingest_pdf(
 class WebIngestRequest(BaseModel):
     url: str
     limit: int = 5
+    domain: str = "general"
+    topic: str = "general"
+    priority: str = "normal"
+    status: str = "active"
+    source_type: Optional[str] = None
+    created_by: Optional[str] = None
 
 
 @router.post("/ingest/web")
-def ingest_web(req: WebIngestRequest):
+def ingest_web(
+    req: WebIngestRequest,
+    decoded_token: dict[str, Any] = Depends(verify_admin_token),
+):
 
     url = req.url
     web_type = classify_web(url)
     chunker = WebChunker(output_dir="data/processed/web")
+    actor = (
+        (req.created_by or "").strip()
+        or str(decoded_token.get("uid") or "")
+        or str(decoded_token.get("email") or "")
+        or "admin"
+    )
+    extra_metadata = {
+        "domain": req.domain.strip() or "general",
+        "topic": req.topic.strip() or "general",
+        "priority": req.priority.strip() or "normal",
+        "status": req.status.strip() or "active",
+        "source_type": (req.source_type or "Web").strip() or "Web",
+        "created_by": actor,
+    }
 
     processed_files = []
 
@@ -65,7 +112,10 @@ def ingest_web(req: WebIngestRequest):
             chunk_file = chunker.process(link, html)
 
             if chunk_file:
-                embed_and_store_chunks(chunk_file)
+                embed_and_store_chunks(
+                    chunk_file,
+                    extra_metadata=extra_metadata,
+                )
                 processed_files.append(chunk_file)
 
     else:
@@ -73,7 +123,10 @@ def ingest_web(req: WebIngestRequest):
         chunk_file = chunker.process(url, html)
 
         if chunk_file:
-            embed_and_store_chunks(chunk_file)
+            embed_and_store_chunks(
+                chunk_file,
+                extra_metadata=extra_metadata,
+            )
             processed_files.append(chunk_file)
 
     return {

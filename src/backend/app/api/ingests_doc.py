@@ -1,8 +1,9 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form
 import os
 import uuid
 import time
 import logging
+from typing import Any, Optional
 
 from backend.app.rag.chunking.pdf.pdf_chunker import process_single_pdf
 from backend.app.rag.ingestion.embedding_store import embed_and_store_chunks
@@ -22,7 +23,16 @@ MAX_FILE_SIZE_MB = 30
 
 
 @router.post("/pdf")
-async def ingest_pdf(file: UploadFile = File(...)):
+async def ingest_pdf(
+    file: UploadFile = File(...),
+    domain: str = Form(default="general"),
+    topic: str = Form(default="general"),
+    priority: str = Form(default="normal"),
+    status: str = Form(default="active"),
+    source_type: str = Form(default="PDF"),
+    created_by: Optional[str] = Form(default=None),
+    decoded_token: dict[str, Any] = Depends(verify_admin_token),
+):
     """
     Upload PDF → Chunk → Embed → Store ChromaDB
     """
@@ -69,10 +79,25 @@ async def ingest_pdf(file: UploadFile = File(...)):
 
 
         embed_start = time.time()
+        actor = (
+            (created_by or "").strip()
+            or str(decoded_token.get("uid") or "")
+            or str(decoded_token.get("email") or "")
+            or "admin"
+        )
+        extra_metadata = {
+            "domain": domain.strip() or "general",
+            "topic": topic.strip() or "general",
+            "priority": priority.strip() or "normal",
+            "status": status.strip() or "active",
+            "source_type": source_type.strip() or "PDF",
+            "created_by": actor,
+        }
 
         result = embed_and_store_chunks(
             chunks_json_path=chunks_json_path,
-            allow_duplicates=False
+            allow_duplicates=False,
+            extra_metadata=extra_metadata,
         )
 
         logger.info("[INGEST] Embed done in %.2fs", time.time() - embed_start)

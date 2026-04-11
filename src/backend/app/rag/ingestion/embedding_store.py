@@ -1,11 +1,14 @@
 import json
 import uuid
 import hashlib
+import logging
+import os
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Any, Optional
 
 from backend.app.chroma_manager import get_chroma_manager
 
+logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 32
 
@@ -22,7 +25,8 @@ def compute_file_hash_from_chunks(chunks: list) -> str:
 def embed_and_store_chunks(
     chunks_json_path: str,
     allow_duplicates: bool = False,
-    data_type: Optional[str] = None
+    data_type: Optional[str] = None,
+    extra_metadata: Optional[dict[str, Any]] = None,
 ):
 
     with open(chunks_json_path, "r", encoding="utf-8") as f:
@@ -35,7 +39,7 @@ def embed_and_store_chunks(
     file_hash = compute_file_hash_from_chunks(chunks)
 
 
-    grouped_by_type = {}
+    grouped_by_type: dict[str, list[dict[str, Any]]] = {}
 
     for c in chunks:
         chunk_type = data_type or c.get("data_type", "unknown")
@@ -61,7 +65,7 @@ def embed_and_store_chunks(
             existing_file = collection.get(where={"file_hash": file_hash})
 
             if existing_file.get("ids"):
-                print(f" File already ingested in {collection_name}, skipping...")
+                logger.info("File already ingested in %s, skipping", collection_name)
                 continue
 
         for i in range(0, len(items), BATCH_SIZE):
@@ -77,10 +81,12 @@ def embed_and_store_chunks(
 
                 metadata = {k: v for k, v in c.items() if k != "text"}
                 metadata["data_type"] = chunk_type
+                if extra_metadata:
+                    metadata.update(extra_metadata)
 
                 metadata.update({
                     "file_hash": file_hash,
-                    "source_file": chunks_json_path.split("/")[-1],
+                    "source_file": os.path.basename(chunks_json_path),
                     "ingested_at": datetime.now(timezone.utc).isoformat()
                 })
 
@@ -132,7 +138,7 @@ def embed_and_store_chunks(
 
             total_inserted += len(texts)
 
-            print(f" Stored {len(texts)} into {collection_name}")
+            logger.info("Stored %s into %s", len(texts), collection_name)
 
     return {
         "status": "ok",

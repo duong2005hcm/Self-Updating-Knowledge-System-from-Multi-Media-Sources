@@ -1,47 +1,42 @@
 import json
+import logging
+from typing import Any
+
 from backend.app.config.openai_factory import get_openai_client
+from backend.app.rag.prompting.prompt_registry import (
+    PROMPT_SCOPE_PLANNER,
+    get_prompt,
+)
 
 client = get_openai_client()
-
-SYSTEM_PROMPT = """
-You are an AI agent.
-
-Actions:
-- retrieve
-- answer_final
-
-Rules:
-- If observation is empty → MUST retrieve
-- DO NOT hallucinate
-- Only answer when confident
-
-Return JSON:
-{"action": "...", "action_input": "..."}
-"""
+logger = logging.getLogger(__name__)
 
 
-def plan_step(question, observation=None):
+def plan_step(
+    question: str,
+    observation: str | None = None,
+    system_prompt: str | None = None,
+) -> dict[str, Any]:
+    planner_system_prompt = (system_prompt or get_prompt(PROMPT_SCOPE_PLANNER)).strip()
 
-    prompt = f"""
-Question: {question}
-
-Observation:
-{observation}
-
-If observation is not useful → retrieve again.
-"""
+    prompt = (
+        f"Question: {question}\n\n"
+        f"Observation:\n{observation or ''}\n\n"
+        "If observation is not useful, retrieve again."
+    )
 
     res = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": prompt}
+            {"role": "system", "content": planner_system_prompt},
+            {"role": "user", "content": prompt},
         ],
         temperature=0,
-        response_format={"type": "json_object"}
+        response_format={"type": "json_object"},
     )
 
     try:
         return json.loads(res.choices[0].message.content)
-    except:
+    except Exception as e:
+        logger.exception("Planner parse failed, fallback to answer_final: %s", str(e))
         return {"action": "answer_final", "action_input": question}

@@ -7,6 +7,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 
 from backend.app.api.ask import router as ask_router
+from backend.app.api.admin_prompts import router as admin_prompts_router
+from backend.app.api.admin_knowledge import router as admin_knowledge_router
 from backend.app.api.ingest_admin import router as ingest_admin_router
 from backend.app.api.user_upload import router as user_upload_router
 from backend.app.api.heat import router as health_router
@@ -34,6 +36,8 @@ app.add_middleware(
 
 app.include_router(health_router, prefix="/api")
 app.include_router(ingest_admin_router, prefix="/api")
+app.include_router(admin_prompts_router, prefix="/api")
+app.include_router(admin_knowledge_router, prefix="/api")
 app.include_router(user_upload_router, prefix="/api")
 app.include_router(ask_router, prefix="/api")
 

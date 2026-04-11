@@ -1,64 +1,70 @@
-from typing import AsyncGenerator
+import logging
+from typing import Any, AsyncGenerator
 
 from backend.app.rag.agent.planner import plan_step
 from backend.app.rag.agent.response_generator import generate_professional_answer
 from backend.app.rag.retrieval.retrieval import multi_query_retrieve
 
 MAX_STEPS = 2
+logger = logging.getLogger(__name__)
 
 
-def build_observation(results):
-
+def build_observation(results: list[dict[str, Any]]) -> str:
     if not results:
         return "No relevant information found."
 
     obs = []
-
-    for r in results[:2]:
-        text = r.get("text", "")[:200]
-        score = round(r.get("score", 0), 2)
-
+    for result in results[:2]:
+        text = str(result.get("text", ""))[:200]
+        score = round(float(result.get("score", 0)), 2)
         obs.append(f"(score={score}) {text}")
 
     return "\n".join(obs)
 
 
-def agent_loop(question: str, history: list) -> AsyncGenerator[str, None]:
-
-    all_contexts = []
-    observation = None
+def agent_loop(
+    question: str,
+    history: list[dict[str, Any]],
+    planner_system_prompt: str | None = None,
+    professional_prompt: str | None = None,
+) -> AsyncGenerator[str, None]:
+    all_contexts: list[dict[str, Any]] = []
+    observation: str | None = None
 
     for step in range(MAX_STEPS):
-
-        plan = plan_step(question, observation)
+        plan = plan_step(
+            question,
+            observation,
+            system_prompt=planner_system_prompt,
+        )
 
         action = plan.get("action")
-        action_input = plan.get("action_input")
+        action_input = str(plan.get("action_input", "") or "").strip()
 
-        print(f"[STEP {step}] {action}")
+        logger.info("[STEP %s] %s", step, action)
 
         if action == "answer_final":
             break
 
+        if not action_input:
+            action_input = question
+
         results = multi_query_retrieve(
             question=action_input,
-            top_k=6
+            top_k=6,
         )
 
-        # fallback nếu fail
         if not results:
             results = multi_query_retrieve(
-                question=action_input + " detailed explanation",
-                top_k=6
+                question=f"{action_input} detailed explanation".strip(),
+                top_k=6,
             )
 
         if results:
             all_contexts.extend(results)
-
             observation = build_observation(results)
 
-            # early stop
-            if results[0]["score"] > 0.9:
+            if float(results[0].get("score", 0)) > 0.9:
                 break
         else:
             observation = "No relevant information found."
@@ -66,5 +72,6 @@ def agent_loop(question: str, history: list) -> AsyncGenerator[str, None]:
     return generate_professional_answer(
         question=question,
         contexts=all_contexts[:6],
-        history=history
+        history=history,
+        system_prompt_template=professional_prompt,
     )

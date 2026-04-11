@@ -19,7 +19,7 @@ class MultiQueryRetriever:
         self,
         collection_names: List[str] = None,
         top_k_per_query: int = 3,
-        max_total_results: int = 10,
+        max_total_results: int = 5,
         enable_parallel: bool = True,
         max_workers: int = 4,
     ):
