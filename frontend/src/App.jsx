@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import ChatPage from "./layouts/ChatPage";
 import AuthPage from "./components/AuthPage";
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./pages/LandingPage";
 import AdminDashboard from "./components/AdminDashboard";
 import { signOut } from "firebase/auth";
 import { auth } from "./auth/firebase";

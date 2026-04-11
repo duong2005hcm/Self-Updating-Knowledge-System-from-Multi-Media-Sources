@@ -8,6 +8,7 @@ const ragAdminIngestRoute = require("./routes/rag/adminIngestRoute");
 const adminKnowledgeRoute = require("./routes/rag/adminKnowledgeRoute");
 const adminPromptsRoute = require("./routes/rag/adminPromptsRoute");
 const ragUserUploadRoute = require("./routes/rag/userUploadRoute");
+const contactRoute = require("./routes/contact");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api/admin/ingest", verifyAdminJwt, ragAdminIngestRoute);
 app.use("/api/admin/knowledge", verifyAdminJwt, adminKnowledgeRoute);
 app.use("/api/admin/prompts", verifyAdminJwt, adminPromptsRoute);
 app.use("/api/user/upload", ragUserUploadRoute);
+app.use("/api/contact", contactRoute);
 
 const PORT = Number(process.env.PORT) || 5000;
 const server = app.listen(PORT, () => {

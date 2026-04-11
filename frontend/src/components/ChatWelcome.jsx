@@ -5,6 +5,13 @@ export default function ChatWelcome() {
   return (
     <div className="welcome-wrap">
       <div className="welcome-content">
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+          <img
+            src="/smilesi_ai.png"
+            alt="SIMLESI AI logo"
+            style={{ width: "56px", height: "56px", borderRadius: "14px", objectFit: "cover" }}
+          />
+        </div>
         <h1 className="welcome-title">Chào bạn, Tớ là SIMLESI AI!</h1>
         <p className="welcome-sub">
           <strong>admin</strong> ngoan xinh yêu ơi! Cứ hành tớ thoải mái nhé?

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  IconSparkle,
   IconPenLine,
   IconImage,
   IconFileEdit,
@@ -44,7 +43,7 @@ export default function ChatWelcomeScreen({ onSuggestionClick }) {
       <div className="chat-welcome__inner">
         {/* Logo */}
         <div className="chat-welcome__logo">
-          <IconSparkle size={36} color="#ffffff" />
+          <img src="/smilesi_ai.png" alt="SIMLESI AI logo" />
         </div>
 
         {/* Title */}

@@ -6,7 +6,7 @@ const DEPLOY_AUTH_API = "https://self-updating-knowledge-system-from-6dk8.onrend
 const DEPLOY_RAG_API = "https://self-updating-knowledge-system-from.onrender.com";
 
 function resolveNodeApiBase() {
-  const fallback = import.meta.env.PROD ? DEPLOY_AUTH_API : "http://localhost:6001";
+  const fallback = import.meta.env.PROD ? DEPLOY_AUTH_API : "http://localhost:5001";
   const raw =
     import.meta.env.VITE_API_URL ||
     import.meta.env.VITE_AUTH_API ||

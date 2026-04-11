@@ -9,7 +9,6 @@ import {
   SearchOutlined,
   DeleteOutlined,
   LogoutOutlined,
-  StarFilled,
   MoreOutlined,
   PushpinOutlined,
   PushpinFilled,
@@ -284,7 +283,7 @@ const userInitial =
       <div className="sb-header">
         <div className="sb-brand">
           <div className="sb-logo">
-            <StarFilled style={{ fontSize: 18, color: "#fff" }} />
+            <img src="/smilesi_ai.png" alt="SIMLESI AI logo" />
           </div>
           <div className="sb-brand-text">
             <span className="sb-brand-name">SIMLESI AI</span>

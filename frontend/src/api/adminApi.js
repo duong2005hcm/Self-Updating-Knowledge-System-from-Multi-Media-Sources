@@ -4,7 +4,7 @@ import axiosClient from "./axiosClient.js";
 function resolveAuthUrl() {
   const fallback = import.meta.env.PROD
     ? "https://self-updating-knowledge-system-from-6dk8.onrender.com"
-    : "http://localhost:6001";
+    : "http://localhost:5001";
   const raw =
     import.meta.env.VITE_API_URL ||
     import.meta.env.VITE_AUTH_API ||
