@@ -636,7 +636,23 @@ html,body,#root{
   cursor:pointer;
 }
 .auth-submit:disabled{opacity: 0.7; cursor:not-allowed}
-.auth-foot{margin-top: 10px}
+.auth-foot{
+  margin-top: 10px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.auth-back{
+  align-self:flex-start;
+  border:none;
+  background: rgba(241,245,249,0.9);
+  color:#0f172a;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor:pointer;
+}
+.auth-back:hover{background:#ffffff}
 .auth-foot-muted{font-size: 12px; color: rgba(15,23,42,0.55)}
 
 .chat-input-inner textarea:focus {

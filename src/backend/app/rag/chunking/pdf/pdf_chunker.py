@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import re
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
@@ -13,6 +15,13 @@ RAW_DATA_DIR = "data/raw"
 PROCESSED_DATA_DIR = "data/processed"
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class PdfChunkingResult:
+    chunks_json_path: str
+    extracted_text: str
+    chunk_count: int
 
 
 def format_document_name(file_name: str) -> str:
@@ -96,9 +105,16 @@ def chunk_text_page_aware(
     start = 0
     text_length = len(full_text)
     chunk_index = 0
+    minimum_chunk_chars = max(200, int(chunk_size * 0.55))
 
     while start < text_length:
-        end = min(start + chunk_size, text_length)
+        hard_end = min(start + chunk_size, text_length)
+        end = _select_chunk_end(
+            full_text=full_text,
+            start=start,
+            hard_end=hard_end,
+            minimum_chunk_chars=minimum_chunk_chars,
+        )
         chunk_text_part = full_text[start:end].strip()
 
         if chunk_text_part:
@@ -126,12 +142,12 @@ def chunk_text_page_aware(
         if new_start <= start:
             new_start = start + 1
 
-        start = new_start
+        start = _align_chunk_start(full_text, new_start, end)
 
     return chunks
 
 
-def process_single_pdf(pdf_path: str) -> str:
+def process_single_pdf(pdf_path: str) -> PdfChunkingResult:
     try:
         os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
         logger.info("Processing PDF: %s", pdf_path)
@@ -167,6 +183,7 @@ def process_single_pdf(pdf_path: str) -> str:
             for chunk in chunk_text_page_aware(full_text, page_map, chunk_size, overlap):
                 chunk_data = {
                     "id": f"chunk_{chunk['chunk_index']}",
+                    "chunk_index": chunk["chunk_index"],
                     "source": source_file_name,
                     "document_name": document_name,
                     "doc_type": doc_type,
@@ -189,7 +206,74 @@ def process_single_pdf(pdf_path: str) -> str:
             output_file.write("\n]")
 
         logger.info("Saved %s chunks to %s", count, output_path)
-        return output_path
+        return PdfChunkingResult(
+            chunks_json_path=output_path,
+            extracted_text=full_text,
+            chunk_count=count,
+        )
     except Exception as e:
         logger.exception("Failed to process PDF '%s': %s", pdf_path, str(e))
         raise RuntimeError(f"Failed to process PDF: {str(e)}")
+
+
+def _select_chunk_end(
+    *,
+    full_text: str,
+    start: int,
+    hard_end: int,
+    minimum_chunk_chars: int,
+) -> int:
+    if hard_end >= len(full_text):
+        return len(full_text)
+
+    min_end = min(len(full_text), start + minimum_chunk_chars)
+    if hard_end <= min_end:
+        return hard_end
+
+    window = full_text[min_end:hard_end]
+    if not window:
+        return hard_end
+
+    preferred_patterns = (
+        r"\n\s*\n",
+        r"[\.\!\?…][\"'\)\]]?\s+",
+        r"[\:\;][\"'\)\]]?\s+",
+        r"\n",
+        r"\s+",
+    )
+
+    for pattern in preferred_patterns:
+        matches = list(re.finditer(pattern, window))
+        if not matches:
+            continue
+        return min_end + matches[-1].end()
+
+    return hard_end
+
+
+def _align_chunk_start(full_text: str, candidate_start: int, current_end: int) -> int:
+    start = max(0, candidate_start)
+    max_forward = min(len(full_text), start + 80)
+
+    while start < max_forward and full_text[start].isspace():
+        start += 1
+
+    if start <= 0 or start >= len(full_text):
+        return min(start, len(full_text))
+
+    if (
+        start < max_forward
+        and start < len(full_text)
+        and start > 0
+        and full_text[start - 1].isalnum()
+        and full_text[start].isalnum()
+    ):
+        while start < max_forward and full_text[start].isalnum():
+            start += 1
+        while start < max_forward and full_text[start].isspace():
+            start += 1
+
+    if start >= current_end:
+        return min(candidate_start, current_end - 1)
+
+    return start

@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from backend.app.api.dependencies.admin_auth import verify_admin_token
 from backend.app.chroma_manager import get_chroma_client_dependency
+from backend.app.services.knowledge_overview_service import KnowledgeOverviewService
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,10 @@ try:
     CHROMA_GET_LIMIT_CAP = max(1, int(_raw_get_limit_cap))
 except ValueError:
     CHROMA_GET_LIMIT_CAP = 300
+
+
+def get_knowledge_overview_service() -> KnowledgeOverviewService:
+    return KnowledgeOverviewService()
 
 
 def _parse_page_numbers(raw: Any) -> list[int]:
@@ -353,6 +358,78 @@ def _safe_collection_get(
                 where=where,
             )
         raise
+
+
+@router.get("/overview")
+def get_knowledge_overview(
+    max_scan: int = Query(default=500, ge=1, le=2000),
+    recent_limit: int = Query(default=5, ge=1, le=20),
+    service: KnowledgeOverviewService = Depends(get_knowledge_overview_service),
+) -> dict[str, Any]:
+    try:
+        item = service.get_document_overview(
+            max_scan=max_scan,
+            recent_limit=recent_limit,
+        )
+        return {"status": "ok", "item": item}
+    except Exception as e:
+        logger.exception("Failed to build admin knowledge overview: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to build knowledge overview: {str(e)}")
+
+
+@router.get("/grouped-by-source")
+def get_documents_grouped_by_source(
+    max_scan: int = Query(default=500, ge=1, le=2000),
+    status: Optional[str] = Query(default=None),
+    domain: Optional[str] = Query(default=None),
+    service: KnowledgeOverviewService = Depends(get_knowledge_overview_service),
+) -> dict[str, Any]:
+    try:
+        item = service.get_documents_grouped_by_source(
+            max_scan=max_scan,
+            status=status,
+            domain=domain,
+        )
+        return {"status": "ok", "item": item}
+    except Exception as e:
+        logger.exception("Failed to build admin grouped-by-source overview: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to build grouped-by-source overview: {str(e)}")
+
+
+@router.get("/grouped-by-domain")
+def get_documents_grouped_by_domain(
+    max_scan: int = Query(default=500, ge=1, le=2000),
+    status: Optional[str] = Query(default=None),
+    domain: Optional[str] = Query(default=None),
+    service: KnowledgeOverviewService = Depends(get_knowledge_overview_service),
+) -> dict[str, Any]:
+    try:
+        item = service.get_documents_grouped_by_domain(
+            max_scan=max_scan,
+            status=status,
+            domain=domain,
+        )
+        return {"status": "ok", "item": item}
+    except Exception as e:
+        logger.exception("Failed to build admin grouped-by-domain overview: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to build grouped-by-domain overview: {str(e)}")
+
+
+@router.get("/rejected-documents")
+def get_rejected_documents(
+    limit: int = Query(default=50, ge=1, le=200),
+    service: KnowledgeOverviewService = Depends(get_knowledge_overview_service),
+) -> dict[str, Any]:
+    try:
+        items = service.list_documents_by_status_view(status="rejected", limit=limit)
+        return {
+            "status": "ok",
+            "items": items,
+            "total": len(items),
+        }
+    except Exception as e:
+        logger.exception("Failed to build rejected-documents view: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to build rejected-documents view: {str(e)}")
 
 
 @router.get("/collections")

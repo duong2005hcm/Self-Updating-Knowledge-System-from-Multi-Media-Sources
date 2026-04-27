@@ -1,0 +1,1104 @@
+{
+  "name": "WF_Update_Sources",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -736,
+        0
+      ],
+      "id": "09811698-5ddc-4eeb-8d1c-fe3389f930f6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"backend_base_url\": \"https://your-backend.example.com\",\n  \"admin_token\": \"YOUR_ADMIN_TOKEN\",\n  \"front_page_size_default\": 7,\n  \"warm_depth_default\": 21\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -528,
+        0
+      ],
+      "id": "a77e3b12-e037-4887-b9a8-ade967c80b66",
+      "name": "Set env"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"source_id\": \"PUBMED_RESP\",\n  \"corpus\": \"content_feed\",\n  \"content_subtype\": \"academic_report\",\n  \"fetch_mode\": \"api_listing\",\n  \"api_provider\": \"pubmed\",\n  \"query\": \"((\\\"respiratory tract diseases\\\"[MeSH Terms] OR pneumonia[Title/Abstract] OR influenza[Title/Abstract] OR \\\"acute respiratory distress syndrome\\\"[Title/Abstract] OR dyspnea[Title/Abstract] OR COPD[Title/Abstract]) AND (diagnosis[Title/Abstract] OR symptoms[Title/Abstract] OR treatment[Title/Abstract]))\",\n  \"front_page_size\": 7,\n  \"warm_depth\": 21,\n  \"next_backfill_offset\": 7,\n  \"topic\": \"respiratory\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -352,
+        0
+      ],
+      "id": "4681f75c-3640-4ebe-97da-8be156ca3b47",
+      "name": "Set - Source Config"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.fetch_mode}}",
+                    "rightValue": "api_listing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "60858bd3-e993-490d-9b7f-a7da1f50de73"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f5e4e534-490d-43fe-a89c-1559af72b008",
+                    "leftValue": "={{$json.fetch_mode}}",
+                    "rightValue": "web_listing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        0
+      ],
+      "id": "0cfed07a-ef2f-421f-aa4e-f95c099361a0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "url": "=https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "db",
+              "value": "pubmed"
+            },
+            {
+              "name": "term",
+              "value": "={{$json.query}}"
+            },
+            {
+              "name": "retmax",
+              "value": "={{$json.warm_depth}}"
+            },
+            {
+              "name": "retstart",
+              "value": "0"
+            },
+            {
+              "name": "retmode",
+              "value": "json"
+            },
+            {
+              "name": "usehistory",
+              "value": "y"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        64,
+        -176
+      ],
+      "id": "62d2a48d-75ab-4260-8bca-167eaf1acee2",
+      "name": "HTTP - Fetch API Listing"
+    },
+    {
+      "parameters": {
+        "jsCode": "const source = $('Set - Source Config').first().json;\nconst data = $json.result || {};\n\nconst ids = Array.isArray(data.uids) ? data.uids : [];\n\nconst candidates = ids.map((uid, idx) => {\n  const item = data[uid] || {};\n\n  const title = item.title || '';\n  const pubdate = item.pubdate || '';\n  const sourceName = item.fulljournalname || item.source || '';\n  const articleIds = Array.isArray(item.articleids) ? item.articleids : [];\n\n  let doi = '';\n  for (const a of articleIds) {\n    if (String(a.idtype || '').toLowerCase() === 'doi') {\n      doi = a.value || '';\n      break;\n    }\n  }\n\n  return {\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    source_kind: 'html_page',\n    candidate_index: idx,\n    url: `https://pubmed.ncbi.nlm.nih.gov/${uid}/`,\n    pdf_url: '',\n    title,\n    description: sourceName,\n    published_at: pubdate,\n    updated_at: '',\n    topic: source.topic || '',\n    region: '',\n    domain: '',\n    doi,\n    pmid: uid\n  };\n}).filter(x => x.title && x.pmid);\n\nreturn [{\n  json: {\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    front_page_size: source.front_page_size,\n    warm_depth: source.warm_depth,\n    next_backfill_offset: source.next_backfill_offset,\n    candidates\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        -176
+      ],
+      "id": "01fc59c7-81cd-4616-9bd0-ac1038bc59e9",
+      "name": "Code - Normalize API Candidates"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.list_url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        64,
+        112
+      ],
+      "id": "eb597d5e-c1ee-4891-b4b2-7e416bf4e584",
+      "name": "HTTP - Fetch Web Listing"
+    },
+    {
+      "parameters": {
+        "jsCode": "const source = $('Set - Source Config').first().json;\nconst html = $json.data || $json.body || $json || '';\n\nfunction clean(text = '') {\n  return String(text)\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/g, ' ')\n    .replace(/&amp;/g, '&')\n    .replace(/&quot;/g, '\"')\n    .replace(/&#39;/g, \"'\")\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction makeAbsoluteUrl(href, baseUrl) {\n  if (!href) return '';\n  if (href.startsWith('http://') || href.startsWith('https://')) return href;\n  if (href.startsWith('//')) return `https:${href}`;\n  if (href.startsWith('/')) return `${baseUrl}${href}`;\n  return `${baseUrl}/${href}`;\n}\n\nconst matches = [...String(html).matchAll(/<a[^>]+href=[\"']([^\"']+)[\"'][^>]*>([\\s\\S]*?)<\\/a>/gi)];\n\nconst seen = new Set();\nconst candidates = [];\n\nfor (const m of matches) {\n  const href = makeAbsoluteUrl(m[1], source.base_url || '');\n  const title = clean(m[2]);\n\n  if (!href) continue;\n  if (!title || title.length < 10) continue;\n\n  const looksRelevant =\n    /disease-outbreak-news|\\/item\\/|\\.pdf/i.test(href);\n\n  if (!looksRelevant) continue;\n\n  const key = `${href}|||${title}`.toLowerCase();\n  if (seen.has(key)) continue;\n  seen.add(key);\n\n  const isPdf = /\\.pdf(\\?|#|$)/i.test(href);\n\n  candidates.push({\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    source_kind: isPdf ? 'pdf_url' : 'html_page',\n    candidate_index: candidates.length,\n    url: isPdf ? '' : href,\n    pdf_url: isPdf ? href : '',\n    title,\n    description: '',\n    published_at: '',\n    updated_at: '',\n    topic: source.topic || '',\n    region: source.region || '',\n    domain: source.domain || '',\n    doi: '',\n    pmid: ''\n  });\n\n  if (candidates.length >= (source.warm_depth || 21)) break;\n}\n\nreturn [{\n  json: {\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    front_page_size: source.front_page_size,\n    warm_depth: source.warm_depth,\n    next_backfill_offset: source.next_backfill_offset,\n    candidates\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        112
+      ],
+      "id": "88528bbd-55ec-4ddb-9a1e-b80502f5ad28",
+      "name": "Code - Parse Web Candidates"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $json;\nconst candidates = payload.candidates || [];\nconst frontSize = payload.front_page_size || 7;\nconst nextOffset = payload.next_backfill_offset || frontSize;\n\nconst frontCandidates = candidates.slice(0, frontSize);\nconst backfillCandidates = candidates.slice(nextOffset, nextOffset + (payload.warm_depth || 21));\n\nreturn [{\n  json: {\n    source_id: payload.source_id,\n    corpus: payload.corpus,\n    content_subtype: payload.content_subtype,\n    front_page_size: frontSize,\n    next_backfill_offset: nextOffset,\n    frontCandidates,\n    backfillCandidates\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -16
+      ],
+      "id": "e8a9fa8a-97fb-4aad-8890-7e5da0a187e2",
+      "name": "Code - Build Scan Plan"
+    },
+    {
+      "parameters": {
+        "jsCode": "const arr = $json.frontCandidates || [];\nreturn arr.map(it => ({ json: { ...it, phase: 'front' } }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        -16
+      ],
+      "id": "422ff13c-ff18-42fe-84bc-25a217611b00",
+      "name": "Code - Emit Front Candidates"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.source_kind}}",
+                    "rightValue": "html_page",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "front-web-route"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.source_kind}}",
+                    "rightValue": "pdf_url",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "front-pdf-route"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        -16
+      ],
+      "id": "84a7ae06-fb4a-4976-98f9-5cdc397fc2be",
+      "name": "Switch - Decide Front Ingest Transport"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$('Set env').first().json.admin_token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "url": "={{$('Set env').first().json.backend_base_url}}/api/ingest/web",
+        "jsonBody": "{\n  \"url\": \"{{$json.url}}\",\n  \"limit\": 1,\n  \"source_id\": \"{{$json.source_id}}\",\n  \"corpus\": \"{{$json.corpus}}\",\n  \"content_subtype\": \"{{$json.content_subtype}}\",\n  \"title\": \"{{$json.title}}\",\n  \"published_at\": \"{{$json.published_at}}\",\n  \"updated_at\": \"{{$json.updated_at}}\",\n  \"topic\": \"{{$json.topic}}\",\n  \"region\": \"{{$json.region}}\",\n  \"domain\": \"{{$json.domain}}\",\n  \"doi\": \"{{$json.doi}}\",\n  \"pmid\": \"{{$json.pmid}}\",\n  \"source_kind\": \"{{$json.source_kind}}\"\n}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1872,
+        -112
+      ],
+      "id": "37199dc1-5c75-424b-a654-7c553f4807f7",
+      "name": "HTTP - Ingest Front Web",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$('Set env').first().json.admin_token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "url": "={{$('Set env').first().json.backend_base_url}}/api/ingest/pdf-url",
+        "jsonBody": "{\n  \"pdf_url\": \"{{$json.pdf_url}}\",\n  \"source_id\": \"{{$json.source_id}}\",\n  \"corpus\": \"{{$json.corpus}}\",\n  \"content_subtype\": \"{{$json.content_subtype}}\",\n  \"title\": \"{{$json.title}}\",\n  \"published_at\": \"{{$json.published_at}}\",\n  \"updated_at\": \"{{$json.updated_at}}\",\n  \"topic\": \"{{$json.topic}}\",\n  \"region\": \"{{$json.region}}\",\n  \"domain\": \"{{$json.domain}}\",\n  \"doi\": \"{{$json.doi}}\",\n  \"pmid\": \"{{$json.pmid}}\",\n  \"source_kind\": \"{{$json.source_kind}}\"\n}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1872,
+        64
+      ],
+      "id": "c7759b70-940f-448a-b35c-6216074d3d69",
+      "name": "HTTP - Ingest Front PDF URL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const candidate = $(\"Switch - Decide Front Ingest Transport\").item.json;\nconst response = $json || {};\nconst validActions = new Set(['created', 'updated', 'skipped', 'failed']);\n\nfunction asObject(value) {\n  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};\n}\n\nfunction toText(value) {\n  if (value === undefined || value === null) return '';\n  if (typeof value === 'string') return value.trim();\n  try {\n    return JSON.stringify(value);\n  } catch (error) {\n    return String(value);\n  }\n}\n\nfunction resolveAction(payload) {\n  const topLevel = String(payload.action || '').toLowerCase();\n  if (validActions.has(topLevel)) return topLevel;\n\n  const documents = Array.isArray(payload.documents) ? payload.documents : [];\n  for (const document of documents) {\n    const documentAction = String(document?.action || '').toLowerCase();\n    if (validActions.has(documentAction)) return documentAction;\n  }\n\n  const created = Number(payload.created || 0);\n  const updated = Number(payload.updated || 0);\n  const skipped = Number(payload.skipped || 0);\n  const failed = Number(payload.failed || 0);\n\n  if (updated > 0) return 'updated';\n  if (created > 0) return 'created';\n  if (skipped > 0) return 'skipped';\n  if (failed > 0 || String(payload.status || '').toLowerCase() === 'failed') return 'failed';\n  return '';\n}\n\nconst body = asObject(response.body);\nconst payload = Object.keys(body).length ? body : asObject(response);\nconst primaryDocument = (Array.isArray(payload.documents) ? payload.documents : []).find((item) => item && typeof item === 'object') || {};\nconst statusCode = Number(response.statusCode || payload.statusCode || 0);\nlet action = resolveAction(payload);\n\nif (response.error || statusCode >= 400) {\n  action = 'failed';\n}\nif (!validActions.has(action)) {\n  action = 'failed';\n}\n\nconst message =\n  toText(response.error?.description) ||\n  toText(response.error?.message) ||\n  toText(payload.detail) ||\n  toText(payload.message) ||\n  (action === 'failed' ? 'Backend ingest failed' : `backend ingest: ${action}`);\n\nreturn [{\n  json: {\n    ...candidate,\n    action,\n    document_id: payload.document_id || primaryDocument.document_id || '',\n    version_id: payload.version_id || primaryDocument.version_id || '',\n    ingest_job_id: payload.ingest_job_id || '',\n    message,\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        -112
+      ],
+      "id": "6c53ec4f-8968-4db2-95f6-2a6de5e55d31",
+      "name": "Code - Normalize Backend Ingest Result"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all().map(i => i.json);\n\nlet created = 0;\nlet updated = 0;\nlet skipped = 0;\nlet failed = 0;\n\nfor (const r of rows) {\n  if (r.action === 'created') created++;\n  else if (r.action === 'updated') updated++;\n  else if (r.action === 'skipped') skipped++;\n  else failed++;\n}\n\nconst frontPageSize = $('Set - Source Config').first().json.front_page_size || 7;\nconst remainingSlots = Math.max(0, frontPageSize - (created + updated));\n\nreturn [{\n  json: {\n    created,\n    updated,\n    skipped,\n    failed,\n    remainingSlots\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        -16
+      ],
+      "id": "5ad057f1-12b9-4a6b-a6bb-9cd94f25c3b1",
+      "name": "Code - Count Front Results"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9b3f84f1-e250-4b1a-a2cc-0fd66ee4052d",
+              "leftValue": "={{$json.remainingSlots}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2272,
+        -16
+      ],
+      "id": "dcc4949c-3470-460c-86c5-0575755813c3",
+      "name": "IF - Need Backfill"
+    },
+    {
+      "parameters": {
+        "jsCode": "const scan = $('Code - Build Scan Plan').first().json;\nconst remain = $('Code - Count Front Results').first().json.remainingSlots || 0;\n\n// scan nhiều hơn số còn thiếu để bù cho trường hợp skipped\nconst picked = (scan.backfillCandidates || []).slice(0, Math.max(remain * 2, remain));\n\nreturn picked.map(it => ({\n  json: {\n    ...it,\n    phase: 'backfill'\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2496,
+        -112
+      ],
+      "id": "229cae13-614c-4ab8-8725-8e58645e48dc",
+      "name": "Code - Emit Backfill Candidates"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.source_kind}}",
+                    "rightValue": "html_page",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "backfill-web-route"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.source_kind}}",
+                    "rightValue": "pdf_url",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "backfill-pdf-route"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2704,
+        -112
+      ],
+      "id": "8a0d1583-9cc2-4373-90f7-99a10af860e1",
+      "name": "Switch - Decide Backfill Ingest Transport"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$('Set env').first().json.admin_token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "url": "={{$('Set env').first().json.backend_base_url}}/api/ingest/web",
+        "jsonBody": "{\n  \"url\": \"{{$json.url}}\",\n  \"limit\": 1,\n  \"source_id\": \"{{$json.source_id}}\",\n  \"corpus\": \"{{$json.corpus}}\",\n  \"content_subtype\": \"{{$json.content_subtype}}\",\n  \"title\": \"{{$json.title}}\",\n  \"published_at\": \"{{$json.published_at}}\",\n  \"updated_at\": \"{{$json.updated_at}}\",\n  \"topic\": \"{{$json.topic}}\",\n  \"region\": \"{{$json.region}}\",\n  \"domain\": \"{{$json.domain}}\",\n  \"doi\": \"{{$json.doi}}\",\n  \"pmid\": \"{{$json.pmid}}\",\n  \"source_kind\": \"{{$json.source_kind}}\"\n}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2912,
+        -224
+      ],
+      "id": "072f8e27-a622-435e-8972-0df76f88f976",
+      "name": "HTTP - Ingest Backfill Web",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$('Set env').first().json.admin_token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "url": "={{$('Set env').first().json.backend_base_url}}/api/ingest/pdf-url",
+        "jsonBody": "{\n  \"pdf_url\": \"{{$json.pdf_url}}\",\n  \"source_id\": \"{{$json.source_id}}\",\n  \"corpus\": \"{{$json.corpus}}\",\n  \"content_subtype\": \"{{$json.content_subtype}}\",\n  \"title\": \"{{$json.title}}\",\n  \"published_at\": \"{{$json.published_at}}\",\n  \"updated_at\": \"{{$json.updated_at}}\",\n  \"topic\": \"{{$json.topic}}\",\n  \"region\": \"{{$json.region}}\",\n  \"domain\": \"{{$json.domain}}\",\n  \"doi\": \"{{$json.doi}}\",\n  \"pmid\": \"{{$json.pmid}}\",\n  \"source_kind\": \"{{$json.source_kind}}\"\n}"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2928,
+        -32
+      ],
+      "id": "47e2a1ad-ffe6-412e-80c8-3eb35bf6e5ff",
+      "name": "HTTP - Ingest Backfill PDF URL",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const candidate = $(\"Switch - Decide Backfill Ingest Transport\").item.json;\nconst response = $json || {};\nconst validActions = new Set(['created', 'updated', 'skipped', 'failed']);\n\nfunction asObject(value) {\n  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};\n}\n\nfunction toText(value) {\n  if (value === undefined || value === null) return '';\n  if (typeof value === 'string') return value.trim();\n  try {\n    return JSON.stringify(value);\n  } catch (error) {\n    return String(value);\n  }\n}\n\nfunction resolveAction(payload) {\n  const topLevel = String(payload.action || '').toLowerCase();\n  if (validActions.has(topLevel)) return topLevel;\n\n  const documents = Array.isArray(payload.documents) ? payload.documents : [];\n  for (const document of documents) {\n    const documentAction = String(document?.action || '').toLowerCase();\n    if (validActions.has(documentAction)) return documentAction;\n  }\n\n  const created = Number(payload.created || 0);\n  const updated = Number(payload.updated || 0);\n  const skipped = Number(payload.skipped || 0);\n  const failed = Number(payload.failed || 0);\n\n  if (updated > 0) return 'updated';\n  if (created > 0) return 'created';\n  if (skipped > 0) return 'skipped';\n  if (failed > 0 || String(payload.status || '').toLowerCase() === 'failed') return 'failed';\n  return '';\n}\n\nconst body = asObject(response.body);\nconst payload = Object.keys(body).length ? body : asObject(response);\nconst primaryDocument = (Array.isArray(payload.documents) ? payload.documents : []).find((item) => item && typeof item === 'object') || {};\nconst statusCode = Number(response.statusCode || payload.statusCode || 0);\nlet action = resolveAction(payload);\n\nif (response.error || statusCode >= 400) {\n  action = 'failed';\n}\nif (!validActions.has(action)) {\n  action = 'failed';\n}\n\nconst message =\n  toText(response.error?.description) ||\n  toText(response.error?.message) ||\n  toText(payload.detail) ||\n  toText(payload.message) ||\n  (action === 'failed' ? 'Backend ingest failed' : `backend ingest: ${action}`);\n\nreturn [{\n  json: {\n    ...candidate,\n    action,\n    document_id: payload.document_id || primaryDocument.document_id || '',\n    version_id: payload.version_id || primaryDocument.version_id || '',\n    ingest_job_id: payload.ingest_job_id || '',\n    message,\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3152,
+        -224
+      ],
+      "id": "8d0a5fb7-f2ce-4575-a1c8-a7fcb1c8df9a",
+      "name": "Code - Normalize Backend Ingest Result Backfill"
+    },
+    {
+      "parameters": {
+        "jsCode": "const front = $('Code - Count Front Results').first().json;\nconst source = $('Set - Source Config').first().json;\n\nreturn [{\n  json: {\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    front_created: front.created,\n    front_updated: front.updated,\n    front_skipped: front.skipped,\n    backfill_created: 0,\n    backfill_updated: 0,\n    backfill_skipped: 0,\n    failed: front.failed || 0,\n    next_backfill_offset_suggested: source.next_backfill_offset || 7,\n    message: (front.failed || 0) > 0\n      ? `Front scan completed without backfill, ${front.failed} item(s) failed`\n      : 'Front scan completed without backfill'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2496,
+        64
+      ],
+      "id": "9f237b45-7dce-4c96-9953-552883506b78",
+      "name": "Code - Build Final Summary (No Backfill)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const front = $('Code - Count Front Results').first().json;\nconst backfillRows = $input.all().map(i => i.json);\n\nlet backfillCreated = 0;\nlet backfillUpdated = 0;\nlet backfillSkipped = 0;\nlet backfillFailed = 0;\n\nfor (const r of backfillRows) {\n  if (r.action === 'created') backfillCreated++;\n  else if (r.action === 'updated') backfillUpdated++;\n  else if (r.action === 'skipped') backfillSkipped++;\n  else backfillFailed++;\n}\n\nconst source = $('Set - Source Config').first().json;\nconst scannedBackfill = backfillRows.length;\nconst newOffset = (source.next_backfill_offset || 7) + scannedBackfill;\n\nreturn [{\n  json: {\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    front_created: front.created,\n    front_updated: front.updated,\n    front_skipped: front.skipped,\n    backfill_created: backfillCreated,\n    backfill_updated: backfillUpdated,\n    backfill_skipped: backfillSkipped,\n    failed: (front.failed || 0) + backfillFailed,\n    next_backfill_offset_suggested: newOffset,\n    message: backfillFailed > 0\n      ? `Front scan + backfill completed with ${backfillFailed} backfill failure(s)`\n      : 'Front scan + backfill completed'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3152,
+        -112
+      ],
+      "id": "88028d6d-bdaf-4eb1-89eb-fac5bdef5b2b",
+      "name": "Code - Build Final Summary (With Backfill)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\n\nreturn [{\n  json: {\n    source_id: data.source_id,\n    total_front: (data.frontCandidates || []).length,\n    total_backfill: (data.backfillCandidates || []).length,\n    front_titles: (data.frontCandidates || []).slice(0, 5).map(x => x.title),\n    backfill_titles: (data.backfillCandidates || []).slice(0, 5).map(x => x.title),\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        224
+      ],
+      "id": "eb1f3a59-79be-49e7-8230-7aa4fc1b831c",
+      "name": "Code - Debug Scan Counts"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "96c15ada-377f-4440-8f1a-83a64a29fca0",
+              "leftValue": "={{($json.candidates || []).length}}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        112
+      ],
+      "id": "240ea0df-654d-4d97-addd-4d127e8aff75",
+      "name": "IF - Candidate Quality OK"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    source_id: $json.source_id,\n    message: 'Parser chưa lấy đủ candidate hợp lệ. Không nên update source này.',\n    candidate_count: ($json.candidates || []).length\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        128
+      ],
+      "id": "bc4735d2-f3f2-4222-b689-26c07847eefd",
+      "name": "Code - Bad Source Summary"
+    },
+    {
+      "parameters": {
+        "jsCode": "const source = $('Set - Source Config').first().json;\nconst result = $json.esearchresult || {};\n\nreturn [{\n  json: {\n    source_id: source.source_id,\n    corpus: source.corpus,\n    content_subtype: source.content_subtype || null,\n    front_page_size: source.front_page_size,\n    warm_depth: source.warm_depth,\n    next_backfill_offset: source.next_backfill_offset,\n    topic: source.topic || '',\n    query: source.query,\n    count: Number(result.count || 0),\n    query_key: result.querykey,\n    webenv: result.webenv\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        272,
+        -176
+      ],
+      "id": "f9b8a012-055f-4dbe-a10c-1d0207467c14",
+      "name": "Code - Extract Search State"
+    },
+    {
+      "parameters": {
+        "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "db",
+              "value": "pubmed"
+            },
+            {
+              "name": "query_key",
+              "value": "={{$json.query_key}}"
+            },
+            {
+              "name": "retstart",
+              "value": "0"
+            },
+            {
+              "name": "retmax",
+              "value": "={{$json.warm_depth}}"
+            },
+            {
+              "name": "retmode",
+              "value": "json"
+            },
+            {
+              "name": "WebEnv",
+              "value": "={{$json.webenv}}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        480,
+        -176
+      ],
+      "id": "473ed810-802d-418c-aebf-9923c9518612",
+      "name": "HTTP - PubMed ESummary"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $json;\nconst candidates = payload.candidates || [];\n\n// từ khóa nên giữ\nconst includeKeywords = [\n  'respiratory',\n  'pneumonia',\n  'influenza',\n  'acute respiratory distress syndrome',\n  'ards',\n  'dyspnea',\n  'copd',\n  'lung',\n  'pulmonary',\n  'thoracic',\n  'covid',\n  'tuberculosis',\n  'tb',\n  'non-small cell lung cancer',\n  'nsclc',\n  'pleural',\n  'airway',\n  'bronch',\n  'trachea'\n];\n\n// từ khóa nên loại\nconst excludeKeywords = [\n  'pericarditis',\n  'appendicitis',\n  'uterine',\n  'endometrial',\n  'gastrointestinal',\n  'obesity'\n];\n\nfunction containsAny(text, words) {\n  const t = String(text || '').toLowerCase();\n  return words.some(w => t.includes(w));\n}\n\nconst filtered = candidates.filter(item => {\n  // chỉ lọc theo title + journal/source, KHÔNG dùng item.topic\n  const haystack = [\n    item.title || '',\n    item.description || ''\n  ].join(' ').toLowerCase();\n\n  const include = containsAny(haystack, includeKeywords);\n  const exclude = containsAny(haystack, excludeKeywords);\n\n  return include && !exclude;\n}).map((item, idx) => ({\n  ...item,\n  candidate_index: idx\n}));\n\nreturn [{\n  json: {\n    ...payload,\n    candidates: filtered\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        -176
+      ],
+      "id": "59e99645-a21c-49a5-9421-2ac96dd64ba9",
+      "name": "Code - Filter Respiratory Candidates"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set env",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set env": {
+      "main": [
+        [
+          {
+            "node": "Set - Source Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Source Config": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Fetch API Listing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP - Fetch Web Listing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Fetch API Listing": {
+      "main": [
+        [
+          {
+            "node": "Code - Extract Search State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Fetch Web Listing": {
+      "main": [
+        [
+          {
+            "node": "Code - Parse Web Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Parse Web Candidates": {
+      "main": [
+        [
+          {
+            "node": "IF - Candidate Quality OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Normalize API Candidates": {
+      "main": [
+        [
+          {
+            "node": "Code - Filter Respiratory Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Build Scan Plan": {
+      "main": [
+        [
+          {
+            "node": "Code - Emit Front Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Emit Front Candidates": {
+      "main": [
+        [
+          {
+            "node": "Switch - Decide Front Ingest Transport",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Decide Front Ingest Transport": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Ingest Front Web",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP - Ingest Front PDF URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Ingest Front Web": {
+      "main": [
+        [
+          {
+            "node": "Code - Normalize Backend Ingest Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Ingest Front PDF URL": {
+      "main": [
+        [
+          {
+            "node": "Code - Normalize Backend Ingest Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Normalize Backend Ingest Result": {
+      "main": [
+        [
+          {
+            "node": "Code - Count Front Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Count Front Results": {
+      "main": [
+        [
+          {
+            "node": "IF - Need Backfill",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Need Backfill": {
+      "main": [
+        [
+          {
+            "node": "Code - Emit Backfill Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Build Final Summary (No Backfill)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Emit Backfill Candidates": {
+      "main": [
+        [
+          {
+            "node": "Switch - Decide Backfill Ingest Transport",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Decide Backfill Ingest Transport": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Ingest Backfill Web",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP - Ingest Backfill PDF URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Ingest Backfill Web": {
+      "main": [
+        [
+          {
+            "node": "Code - Normalize Backend Ingest Result Backfill",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Ingest Backfill PDF URL": {
+      "main": [
+        [
+          {
+            "node": "Code - Normalize Backend Ingest Result Backfill",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Normalize Backend Ingest Result Backfill": {
+      "main": [
+        [
+          {
+            "node": "Code - Build Final Summary (With Backfill)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Build Final Summary (No Backfill)": {
+      "main": [
+        []
+      ]
+    },
+    "Code - Build Final Summary (With Backfill)": {
+      "main": [
+        []
+      ]
+    },
+    "Code - Debug Scan Counts": {
+      "main": [
+        []
+      ]
+    },
+    "IF - Candidate Quality OK": {
+      "main": [
+        [
+          {
+            "node": "Code - Build Scan Plan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - Bad Source Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Extract Search State": {
+      "main": [
+        [
+          {
+            "node": "HTTP - PubMed ESummary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - PubMed ESummary": {
+      "main": [
+        [
+          {
+            "node": "Code - Normalize API Candidates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Filter Respiratory Candidates": {
+      "main": [
+        [
+          {
+            "node": "Code - Build Scan Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d2e75801-2b40-4922-a0da-e68fdd6b0c6c",
+  "meta": {
+    "instanceId": "549f951728b4cb93cf1c66e38895d964e2cd62a26b6fb17c76412d29b78517f0"
+  },
+  "id": "SL9Uq8CWu0fQgNhA3Gzkr",
+  "tags": []
+}

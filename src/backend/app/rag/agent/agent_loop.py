@@ -3,7 +3,7 @@ from typing import Any, AsyncGenerator
 
 from backend.app.rag.agent.planner import plan_step
 from backend.app.rag.agent.response_generator import generate_professional_answer
-from backend.app.rag.retrieval.retrieval import multi_query_retrieve
+from backend.app.services.ask_context_service import AskContextService
 
 MAX_STEPS = 2
 logger = logging.getLogger(__name__)
@@ -27,9 +27,11 @@ def agent_loop(
     history: list[dict[str, Any]],
     planner_system_prompt: str | None = None,
     professional_prompt: str | None = None,
+    context_service: AskContextService | None = None,
 ) -> AsyncGenerator[str, None]:
     all_contexts: list[dict[str, Any]] = []
     observation: str | None = None
+    retriever = context_service or AskContextService()
 
     for step in range(MAX_STEPS):
         plan = plan_step(
@@ -49,15 +51,12 @@ def agent_loop(
         if not action_input:
             action_input = question
 
-        results = multi_query_retrieve(
-            question=action_input,
-            top_k=6,
-        )
+        results = retriever.retrieve_contexts(action_input, limit=6)
 
         if not results:
-            results = multi_query_retrieve(
-                question=f"{action_input} detailed explanation".strip(),
-                top_k=6,
+            results = retriever.retrieve_contexts(
+                f"{action_input} detailed explanation".strip(),
+                limit=6,
             )
 
         if results:

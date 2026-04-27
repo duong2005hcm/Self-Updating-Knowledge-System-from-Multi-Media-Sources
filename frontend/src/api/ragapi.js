@@ -1,127 +1,73 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { ingestPdf, ingestWeb } from "./adminApi";
+import { askKnowledge, uploadChatPdf } from "./askApi";
+import { getBackendHealth } from "./publicApi";
+import { searchDocuments } from "./searchApi";
+import { getOrCreateConversationId } from "../lib/storage";
 
-// ====== ID helpers ======
-function getUserId() {
-  let userId = localStorage.getItem("user_id");
+export function checkHealth() {
+  return getBackendHealth();
+}
 
-  if (!userId) {
-    userId = "user_" + Math.random().toString(36).substring(2);
-    localStorage.setItem("user_id", userId);
+export function searchKnowledge(query, options = {}) {
+  return searchDocuments(query, options);
+}
+
+export async function askRAG(question, options = {}) {
+  if (!options.token) {
+    throw new Error("askRAG yêu cầu Firebase ID token thật.");
   }
 
-  return userId;
-}
-
-function getConversationId() {
-  let convoId = localStorage.getItem("conversation_id");
-
-  if (!convoId) {
-    convoId = "convo_" + Math.random().toString(36).substring(2);
-    localStorage.setItem("conversation_id", convoId);
-  }
-
-  return convoId;
-}
-
-// ====== Health ======
-export async function checkHealth() {
-  const res = await fetch(`${BASE_URL}/api/health`);
-
-  if (!res.ok) throw new Error("Health check failed");
-
-  return res.json();
-}
-
-// ====== ASK RAG ======
-export async function askRAG(question) {
-  const user_id = getUserId();
-  const conversation_id = getConversationId();
-
-  const res = await fetch(`${BASE_URL}/api/ask`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      question,
-      user_id,
-      conversation_id,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error("Ask RAG failed: " + err);
-  }
-
-  const data = await res.json();
-
-  return {
-    answer: data.answer,
-    mode: data.mode,
-    contexts: data.contexts || [],
-  };
-}
-
-// ====== ADMIN INGEST PDF ======
-export async function ingestDoc(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const res = await fetch(`${BASE_URL}/api/admin/ingest/pdf`, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer super_secret_admin",
-    },
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error("Ingest doc failed: " + err);
-  }
-
-  return res.json();
-}
-
-// ====== ADMIN INGEST WEB ======
-export async function ingestWeb(url) {
-  const res = await fetch(`${BASE_URL}/api/admin/ingest/web`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer super_secret_admin",
-    },
-    body: JSON.stringify({ url }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error("Ingest web failed: " + err);
-  }
-
-  return res.json();
-}
-
-// ====== USER UPLOAD PDF (temporary context) ======
-export async function uploadUserPDF(file) {
-  const formData = new FormData();
-  const conversation_id = getConversationId();
-
-  formData.append("file", file);
-
-  const res = await fetch(
-    `${BASE_URL}/api/user/upload/pdf?conversation_id=${conversation_id}`,
+  return askKnowledge(
     {
-      method: "POST",
-      body: formData,
-    }
+      question,
+      userId: options.userId,
+      conversationId: options.conversationId || getOrCreateConversationId(),
+    },
+    options.token
   );
+}
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error("Upload user PDF failed: " + err);
+export async function ingestDoc(file, options = {}) {
+  if (!options.token) {
+    throw new Error("ingestDoc yêu cầu Firebase admin token thật.");
   }
 
-  return res.json();
+  return ingestPdf(
+    {
+      file,
+      domain: options.domain || "general",
+      topic: options.topic || "general",
+      priority: options.priority || "normal",
+      status: options.status || "active",
+      visibility: options.visibility || "public",
+      sourceType: options.sourceType || "PDF",
+      createdBy: options.createdBy || "",
+    },
+    options.token
+  );
+}
+
+export async function ingestWebContent(url, options = {}) {
+  if (!options.token) {
+    throw new Error("ingestWebContent yêu cầu Firebase admin token thật.");
+  }
+
+  return ingestWeb(
+    {
+      url,
+      limit: options.limit || 5,
+      domain: options.domain || "general",
+      topic: options.topic || "general",
+      priority: options.priority || "normal",
+      status: options.status || "active",
+      visibility: options.visibility || "public",
+      source_type: options.sourceType || "Web",
+      created_by: options.createdBy || undefined,
+    },
+    options.token
+  );
+}
+
+export function uploadUserPDF(file, options = {}) {
+  return uploadChatPdf(file, options.conversationId || getOrCreateConversationId());
 }

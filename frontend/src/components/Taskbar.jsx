@@ -11,6 +11,7 @@ function initials(nameOrEmail) {
 export default function Taskbar({
   user,
   onLogout,
+  onGoHome,
   tool,
   onSelectTool,
   children,
@@ -53,6 +54,11 @@ export default function Taskbar({
       </div>
 
       <div className="taskbar-right">
+        {onGoHome ? (
+          <button className="taskbar-btn" onClick={onGoHome}>
+            Trang chủ
+          </button>
+        ) : null}
         <div className="taskbar-user">
           <div className="taskbar-avatar" aria-hidden="true">
             {badge}

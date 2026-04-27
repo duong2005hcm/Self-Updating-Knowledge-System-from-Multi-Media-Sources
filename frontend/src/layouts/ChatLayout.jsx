@@ -14,7 +14,7 @@ import {
   saveConversations,
 } from "../chat/conversations";
 
-export default function ChatLayout({ user, onLogout }) {
+export default function ChatLayout({ user, onLogout, onGoHome }) {
   const [{ conversations, activeConversationId }, setChatState] = useState(() => {
     const loaded = loadConversations();
     const initialConversations = loaded?.conversations?.length
@@ -124,7 +124,13 @@ export default function ChatLayout({ user, onLogout }) {
       />
 
       <div className="main-area">
-        <Taskbar user={user} onLogout={onLogout} tool={tool} onSelectTool={setTool}>
+        <Taskbar
+          user={user}
+          onLogout={onLogout}
+          onGoHome={onGoHome}
+          tool={tool}
+          onSelectTool={setTool}
+        >
           <ChatHeader />
         </Taskbar>
 

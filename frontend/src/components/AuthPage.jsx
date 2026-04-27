@@ -2,12 +2,16 @@ import React, { useMemo, useState } from "react";
 import { loginUser, registerUser } from "../auth/users";
 import LightRays from "./LightRays";
 
-function isEmail(s) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s).trim());
+function isEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
 }
 
-export default function AuthPage({ onAuthed }) {
-  const [mode, setMode] = useState("login"); // login | register
+export default function AuthPage({
+  onAuthed,
+  onBack,
+  subtitle = "Đăng nhập để tiếp tục khai thác tri thức",
+}) {
+  const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,28 +23,44 @@ export default function AuthPage({ onAuthed }) {
     [mode]
   );
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const submit = async (event) => {
+    event.preventDefault();
     setError("");
 
     const cleanEmail = email.trim();
     const cleanPassword = password;
     const cleanName = name.trim();
 
-    if (!isEmail(cleanEmail)) return setError("Email không hợp lệ.");
-    if (cleanPassword.length < 4) return setError("Mật khẩu tối thiểu 4 ký tự.");
-    if (mode === "register" && cleanName.length < 2)
-      return setError("Tên tối thiểu 2 ký tự.");
+    if (!isEmail(cleanEmail)) {
+      setError("Email không hợp lệ.");
+      return;
+    }
+    if (cleanPassword.length < 4) {
+      setError("Mật khẩu tối thiểu 4 ký tự.");
+      return;
+    }
+    if (mode === "register" && cleanName.length < 2) {
+      setError("Tên tối thiểu 2 ký tự.");
+      return;
+    }
 
     setBusy(true);
     try {
-      const res =
+      const result =
         mode === "login"
           ? loginUser({ email: cleanEmail, password: cleanPassword })
-          : registerUser({ name: cleanName, email: cleanEmail, password: cleanPassword });
+          : registerUser({
+              name: cleanName,
+              email: cleanEmail,
+              password: cleanPassword,
+            });
 
-      if (!res.ok) return setError(res.message || "Có lỗi xảy ra.");
-      onAuthed(res.user);
+      if (!result.ok) {
+        setError(result.message || "Có lỗi xảy ra.");
+        return;
+      }
+
+      onAuthed?.(result.user);
     } finally {
       setBusy(false);
     }
@@ -57,13 +77,14 @@ export default function AuthPage({ onAuthed }) {
         followMouse
         mouseInfluence={0.1}
       />
+
       <div className="auth-card" role="dialog" aria-label="Authentication">
         <div className="auth-head">
           <div className="auth-brand">
             <div className="auth-dot" />
             <div>
-              <div className="auth-app">RAG AI</div>
-              <div className="auth-sub">Đăng nhập để bắt đầu chat</div>
+              <div className="auth-app">SIMLESI AI</div>
+              <div className="auth-sub">{subtitle}</div>
             </div>
           </div>
 
@@ -88,24 +109,24 @@ export default function AuthPage({ onAuthed }) {
         <h1 className="auth-title">{title}</h1>
 
         <form className="auth-form" onSubmit={submit}>
-          {mode === "register" && (
+          {mode === "register" ? (
             <label className="auth-field">
               <span>Họ tên</span>
               <input
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="VD: Admin"
+                onChange={(event) => setName(event.target.value)}
+                placeholder="VD: Nguyen Van A"
                 autoComplete="name"
               />
             </label>
-          )}
+          ) : null}
 
           <label className="auth-field">
             <span>Email</span>
             <input
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@example.com"
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="user@example.com"
               inputMode="email"
               autoComplete="email"
             />
@@ -115,14 +136,14 @@ export default function AuthPage({ onAuthed }) {
             <span>Mật khẩu</span>
             <input
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
               type="password"
               placeholder="••••"
               autoComplete={mode === "login" ? "current-password" : "new-password"}
             />
           </label>
 
-          {error && <div className="auth-error">{error}</div>}
+          {error ? <div className="auth-error">{error}</div> : null}
 
           <button className="auth-submit" disabled={busy}>
             {busy ? "Đang xử lý..." : title}
@@ -130,12 +151,16 @@ export default function AuthPage({ onAuthed }) {
         </form>
 
         <div className="auth-foot">
+          {onBack ? (
+            <button type="button" className="auth-back" onClick={onBack}>
+              Quay lại landing page
+            </button>
+          ) : null}
           <span className="auth-foot-muted">
-            Bản quyền &copy; 2024 - RAG AI. All rights reserved.
+            Bản quyền © 2024 - SIMLESI AI. All rights reserved.
           </span>
         </div>
       </div>
     </div>
   );
 }
-

@@ -240,6 +240,12 @@ def multi_query_retrieve(
     collection_names: List[str] = None,
     mode: str = "professional",
 ) -> List[Dict]:
+    """Legacy retrieval helper for pre-Phase-6 ask flows.
+
+    Keep this for compatibility with older/internal call sites. The main ask
+    boundary now goes through `AskContextService` -> `SearchService` instead of
+    calling this helper directly.
+    """
 
     retriever = MultiQueryRetriever(
         collection_names=collection_names,
