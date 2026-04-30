@@ -86,6 +86,10 @@ export default function DocumentDetailPage() {
   const handleOpenFile = async (mode) => {
     if (!state.document) return;
 
+    const targetWindow = mode === "open" ? window.open("about:blank", "_blank") : null;
+    if (targetWindow) {
+      targetWindow.opener = null;
+    }
     setState((current) => ({ ...current, fileBusy: true }));
     try {
       const token = user ? await getToken() : null;
@@ -93,8 +97,12 @@ export default function DocumentDetailPage() {
         token,
         mode,
         fileName: state.document.title,
+        targetWindow,
       });
     } catch (error) {
+      if (targetWindow && !targetWindow.closed) {
+        targetWindow.close();
+      }
       setState((current) => ({
         ...current,
         error: error.message || "Không thể mở file tài liệu.",
@@ -191,6 +199,54 @@ export default function DocumentDetailPage() {
             {state.error}
           </div>
         ) : null}
+
+        <section className="mt-8 rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-sky-700">
+                <FileText className="h-4 w-4" />
+                {state.document.summary_status === "approved"
+                  ? "Tóm tắt đã được kiểm duyệt"
+                  : "Tóm tắt AI"}
+              </div>
+              {state.document.ai_summary ? (
+                <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-slate-700">
+                  {state.document.ai_summary}
+                </p>
+              ) : (
+                <p className="mt-4 text-sm leading-7 text-slate-500">
+                  Tài liệu này chưa có tóm tắt được duyệt. Bạn vẫn có thể đọc các đoạn trích
+                  tài liệu bên dưới.
+                </p>
+              )}
+            </div>
+            {state.document.summary_status ? (
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-slate-500">
+                {state.document.summary_status}
+              </span>
+            ) : null}
+          </div>
+
+          {Array.isArray(state.document.ai_key_points) && state.document.ai_key_points.length ? (
+            <div className="mt-5">
+              <h3 className="text-sm font-bold text-slate-800">Ý chính</h3>
+              <ul className="mt-3 grid gap-2 text-sm leading-6 text-slate-600">
+                {state.document.ai_key_points.map((point, index) => (
+                  <li key={`${point}-${index}`} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {state.document.ai_medical_warning ? (
+            <div className="mt-5 rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 text-xs leading-6 text-amber-800">
+              {state.document.ai_medical_warning}
+            </div>
+          ) : null}
+        </section>
 
         <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <MetadataItem label="Source ID" value={state.document.source_id} />

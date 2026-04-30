@@ -2,7 +2,9 @@ import {
   CalendarClock,
   CheckCircle2,
   FileText,
+  Home,
   LayoutDashboard,
+  LogOut,
   Menu,
   MessageSquareHeart,
   Newspaper,
@@ -13,9 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
-import AskAiPanel from "../../components/ask/AskAiPanel";
-import Navbar from "../../components/layout/Navbar";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "../../lib/utils";
 import { useAuth } from "../../providers/AuthProvider";
 
@@ -50,47 +50,51 @@ const adminGroups = [
   },
 ];
 
+const routeTitles = [
+  { path: "/admin/sources", title: "Nguồn dữ liệu" },
+  { path: "/admin/documents", title: "Danh sách tài liệu" },
+  { path: "/admin/versions", title: "Quản lý phiên bản" },
+  { path: "/admin/ingest", title: "Nạp dữ liệu" },
+  { path: "/admin/pipeline", title: "Nhật ký Pipeline" },
+  { path: "/admin/schedules", title: "Lịch quét tự động" },
+  { path: "/admin/approvals", title: "Phê duyệt tri thức" },
+  { path: "/admin/articles", title: "Bài viết" },
+  { path: "/admin/feedback", title: "Feedback của người dùng" },
+];
+
+function getPageTitle(pathname) {
+  return routeTitles.find((item) => pathname.startsWith(item.path))?.title || "Tổng quan";
+}
+
 function AdminSidebar({ onNavigate }) {
   const { profile, signOutUser } = useAuth();
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    await signOutUser();
+    navigate("/");
+  };
 
   return (
     <div className="flex h-full flex-col bg-white">
-      <div className="border-b border-slate-100 p-5">
-        <Link
-          to="/"
-          onClick={onNavigate}
-          className="block rounded-[24px] bg-gradient-to-br from-brand-700 via-brand-600 to-mint-500 p-5 text-white"
-        >
-          <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm">
-            <img
-              src="/logoIcare.png"
-              alt="HealthCall"
-              className="h-full w-full object-contain p-1"
-            />
-          </div>
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-100">
-            Tri thức Sức khỏe
-          </div>
-          <div className="mt-3 font-display text-2xl font-bold">Admin Console</div>
-          <div className="mt-2 text-sm text-brand-50">
-            Quản trị tri thức, vận hành pipeline và kiểm soát chất lượng.
-          </div>
-        </Link>
-
-        <div className="mt-5 rounded-[24px] border border-slate-100 bg-slate-50 p-4">
-          <div className="text-sm font-semibold text-ink">{profile?.displayName}</div>
-          <div className="mt-1 truncate text-xs text-slate-500">{profile?.email}</div>
+      <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-brand-100">
+          <img src="/logoIcare.png" alt="HealthCall" className="h-full w-full object-contain p-1" />
+        </div>
+        <div className="min-w-0">
+          <div className="font-display text-base font-bold text-ink">Admin</div>
+          <div className="truncate text-xs text-slate-500">Tri thức Sức khỏe</div>
         </div>
       </div>
 
-      <nav className="min-h-0 flex-1 overflow-y-auto p-4">
-        <div className="grid gap-5">
+      <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
+        <div className="grid gap-4">
           {adminGroups.map((group) => (
             <div key={group.label}>
-              <div className="mb-2 px-3 text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400">
+              <div className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
                 {group.label}
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-1.5">
                 {group.items.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -101,7 +105,7 @@ function AdminSidebar({ onNavigate }) {
                       onClick={onNavigate}
                       className={({ isActive }) =>
                         cn(
-                          "flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold transition",
+                          "flex items-center gap-3 rounded-2xl border px-3 py-2.5 text-sm font-semibold transition",
                           isActive
                             ? "border-sky-100 bg-sky-50 text-sky-700"
                             : "border-transparent text-slate-600 hover:border-brand-100 hover:bg-brand-50 hover:text-brand-700"
@@ -119,12 +123,18 @@ function AdminSidebar({ onNavigate }) {
         </div>
       </nav>
 
-      <div className="border-t border-slate-100 p-4">
+      <div className="border-t border-slate-100 p-3">
+        <div className="mb-3 rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5">
+          <div className="truncate text-sm font-semibold text-ink">{profile?.displayName || "Admin"}</div>
+          <div className="mt-0.5 truncate text-xs text-slate-500">{profile?.email}</div>
+        </div>
         <div className="grid gap-2">
-          <Link to="/" onClick={onNavigate} className="btn-ghost justify-center">
+          <Link to="/" onClick={onNavigate} className="btn-ghost justify-center px-3 py-2">
+            <Home className="h-4 w-4" />
             Về site public
           </Link>
-          <button type="button" className="btn-secondary justify-center" onClick={signOutUser}>
+          <button type="button" className="btn-secondary justify-center px-3 py-2" onClick={logout}>
+            <LogOut className="h-4 w-4" />
             Đăng xuất
           </button>
         </div>
@@ -133,60 +143,98 @@ function AdminSidebar({ onNavigate }) {
   );
 }
 
-export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isAskOpen, setIsAskOpen] = useState(false);
+function AdminTopbar({ onOpenSidebar }) {
+  const { profile, signOutUser } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pageTitle = getPageTitle(location.pathname);
+
+  const logout = async () => {
+    await signOutUser();
+    navigate("/");
+  };
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-surface text-ink">
-      <Navbar onAskClick={() => setIsAskOpen(true)} />
-
-      <div className="relative flex min-h-0 flex-1 overflow-hidden">
-        <aside className="z-40 hidden h-full w-72 shrink-0 overflow-hidden border-r border-slate-200 bg-white lg:block">
-          <AdminSidebar />
-        </aside>
-
-        {sidebarOpen ? (
-          <div className="fixed inset-0 z-[60] lg:hidden">
-            <button
-              type="button"
-              className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
-              aria-label="Đóng menu quản trị"
-              onClick={() => setSidebarOpen(false)}
-            />
-            <aside className="relative h-full w-[min(86vw,320px)] overflow-hidden border-r border-slate-200 bg-white shadow-float">
-              <div className="absolute right-3 top-3 z-10">
-                <button
-                  type="button"
-                  className="rounded-full border border-slate-200 bg-white p-2 text-slate-700 shadow-sm"
-                  aria-label="Đóng menu quản trị"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              <AdminSidebar onNavigate={() => setSidebarOpen(false)} />
-            </aside>
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:px-6">
+      <div className="flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          className="rounded-full border border-slate-200 bg-white p-2 text-slate-700 shadow-sm lg:hidden"
+          aria-label="Mở menu quản trị"
+          onClick={onOpenSidebar}
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div className="min-w-0">
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Admin Console
           </div>
-        ) : null}
-
-        <main className="min-w-0 flex-1 overflow-y-auto">
-          <div className="sticky top-0 z-30 border-b border-slate-200 bg-surface/90 px-4 py-3 backdrop-blur lg:hidden">
-            <button
-              type="button"
-              className="btn-secondary px-4 py-2"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="h-4 w-4" />
-              Menu quản trị
-            </button>
-          </div>
-          <div className="mx-auto w-full max-w-[1600px] p-4 sm:p-6 lg:p-8">
-            <Outlet />
-          </div>
-        </main>
+          <h1 className="truncate font-display text-base font-bold text-ink sm:text-lg">
+            {pageTitle}
+          </h1>
+        </div>
       </div>
-      <AskAiPanel open={isAskOpen} onClose={() => setIsAskOpen(false)} />
+
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <Link to="/" className="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:inline-flex">
+          Về site public
+        </Link>
+        <div className="hidden min-w-0 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 sm:block">
+          <div className="max-w-36 truncate text-sm font-semibold text-ink">{profile?.displayName || "Admin"}</div>
+          <div className="max-w-40 truncate text-xs text-slate-500">{profile?.email}</div>
+        </div>
+        <button
+          type="button"
+          className="rounded-full border border-slate-200 bg-white p-2.5 text-slate-600 transition hover:bg-rose-50 hover:text-rose-600"
+          aria-label="Đăng xuất"
+          onClick={logout}
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
+      </div>
+    </header>
+  );
+}
+
+export default function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-slate-50 text-ink">
+      <aside className="hidden h-screen w-72 shrink-0 overflow-hidden border-r border-slate-200 bg-white lg:block">
+        <AdminSidebar />
+      </aside>
+
+      {sidebarOpen ? (
+        <div className="fixed inset-0 z-[60] lg:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm"
+            aria-label="Đóng menu quản trị"
+            onClick={() => setSidebarOpen(false)}
+          />
+          <aside className="relative h-full w-[min(86vw,320px)] overflow-hidden border-r border-slate-200 bg-white shadow-float">
+            <div className="absolute right-3 top-3 z-10">
+              <button
+                type="button"
+                className="rounded-full border border-slate-200 bg-white p-2 text-slate-700 shadow-sm"
+                aria-label="Đóng menu quản trị"
+                onClick={() => setSidebarOpen(false)}
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <AdminSidebar onNavigate={() => setSidebarOpen(false)} />
+          </aside>
+        </div>
+      ) : null}
+
+      <main className="h-screen min-w-0 flex-1 overflow-y-auto">
+        <AdminTopbar onOpenSidebar={() => setSidebarOpen(true)} />
+        <div className="mx-auto w-full max-w-[1600px] p-4 sm:p-6 lg:p-8">
+          <Outlet />
+        </div>
+      </main>
     </div>
   );
 }

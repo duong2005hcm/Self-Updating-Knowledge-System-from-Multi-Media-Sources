@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Any
 
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
 
 from backend.app.api.dependencies.admin_auth import verify_admin_token
 from backend.app.schemas.ingest_metadata import (
@@ -26,6 +26,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 @router.post("/ingest/pdf")
 async def ingest_pdf(
     file: UploadFile = File(...),
+    pdf_url: str | None = Form(default=None),
     ingest_metadata: IngestMetadata = Depends(parse_ingest_metadata_form),
     decoded_token: dict[str, Any] = Depends(verify_admin_token),
 ):
@@ -37,6 +38,7 @@ async def ingest_pdf(
         return orchestrator.ingest_pdf(
             file_bytes=file_bytes,
             filename=file.filename or "",
+            source_url=(pdf_url or "").strip() or None,
             ingest_metadata=ingest_metadata,
             actor=actor,
             upload_dir=UPLOAD_DIR,

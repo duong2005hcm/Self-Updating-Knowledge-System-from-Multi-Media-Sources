@@ -1,14 +1,14 @@
-import { workflowSteps } from "../../data/features";
+﻿import { workflowSteps } from "../../data/features";
 import SectionHeading from "../common/SectionHeading";
 
 export default function WorkflowSection() {
   return (
-    <section className="page-shell py-12">
-      <div className="glass-panel p-8 sm:p-10">
+    <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="rounded-[32px] border border-white/80 bg-white p-8 shadow-soft sm:p-10">
         <SectionHeading
-          kicker="Workflow"
-          title="Từ nguồn dữ liệu thô đến hỗ trợ tra cứu có kiểm soát"
-          description="Pipeline được thiết kế cho ingestion, chuẩn hóa, lưu trữ và truy xuất tài liệu trước khi AI tạo câu trả lời."
+          kicker="Cách sử dụng"
+          title="Một quy trình đơn giản cho người cần tra cứu sức khỏe"
+          description="Bắt đầu bằng tìm kiếm, đọc nguồn trước, sau đó dùng AI để hỗ trợ hiểu nội dung nhanh hơn."
         />
 
         <div className="mt-10 grid gap-5 lg:grid-cols-4">

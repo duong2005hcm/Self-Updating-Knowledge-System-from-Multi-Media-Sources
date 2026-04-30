@@ -48,6 +48,9 @@ export function ingestPdf(payload, token) {
   formData.append("visibility", payload.visibility);
   formData.append("source_type", payload.sourceType);
   formData.append("created_by", payload.createdBy || "");
+  if (payload.pdfUrl?.trim()) {
+    formData.append("pdf_url", payload.pdfUrl.trim());
+  }
 
   return apiRequest("/api/admin/ingest/pdf", {
     method: "POST",
@@ -59,6 +62,14 @@ export function ingestPdf(payload, token) {
 export function ingestWeb(payload, token) {
   return apiRequest("/api/admin/ingest/web", {
     method: "POST",
+    token,
+    body: payload,
+  });
+}
+
+export function saveDocumentSummary(documentId, payload, token) {
+  return apiRequest(`/api/admin/documents/${documentId}/summary`, {
+    method: "PATCH",
     token,
     body: payload,
   });

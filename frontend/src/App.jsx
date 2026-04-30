@@ -37,7 +37,7 @@ function SiteLayout() {
     <div className="min-h-screen bg-surface text-ink">
       <Navbar onAskClick={() => setIsAskOpen(true)} />
       <main className="relative z-10">
-        <Outlet />
+        <Outlet context={{ openAskPanel: () => setIsAskOpen(true) }} />
       </main>
       <Footer />
       <ScrollToTopButton />

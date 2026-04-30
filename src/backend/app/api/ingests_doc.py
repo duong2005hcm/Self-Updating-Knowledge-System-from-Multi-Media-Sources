@@ -282,6 +282,7 @@ async def ingest_pdf(
         result = orchestrator.ingest_pdf(
             file_bytes=file_bytes,
             filename=file.filename,
+            source_url=pdf_url,
             ingest_metadata=ingest_metadata,
             actor=actor,
             upload_dir=UPLOAD_DIR,
@@ -323,6 +324,7 @@ def ingest_pdf_url(
         result = orchestrator.ingest_pdf(
             file_bytes=file_bytes,
             filename=filename,
+            source_url=pdf_url,
             ingest_metadata=req,
             actor=actor,
             upload_dir=UPLOAD_DIR,

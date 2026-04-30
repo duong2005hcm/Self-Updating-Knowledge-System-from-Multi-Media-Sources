@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from backend.app.api.ask import router as ask_router
 from backend.app.api.articles import router as articles_router
 from backend.app.api.admin_articles import router as admin_articles_router
+from backend.app.api.admin_documents import router as admin_documents_router
 from backend.app.api.admin_governance import router as admin_governance_router
 from backend.app.api.admin_prompts import router as admin_prompts_router
 from backend.app.api.admin_knowledge import router as admin_knowledge_router
@@ -60,6 +61,7 @@ app.include_router(search_router, prefix="/api")
 app.include_router(pipeline_jobs_router, prefix="/api")
 app.include_router(documents_router, prefix="/api")
 app.include_router(admin_articles_router, prefix="/api")
+app.include_router(admin_documents_router, prefix="/api")
 app.include_router(admin_governance_router, prefix="/api")
 app.include_router(ingest_admin_router, prefix="/api")
 app.include_router(ingests_doc_router, prefix="/api")

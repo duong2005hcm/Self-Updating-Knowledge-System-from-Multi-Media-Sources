@@ -172,7 +172,9 @@ export default function AdminDocuments() {
                     <div className="font-semibold text-ink">Version {version.version_no}</div>
                     <div className="mt-2">status: {version.status}</div>
                     <div className="mt-2">created: {formatDateTime(version.created_at)}</div>
-                    <div className="mt-2 break-all">raw_path: {version.raw_path || "N/A"}</div>
+                    <div className="mt-2 break-all">raw_storage_path: {version.raw_storage_path || "N/A"}</div>
+                    <div className="mt-2 break-all">file_url: {version.file_url || "N/A"}</div>
+                    <div className="mt-2">mime_type: {version.mime_type || "N/A"}</div>
                   </article>
                 ))}
               </div>

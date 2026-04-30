@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { listLatestArticles } from "../api/articleApi";
-import { getBackendHealth } from "../api/publicApi";
-import AboutSection from "../components/landing/AboutSection";
 import DiseaseSearchPreview from "../components/landing/DiseaseSearchPreview";
-import FaqSection from "../components/landing/FaqSection";
 import FeatureCards from "../components/landing/FeatureCards";
 import FinalCta from "../components/landing/FinalCta";
 import HeroSection from "../components/landing/HeroSection";
 import LatestArticles from "../components/landing/LatestArticles";
 import StatsSection from "../components/landing/StatsSection";
+import SystemTestimonials from "../components/landing/SystemTestimonials";
 import WorkflowSection from "../components/landing/WorkflowSection";
 import { mockArticles } from "../data/mockArticles";
-
-const initialHealth = {
-  status: "degraded",
-  label: "Đang kiểm tra backend",
-};
 
 const MOH_SOURCE_NAME = "Bộ Y tế";
 
@@ -28,22 +22,9 @@ function isMohFeaturedArticle(article) {
   );
 }
 
-function mapHealthState(payload) {
-  if (payload?.status === "ok") {
-    return {
-      status: "healthy",
-      label: "Backend đang sẵn sàng",
-    };
-  }
-
-  return {
-    status: "offline",
-    label: "Backend hiện chưa phản hồi",
-  };
-}
-
 export default function HomePage() {
-  const [healthState, setHealthState] = useState(initialHealth);
+  const outletContext = useOutletContext();
+  const openAskPanel = outletContext?.openAskPanel || (() => {});
   const [articleState, setArticleState] = useState({
     loading: true,
     error: "",
@@ -53,19 +34,6 @@ export default function HomePage() {
 
   useEffect(() => {
     let active = true;
-
-    getBackendHealth()
-      .then((payload) => {
-        if (!active) return;
-        setHealthState(mapHealthState(payload));
-      })
-      .catch(() => {
-        if (!active) return;
-        setHealthState({
-          status: "offline",
-          label: "Backend hiện chưa phản hồi",
-        });
-      });
 
     setArticleState((current) => ({
       ...current,
@@ -88,7 +56,7 @@ export default function HomePage() {
         if (!active) return;
         setArticleState({
           loading: false,
-          error: error.message || "Không thể tải bài viết từ backend.",
+          error: error.message || "Không thể tải bài viết mới.",
           articles: mockArticles,
           usingFallback: true,
         });
@@ -100,21 +68,20 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
-      <HeroSection healthState={healthState} />
+    <main className="bg-slate-50">
+      <HeroSection onAskClick={openAskPanel} />
       <StatsSection />
+      <DiseaseSearchPreview />
       <FeatureCards />
-      <WorkflowSection />
       <LatestArticles
         articles={articleState.articles}
         error={articleState.error}
         isLoading={articleState.loading}
         usingFallback={articleState.usingFallback}
       />
-      <DiseaseSearchPreview />
-      <FaqSection />
-      <AboutSection />
+      <SystemTestimonials />
+      <WorkflowSection />
       <FinalCta />
-    </>
+    </main>
   );
 }

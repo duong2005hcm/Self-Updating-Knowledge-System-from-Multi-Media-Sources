@@ -529,11 +529,26 @@ class DocumentService:
         *,
         version_id: str,
         raw_path: Optional[str] = None,
+        raw_filename: Optional[str] = None,
+        raw_storage_path: Optional[str] = None,
+        file_url: Optional[str] = None,
+        mime_type: Optional[str] = None,
+        source_url: Optional[str] = None,
         extracted_text: Optional[str] = None,
     ) -> Optional[DocumentVersion]:
         updates: dict[str, object] = {}
         if raw_path:
             updates["raw_path"] = raw_path
+        if raw_filename:
+            updates["raw_filename"] = raw_filename
+        if raw_storage_path:
+            updates["raw_storage_path"] = raw_storage_path
+        if file_url:
+            updates["file_url"] = file_url
+        if mime_type:
+            updates["mime_type"] = mime_type
+        if source_url:
+            updates["source_url"] = source_url
 
         normalized_extracted_text = (extracted_text or "").strip()
         if normalized_extracted_text:
@@ -544,6 +559,78 @@ class DocumentService:
             return None
 
         return self._versions.update_version(version_id, updates)
+
+    def update_document_summary(
+        self,
+        *,
+        document_id: str,
+        version_id: Optional[str] = None,
+        summary: str = "",
+        key_points: Optional[list[str]] = None,
+        medical_warning: str = "",
+        suggested_tags: Optional[list[str]] = None,
+        suggested_topic: str = "",
+        summary_status: str = "draft",
+        updated_by: str = "admin",
+    ) -> Document:
+        document = self.get_document(document_id)
+        normalized_status = (summary_status or "draft").strip().lower()
+        if normalized_status not in {"draft", "approved"}:
+            normalized_status = "draft"
+
+        now = datetime.now(timezone.utc)
+        normalized_key_points = [
+            str(item).strip()
+            for item in (key_points or [])
+            if str(item).strip()
+        ][:10]
+        normalized_tags = [
+            str(item).strip()
+            for item in (suggested_tags or [])
+            if str(item).strip()
+        ][:10]
+        normalized_summary = (summary or "").strip()[:3000]
+        normalized_warning = (medical_warning or "").strip()
+        normalized_topic = (suggested_topic or "").strip()
+
+        updates = {
+            "ai_summary": normalized_summary,
+            "ai_key_points": normalized_key_points,
+            "ai_medical_warning": normalized_warning,
+            "ai_suggested_tags": normalized_tags,
+            "ai_suggested_topic": normalized_topic,
+            "summary_status": normalized_status,
+            "summary_version_id": version_id,
+            "summary_updated_at": now,
+            "summary_updated_by": (updated_by or "admin").strip(),
+        }
+
+        updated_document = self._documents.update_document(document.id, updates)
+        if updated_document is None:
+            raise DocumentNotFoundError(f"Document not found: {document_id}")
+
+        if version_id:
+            self._versions.update_version(
+                version_id,
+                {
+                    "ai_summary": normalized_summary,
+                    "ai_key_points": normalized_key_points,
+                    "ai_medical_warning": normalized_warning,
+                    "ai_suggested_tags": normalized_tags,
+                    "ai_suggested_topic": normalized_topic,
+                    "summary_status": normalized_status,
+                    "summary_updated_at": now,
+                    "summary_updated_by": (updated_by or "admin").strip(),
+                },
+            )
+
+        return updated_document
+
+    def get_source_url(self, source_id: str) -> Optional[str]:
+        source = self._sources.get_source_by_id(source_id)
+        if source is None:
+            return None
+        return source.url_or_path
 
     def compute_source_id(self, *, source_type: str, source_locator: str) -> str:
         normalized_source_type = _normalize_text(source_type, "unknown")

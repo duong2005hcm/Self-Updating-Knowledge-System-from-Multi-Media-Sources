@@ -31,6 +31,15 @@ class Document(BaseModel):
     reviewed_at: Optional[datetime] = None
     effective_at: Optional[datetime] = None
     expires_at: Optional[datetime] = None
+    ai_summary: Optional[str] = None
+    ai_key_points: list[str] = Field(default_factory=list)
+    ai_medical_warning: Optional[str] = None
+    ai_suggested_tags: list[str] = Field(default_factory=list)
+    ai_suggested_topic: Optional[str] = None
+    summary_status: Optional[str] = None
+    summary_version_id: Optional[str] = None
+    summary_updated_at: Optional[datetime] = None
+    summary_updated_by: Optional[str] = None
 
     @classmethod
     def create(

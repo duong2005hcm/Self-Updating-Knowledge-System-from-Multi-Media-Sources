@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import logging
-import os
+import ipaddress
 from typing import Optional
+from urllib.parse import urlparse
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import FileResponse
 
 from backend.app.api.dependencies.authz import (
     Principal,
@@ -22,6 +22,7 @@ from backend.app.schemas.document import (
     DocumentChunkListResponse,
     DocumentChunkResponse,
     DocumentDetailResponse,
+    DocumentFileResponse,
     DocumentListResponse,
     DocumentPreviewResponse,
     DocumentPreviewSnippetResponse,
@@ -30,6 +31,12 @@ from backend.app.schemas.document import (
     DocumentVersionResponse,
 )
 from backend.app.services.document_service import DocumentNotFoundError, DocumentPreviewSnippet, DocumentService
+from backend.app.services.file_storage_service import (
+    SIGNED_URL_EXPIRES_SECONDS,
+    FileStorageError,
+    FileStorageNotConfiguredError,
+    FileStorageService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -43,8 +50,74 @@ router = APIRouter(
 #   public documents and sanitized previews unless the caller is admin.
 
 
+def _is_blocked_remote_host(hostname: str) -> bool:
+    normalized = (hostname or "").strip().lower().strip("[]")
+    if not normalized:
+        return True
+    if normalized in {"localhost", "0.0.0.0"} or normalized.endswith(".local"):
+        return True
+
+    try:
+        ip = ipaddress.ip_address(normalized)
+    except ValueError:
+        return False
+
+    return any(
+        [
+            ip.is_loopback,
+            ip.is_private,
+            ip.is_link_local,
+            ip.is_reserved,
+            ip.is_multicast,
+        ]
+    )
+
+
+def _normalize_remote_pdf_url(value: str) -> str:
+    raw = (value or "").strip()
+    if not raw:
+        return ""
+
+    parsed = urlparse(raw)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return ""
+    if _is_blocked_remote_host(parsed.hostname or ""):
+        return ""
+    return raw
+
+
+def _document_remote_pdf_urls(
+    *,
+    document: Document,
+    version: DocumentVersion | None,
+    raw_path: str,
+    service: DocumentService,
+) -> list[str]:
+    candidates = [
+        (
+            getattr(version, "file_url", None)
+            if version and not getattr(version, "raw_storage_path", None)
+            else None
+        ),
+        getattr(version, "source_url", None) if version else None,
+        raw_path,
+        service.get_source_url(document.source_id),
+    ]
+
+    urls: list[str] = []
+    for candidate in candidates:
+        url = _normalize_remote_pdf_url(candidate or "")
+        if url and url not in urls:
+            urls.append(url)
+    return urls
+
+
 def get_document_service() -> DocumentService:
     return DocumentService()
+
+
+def get_file_storage_service() -> FileStorageService:
+    return FileStorageService()
 
 
 USER_SAFE_CHUNK_METADATA_KEYS = {
@@ -80,6 +153,12 @@ def _to_response(document: Document, *, principal: Optional[Principal] = None) -
         data["created_by"] = None
         data["reviewed_by"] = None
         data["reviewed_at"] = None
+        if data.get("summary_status") != "approved":
+            data["ai_summary"] = None
+            data["ai_key_points"] = []
+            data["ai_medical_warning"] = None
+            data["ai_suggested_tags"] = []
+            data["ai_suggested_topic"] = None
 
     return DocumentResponse(**data)
 
@@ -127,8 +206,14 @@ def _to_preview_snippet_response(
 
 def _to_version_response(version: DocumentVersion) -> DocumentVersionResponse:
     if hasattr(version, "model_dump"):
-        return DocumentVersionResponse(**version.model_dump())
-    return DocumentVersionResponse(**version.dict())
+        data = version.model_dump()
+    else:
+        data = version.dict()
+
+    # raw_path is an internal temp/local path. Do not expose local filesystem
+    # paths to frontend clients; use raw_storage_path/file_url for diagnostics.
+    data["raw_path"] = None
+    return DocumentVersionResponse(**data)
 
 
 @router.get("", response_model=DocumentListResponse)
@@ -276,12 +361,14 @@ def get_document_preview(
         raise HTTPException(status_code=500, detail=f"Failed to get document preview: {str(e)}")
 
 
-@router.get("/{document_id}/file")
+@router.get("/{document_id}/file", response_model=DocumentFileResponse)
 def get_document_file(
     document_id: str,
+    disposition: str = Query(default="inline"),
     service: DocumentService = Depends(get_document_service),
+    file_storage: FileStorageService = Depends(get_file_storage_service),
     principal: Principal = Depends(get_current_principal),
-) -> FileResponse:
+) -> DocumentFileResponse:
     try:
         document = service.get_document(document_id)
         enforce_document_access(principal=principal, status=document.status, visibility=document.visibility)
@@ -297,14 +384,76 @@ def get_document_file(
         versions = service.list_document_versions(document_id)
         version = max(versions, key=lambda item: item.version_no, default=None)
         raw_path = (version.raw_path if version else None) or ""
-        if not raw_path or not os.path.exists(raw_path):
-            raise HTTPException(status_code=404, detail="Document file is not available")
+        filename = (
+            getattr(version, "raw_filename", None)
+            or document.title
+            or f"{document_id}.pdf"
+        )
+        if not filename.lower().endswith(".pdf"):
+            filename = f"{filename}.pdf"
 
-        filename = document.title if document.title.lower().endswith(".pdf") else f"{document.title}.pdf"
-        return FileResponse(
-            raw_path,
-            media_type="application/pdf",
-            filename=filename,
+        normalized_disposition = "attachment" if disposition == "attachment" else "inline"
+        storage_path = (getattr(version, "raw_storage_path", None) if version else None) or ""
+        storage_error: Exception | None = None
+
+        if storage_path:
+            try:
+                signed_url = file_storage.get_file_url(
+                    storage_path=storage_path,
+                    filename=filename,
+                    disposition=normalized_disposition,
+                )
+                return DocumentFileResponse(
+                    document_id=document_id,
+                    filename=filename,
+                    mime_type=(getattr(version, "mime_type", None) if version else None) or "application/pdf",
+                    file_url=signed_url,
+                    storage_path=storage_path,
+                    source="firebase_storage_signed_url",
+                    expires_in_seconds=SIGNED_URL_EXPIRES_SECONDS,
+                )
+            except (FileStorageError, FileStorageNotConfiguredError) as exc:
+                storage_error = exc
+                logger.warning(
+                    "Stored document file URL failed for document_id='%s', storage_path='%s': %s",
+                    document_id,
+                    storage_path,
+                    str(exc),
+                )
+
+        if is_public_document(status=document.status, visibility=document.visibility):
+            remote_urls = _document_remote_pdf_urls(
+                document=document,
+                version=version,
+                raw_path=raw_path,
+                service=service,
+            )
+            if remote_urls:
+                return DocumentFileResponse(
+                    document_id=document_id,
+                    filename=filename,
+                    mime_type=(getattr(version, "mime_type", None) if version else None) or "application/pdf",
+                    file_url=remote_urls[0],
+                    storage_path=storage_path or None,
+                    source="external_pdf_url",
+                    expires_in_seconds=None,
+                )
+
+        if storage_error is not None:
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    "Document PDF exists in metadata but a browser-accessible storage URL "
+                    f"could not be created: {str(storage_error)}"
+                ),
+            )
+
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Document PDF is not available from browser-accessible storage. "
+                "Re-ingest the PDF with Firebase Storage/GCS configured."
+            ),
         )
     except DocumentNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))

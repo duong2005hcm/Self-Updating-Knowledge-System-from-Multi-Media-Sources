@@ -249,7 +249,7 @@ dist/
 coverage/
 
 # Uploads
-data/
+datas/
 # Ignore PDF files
 *.pdf
 rag-knowledge-system-firebase-adminsdk-fbsvc-bb575ec243.json
