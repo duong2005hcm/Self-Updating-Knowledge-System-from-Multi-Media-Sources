@@ -130,6 +130,18 @@ class ArticleRepository:
             return None
         return self._get_first_by_field("content_hash", normalized_hash)
 
+    def get_article_by_id(self, article_id: str) -> Optional[Article]:
+        normalized_id = (article_id or "").strip()
+        if not normalized_id:
+            return None
+
+        snapshot = self._db.collection(ARTICLES_COLLECTION).document(normalized_id).get(
+            **FIRESTORE_CALL_KWARGS,
+        )
+        if not snapshot.exists:
+            return None
+        return self._snapshot_to_model(snapshot)
+
     def list_articles(
         self,
         *,
@@ -139,6 +151,9 @@ class ArticleRepository:
         topic: Optional[str] = None,
         source_name: Optional[str] = None,
         content_type: Optional[str] = None,
+        source_type: Optional[str] = None,
+        author_id: Optional[str] = None,
+        author_name: Optional[str] = None,
     ) -> list[Article]:
         capped_limit = max(1, min(int(limit or 50), 200))
         query = self._db.collection(ARTICLES_COLLECTION)
@@ -153,20 +168,61 @@ class ArticleRepository:
             query = query.where("source_name", "==", source_name.strip())
         if content_type:
             query = query.where("content_type", "==", content_type.strip())
+        if source_type:
+            query = query.where("source_type", "==", source_type.strip())
+        if author_id:
+            query = query.where("author_id", "==", author_id.strip())
+        if author_name:
+            query = query.where("author_name", "==", author_name.strip())
 
         try:
-            ordered_query = query.order_by("published_at", direction="DESCENDING").limit(capped_limit)
+            # Pending community articles usually do not have published_at yet.
+            # Ordering by published_at can make Firestore omit those documents,
+            # so use updated_at for retrieval and sort by best available date below.
+            ordered_query = query.order_by("updated_at", direction="DESCENDING").limit(capped_limit)
             snapshots = list(ordered_query.stream(**FIRESTORE_CALL_KWARGS))
         except Exception:
             snapshots = list(query.limit(capped_limit).stream(**FIRESTORE_CALL_KWARGS))
-            snapshots.sort(
-                key=lambda item: (item.to_dict() or {}).get("published_at")
-                or (item.to_dict() or {}).get("updated_at")
-                or datetime.min.replace(tzinfo=timezone.utc),
-                reverse=True,
-            )
+
+        snapshots.sort(
+            key=lambda item: (item.to_dict() or {}).get("published_at")
+            or (item.to_dict() or {}).get("updated_at")
+            or (item.to_dict() or {}).get("created_at")
+            or datetime.min.replace(tzinfo=timezone.utc),
+            reverse=True,
+        )
 
         return [self._snapshot_to_model(snapshot) for snapshot in snapshots[:capped_limit]]
+
+    def update_article_fields(self, article_id: str, fields: dict[str, Any]) -> Optional[Article]:
+        normalized_id = (article_id or "").strip()
+        if not normalized_id:
+            return None
+
+        document_ref = self._db.collection(ARTICLES_COLLECTION).document(normalized_id)
+        snapshot = document_ref.get(**FIRESTORE_CALL_KWARGS)
+        if not snapshot.exists:
+            return None
+
+        payload = dict(fields)
+        payload["updated_at"] = datetime.now(timezone.utc)
+        document_ref.update(payload, **FIRESTORE_CALL_KWARGS)
+        next_snapshot = document_ref.get(**FIRESTORE_CALL_KWARGS)
+        return self._snapshot_to_model(next_snapshot)
+
+    def delete_article(self, article_id: str) -> Optional[Article]:
+        normalized_id = (article_id or "").strip()
+        if not normalized_id:
+            return None
+
+        document_ref = self._db.collection(ARTICLES_COLLECTION).document(normalized_id)
+        snapshot = document_ref.get(**FIRESTORE_CALL_KWARGS)
+        if not snapshot.exists:
+            return None
+
+        article = self._snapshot_to_model(snapshot)
+        document_ref.delete(**FIRESTORE_CALL_KWARGS)
+        return article
 
     def _get_first_by_field(self, field_name: str, value: str) -> Optional[Article]:
         return self._get_first_by_fields({field_name: value})

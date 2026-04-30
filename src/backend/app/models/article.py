@@ -27,6 +27,9 @@ class Article(BaseModel):
     source_type: str = "external_news"
     source_name: str
     source_url: str
+    image_url: Optional[str] = None
+    author_id: Optional[str] = None
+    author_name: Optional[str] = None
     external_id: Optional[str] = None
     content_hash: Optional[str] = None
     published_at: Optional[datetime] = None
@@ -49,6 +52,9 @@ class Article(BaseModel):
         summary: str = "",
         content_type: str = "news",
         source_type: str = "external_news",
+        image_url: Optional[str] = None,
+        author_id: Optional[str] = None,
+        author_name: Optional[str] = None,
         external_id: Optional[str] = None,
         content_hash: Optional[str] = None,
         published_at: Optional[datetime] = None,
@@ -68,6 +74,9 @@ class Article(BaseModel):
             source_type=source_type,
             source_name=source_name,
             source_url=source_url,
+            image_url=image_url,
+            author_id=author_id,
+            author_name=author_name,
             external_id=external_id,
             content_hash=content_hash,
             published_at=published_at,

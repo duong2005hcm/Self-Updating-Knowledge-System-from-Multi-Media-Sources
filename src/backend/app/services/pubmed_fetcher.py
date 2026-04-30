@@ -1,17 +1,21 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Callable, Optional
 
 import requests
 
+from backend.app.config.runtime_network import should_trust_external_news_proxy
 from backend.app.schemas.article import ArticleCreateRequest
 from backend.app.services.article_service import ArticleCreateResult, ArticleService
 
 PUBMED_SEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 PUBMED_SUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
 PUBMED_SOURCE_NAME = "PubMed"
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -45,7 +49,7 @@ class PubMedFetcher:
         timeout_seconds: int = 20,
     ):
         self._articles = article_service
-        self._http_get = http_get or requests.get
+        self._http_get = http_get or _build_default_http_get()
         self._timeout_seconds = timeout_seconds
 
     def fetch_latest(
@@ -62,6 +66,13 @@ class PubMedFetcher:
 
         pubmed_ids = self._search_ids(query=normalized_query, page_size=capped_page_size)
         summaries = self._fetch_summaries(pubmed_ids) if pubmed_ids else []
+        logger.info(
+            "pubmed_parse_result query=%s requested=%s raw_count=%s first_title=%s",
+            normalized_query,
+            capped_page_size,
+            len(summaries),
+            _clean_text(summaries[0].get("title")) if summaries else "",
+        )
 
         items: list[PubMedFetchItem] = []
         created = 0
@@ -74,6 +85,14 @@ class PubMedFetcher:
                 tags=tags or [],
             )
             create_result = self._articles.create_article(article_payload)
+            logger.info(
+                "pubmed_dedup_result action=%s matched_by=%s external_id=%s source_url=%s title=%s",
+                create_result.action,
+                create_result.dedup_matched_by or "",
+                article_payload.external_id or "",
+                article_payload.source_url,
+                article_payload.title,
+            )
             if create_result.action == "created":
                 created += 1
             elif create_result.action == "skipped_duplicate":
@@ -90,31 +109,49 @@ class PubMedFetcher:
         )
 
     def _search_ids(self, *, query: str, page_size: int) -> list[str]:
+        params = {
+            "db": "pubmed",
+            "term": query,
+            "retmode": "json",
+            "sort": "pub date",
+            "retmax": page_size,
+        }
+        logger.info("pubmed_esearch_request url=%s params=%s", PUBMED_SEARCH_URL, params)
         response = self._http_get(
             PUBMED_SEARCH_URL,
-            params={
-                "db": "pubmed",
-                "term": query,
-                "retmode": "json",
-                "sort": "pub+date",
-                "retmax": page_size,
-            },
+            params=params,
             timeout=self._timeout_seconds,
+        )
+        logger.info(
+            "pubmed_esearch_response status=%s size=%s url=%s",
+            getattr(response, "status_code", ""),
+            len(getattr(response, "content", b"") or b""),
+            getattr(response, "url", PUBMED_SEARCH_URL),
         )
         response.raise_for_status()
         payload = response.json()
         ids = ((payload.get("esearchresult") or {}).get("idlist") or []) if isinstance(payload, dict) else []
-        return [str(item).strip() for item in ids if str(item).strip()]
+        normalized_ids = [str(item).strip() for item in ids if str(item).strip()]
+        logger.info("pubmed_esearch_result query=%s pmid_count=%s ids=%s", query, len(normalized_ids), normalized_ids)
+        return normalized_ids
 
     def _fetch_summaries(self, pubmed_ids: list[str]) -> list[dict[str, Any]]:
+        params = {
+            "db": "pubmed",
+            "id": ",".join(pubmed_ids),
+            "retmode": "json",
+        }
+        logger.info("pubmed_esummary_request url=%s params=%s", PUBMED_SUMMARY_URL, params)
         response = self._http_get(
             PUBMED_SUMMARY_URL,
-            params={
-                "db": "pubmed",
-                "id": ",".join(pubmed_ids),
-                "retmode": "json",
-            },
+            params=params,
             timeout=self._timeout_seconds,
+        )
+        logger.info(
+            "pubmed_esummary_response status=%s size=%s url=%s",
+            getattr(response, "status_code", ""),
+            len(getattr(response, "content", b"") or b""),
+            getattr(response, "url", PUBMED_SUMMARY_URL),
         )
         response.raise_for_status()
         payload = response.json()
@@ -126,6 +163,12 @@ class PubMedFetcher:
             item = result.get(pubmed_id)
             if isinstance(item, dict):
                 summaries.append(item)
+        logger.info(
+            "pubmed_esummary_result requested=%s summary_count=%s first_title=%s",
+            len(pubmed_ids),
+            len(summaries),
+            _clean_text(summaries[0].get("title")) if summaries else "",
+        )
         return summaries
 
 
@@ -160,6 +203,12 @@ def _map_summary_to_article_request(
         status="active",
         visibility="public",
     )
+
+
+def _build_default_http_get() -> Callable[..., Any]:
+    session = requests.Session()
+    session.trust_env = should_trust_external_news_proxy()
+    return session.get
 
 
 def _parse_pubmed_date(value: Any) -> Optional[datetime]:

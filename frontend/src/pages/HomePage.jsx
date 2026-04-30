@@ -17,6 +17,17 @@ const initialHealth = {
   label: "Đang kiểm tra backend",
 };
 
+const MOH_SOURCE_NAME = "Bộ Y tế";
+
+function isMohFeaturedArticle(article) {
+  const sourceUrl = String(article?.source_url || "");
+  return (
+    article?.source_name === MOH_SOURCE_NAME &&
+    sourceUrl.includes("moh.gov.vn/index.jsp") &&
+    sourceUrl.includes("pageId=5803")
+  );
+}
+
 function mapHealthState(payload) {
   if (payload?.status === "ok") {
     return {
@@ -33,8 +44,12 @@ function mapHealthState(payload) {
 
 export default function HomePage() {
   const [healthState, setHealthState] = useState(initialHealth);
-  const [articles, setArticles] = useState(mockArticles);
-  const [usingFallback, setUsingFallback] = useState(true);
+  const [articleState, setArticleState] = useState({
+    loading: true,
+    error: "",
+    articles: [],
+    usingFallback: false,
+  });
 
   useEffect(() => {
     let active = true;
@@ -52,18 +67,31 @@ export default function HomePage() {
         });
       });
 
-    listLatestArticles(6)
+    setArticleState((current) => ({
+      ...current,
+      loading: true,
+      error: "",
+      usingFallback: false,
+    }));
+
+    listLatestArticles(6, { sourceName: MOH_SOURCE_NAME })
       .then((response) => {
         if (!active) return;
-        if (response?.items?.length) {
-          setArticles(response.items);
-          setUsingFallback(false);
-        }
+        setArticleState({
+          loading: false,
+          error: "",
+          articles: (response?.items || []).filter(isMohFeaturedArticle),
+          usingFallback: false,
+        });
       })
-      .catch(() => {
+      .catch((error) => {
         if (!active) return;
-        setArticles(mockArticles);
-        setUsingFallback(true);
+        setArticleState({
+          loading: false,
+          error: error.message || "Không thể tải bài viết từ backend.",
+          articles: mockArticles,
+          usingFallback: true,
+        });
       });
 
     return () => {
@@ -77,7 +105,12 @@ export default function HomePage() {
       <StatsSection />
       <FeatureCards />
       <WorkflowSection />
-      <LatestArticles articles={articles} usingFallback={usingFallback} />
+      <LatestArticles
+        articles={articleState.articles}
+        error={articleState.error}
+        isLoading={articleState.loading}
+        usingFallback={articleState.usingFallback}
+      />
       <DiseaseSearchPreview />
       <FaqSection />
       <AboutSection />

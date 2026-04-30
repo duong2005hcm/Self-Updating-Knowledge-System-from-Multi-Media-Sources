@@ -64,15 +64,20 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Exit 0 even if one source fails but others finish.",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable verbose fetch/parse/dedup logs.",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
+    args = _build_parser().parse_args(argv)
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG if args.debug else logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s - %(message)s",
     )
-    args = _build_parser().parse_args(argv)
 
     repository = ArticleRepository()
     article_service = ArticleService(repository)
@@ -109,10 +114,13 @@ def main(argv: list[str] | None = None) -> int:
         )
     for item in result.items:
         logger.info(
-            "external_news_item source=%s action=%s article_id=%s title=%s",
+            "external_news_item source=%s action=%s article_id=%s matched_by=%s external_id=%s url=%s title=%s",
             item.source_name,
             item.action,
             item.article_id,
+            item.dedup_matched_by or "",
+            item.external_id or "",
+            item.source_url,
             item.title,
         )
 

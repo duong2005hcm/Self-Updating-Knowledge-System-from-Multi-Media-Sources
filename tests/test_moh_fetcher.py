@@ -12,61 +12,72 @@ if str(SRC) not in sys.path:
 from backend.app.models.article import Article
 from backend.app.services.article_service import ArticleCreateResult
 from backend.app.services.moh_fetcher import (
+    MOH_HOME_URL,
+    MOH_LISTING_API_URL,
     MOH_SOURCE_NAME,
     MohFetcher,
     MohListingItem,
-    map_moh_detail_to_article_request,
-    parse_moh_featured_items,
+    map_moh_api_detail_to_article_request,
+    parse_moh_featured_api_items,
 )
 
 
-LISTING_HTML = """
-<html>
-  <body>
-    <div id="featured">
-      <h2>Tin nổi bật</h2>
-      <ul>
-        <li class="news-item">
-          <img src="/thumb-1.jpg" />
-          <a href="/tin-noi-bat/bai-viet-1.html">Bài viết Bộ Y tế số 1</a>
-          <span class="date">25/04/2026 08:30</span>
-        </li>
-        <li class="news-item">
-          <a href="https://moh.gov.vn/tin-noi-bat/bai-viet-2.html">Bài viết Bộ Y tế số 2</a>
-          <span class="date">24/04/2026</span>
-        </li>
-        <li class="news-item">
-          <a href="/tin-noi-bat/bai-viet-3.html">Không được lấy quá limit</a>
-        </li>
-      </ul>
-    </div>
-  </body>
-</html>
-"""
+LISTING_PAYLOAD = [
+    {
+        "MA": "8358",
+        "TEN_MUC": "Tin noi bat (Tin tuc - su kien)",
+        "ITEMS": [
+            {
+                "MA": "167411",
+                "TIEU_DE": "Bo Y te article 1",
+                "MO_TA": "Listing summary 1",
+                "MA_DANH_MUC": "8351;8358",
+                "THOI_GIAN_XUAT_BAN": "29/04/2026 08:30 AM",
+                "DUONG_DAN_ANH": "/CustomsCMS/BO_YTE/2026/4/29/thumb-1.png",
+            },
+            {
+                "MA": "167409",
+                "TIEU_DE": "Bo Y te article 2",
+                "MO_TA": "Listing summary 2",
+                "MA_DANH_MUC": "8358",
+                "THOI_GIAN_XUAT_BAN": "29/04/2026 07:15 AM",
+                "DUONG_DAN_ANH": "/CustomsCMS/BO_YTE/2026/4/29/thumb-2.jpg",
+            },
+            {
+                "MA": "167408",
+                "TIEU_DE": "Should not exceed limit",
+                "DUONG_DAN_ANH": "/CustomsCMS/BO_YTE/2026/4/29/thumb-3.jpg",
+            },
+        ],
+    }
+]
 
 
-DETAIL_HTML = """
-<html>
-  <head>
-    <meta property="og:title" content="Tiêu đề detail Bộ Y tế" />
-    <meta name="description" content="Tóm tắt bài viết Bộ Y tế" />
-    <meta property="article:published_time" content="2026-04-25T08:30:00+07:00" />
-    <meta property="og:image" content="/detail-thumb.jpg" />
-  </head>
-  <body>
-    <article>
-      <h1>Tiêu đề detail Bộ Y tế</h1>
-      <p>Nội dung chính của bài viết Bộ Y tế đủ dài để parser xem là nội dung hợp lệ.</p>
-      <p>Đoạn thứ hai bổ sung thêm thông tin y tế, chỉ dùng cho article Firestore.</p>
-    </article>
-  </body>
-</html>
-"""
+DETAIL_PAYLOAD = {
+    "d": {
+        "ma": "167411",
+        "tieuDe": "Detail title from MOH",
+        "moTa": "Detail summary from MOH",
+        "thoiGianBatDauDang": "29/04/2026 08:30 AM",
+        "noiDung": """
+            <p>Main MOH article content long enough for article ingestion.</p>
+            <p>Second paragraph with public health information.</p>
+            <img src="/resource/CustomsCMS/ckeditor/images/detail.png" />
+        """,
+    }
+}
 
 
 class FakeResponse:
-    def __init__(self, text):
+    def __init__(self, text="", json_data=None, url="https://moh.gov.vn/test"):
         self.text = text
+        self._json_data = json_data
+        self.status_code = 200
+        self.url = url
+        self.content = text.encode("utf-8") if text else b"{}"
+
+    def json(self):
+        return self._json_data
 
     def raise_for_status(self):
         return None
@@ -84,6 +95,7 @@ class FakeArticleService:
             content=payload.content,
             source_name=payload.source_name,
             source_url=payload.source_url,
+            image_url=payload.image_url,
             external_id=payload.external_id,
             published_at=payload.published_at,
             topic=payload.topic,
@@ -100,29 +112,35 @@ class FakeArticleService:
         return ArticleCreateResult(action="created", article=article)
 
 
-def test_parse_moh_featured_items_uses_featured_block_and_limit():
-    items = parse_moh_featured_items(
-        LISTING_HTML,
-        base_url="https://moh.gov.vn/",
+def test_parse_moh_featured_api_items_uses_featured_category_and_limit():
+    items = parse_moh_featured_api_items(
+        LISTING_PAYLOAD,
+        base_url=MOH_HOME_URL,
         limit=2,
     )
 
     assert len(items) == 2
-    assert items[0].title == "Bài viết Bộ Y tế số 1"
-    assert items[0].source_url == "https://moh.gov.vn/tin-noi-bat/bai-viet-1.html"
-    assert items[0].thumbnail_url == "https://moh.gov.vn/thumb-1.jpg"
+    assert items[0].title == "Bo Y te article 1"
+    assert items[0].external_id == "167411"
+    assert items[0].category_id == "8358"
+    assert items[0].source_url == "https://moh.gov.vn/index.jsp?pageId=5803&aid=167411&cid=8358"
+    assert items[0].thumbnail_url == "https://moh.gov.vn/resource/CustomsCMS/BO_YTE/2026/4/29/thumb-1.png"
     assert items[0].published_at.year == 2026
-    assert items[1].source_url == "https://moh.gov.vn/tin-noi-bat/bai-viet-2.html"
+    assert items[1].source_url == "https://moh.gov.vn/index.jsp?pageId=5803&aid=167409&cid=8358"
 
 
-def test_map_moh_detail_to_article_request_normalizes_article_schema():
+def test_map_moh_api_detail_to_article_request_normalizes_article_schema():
     listing_item = MohListingItem(
         title="Listing title",
-        source_url="https://moh.gov.vn/tin-noi-bat/bai-viet-1.html",
+        source_url="https://moh.gov.vn/index.jsp?pageId=5803&aid=167411&cid=8358",
+        thumbnail_url="https://moh.gov.vn/resource/CustomsCMS/BO_YTE/2026/4/29/thumb-1.png",
+        summary="Listing summary",
+        external_id="167411",
+        category_id="8358",
     )
 
-    payload = map_moh_detail_to_article_request(
-        DETAIL_HTML,
+    payload = map_moh_api_detail_to_article_request(
+        DETAIL_PAYLOAD,
         listing_item=listing_item,
         topic="health",
         tags=["official"],
@@ -133,25 +151,32 @@ def test_map_moh_detail_to_article_request_normalizes_article_schema():
     assert payload.source_type == "external_news"
     assert payload.status == "active"
     assert payload.visibility == "public"
-    assert payload.external_id.startswith("moh:")
-    assert payload.title == "Tiêu đề detail Bộ Y tế"
-    assert payload.summary == "Tóm tắt bài viết Bộ Y tế"
-    assert "Nội dung chính" in payload.content
+    assert payload.external_id == "moh:167411"
+    assert payload.source_url == "https://moh.gov.vn/index.jsp?pageId=5803&aid=167411&cid=8358"
+    assert payload.image_url == "https://moh.gov.vn/resource/CustomsCMS/BO_YTE/2026/4/29/thumb-1.png"
+    assert payload.title == "Detail title from MOH"
+    assert payload.summary == "Detail summary from MOH"
+    assert "Main MOH article content" in payload.content
     assert payload.topic == "health"
-    assert payload.tags == ["health", "Bộ Y tế", "Tin nổi bật", "Tin tức - sự kiện", "official"]
+    assert "official" in payload.tags
 
 
-def test_moh_fetcher_fetches_details_and_uses_article_service_dedup():
-    calls = []
+def test_moh_fetcher_uses_exact_featured_page_bridge_api_and_article_service_dedup():
+    get_calls = []
+    post_calls = []
 
     def fake_get(url, *, headers, timeout):
-        calls.append({"url": url, "headers": headers, "timeout": timeout})
-        if url == "https://moh.gov.vn/":
-            return FakeResponse(LISTING_HTML)
-        return FakeResponse(DETAIL_HTML)
+        get_calls.append({"url": url, "headers": headers, "timeout": timeout})
+        return FakeResponse("<html><div id='main'></div></html>", url=url)
+
+    def fake_post(url, *, json, headers, timeout):
+        post_calls.append({"url": url, "json": json, "headers": headers, "timeout": timeout})
+        if url == MOH_LISTING_API_URL:
+            return FakeResponse(json_data=LISTING_PAYLOAD, url=url)
+        return FakeResponse(json_data=DETAIL_PAYLOAD, url=url)
 
     service = FakeArticleService()
-    fetcher = MohFetcher(service, http_get=fake_get, timeout_seconds=5)
+    fetcher = MohFetcher(service, http_get=fake_get, http_post=fake_post, timeout_seconds=5)
 
     result = fetcher.fetch_latest(topic="health", page_size=10, tags=["official"])
 
@@ -159,9 +184,13 @@ def test_moh_fetcher_fetches_details_and_uses_article_service_dedup():
     assert result.created == 1
     assert result.skipped_duplicate == 1
     assert len(service.received) == 2
-    assert calls[0]["url"] == "https://moh.gov.vn/"
-    assert calls[1]["url"] == "https://moh.gov.vn/tin-noi-bat/bai-viet-1.html"
-    assert calls[2]["url"] == "https://moh.gov.vn/tin-noi-bat/bai-viet-2.html"
+    assert get_calls[0]["url"] == MOH_HOME_URL
+    assert post_calls[0]["url"] == MOH_LISTING_API_URL
+    assert post_calls[0]["json"]["MA_DANH_MUC"] == "8358"
+    assert post_calls[0]["json"]["PAGE_SIZE"] == 2
+    assert post_calls[1]["json"] == {"maBaiViet": "167411", "maDanhMuc": "8358"}
+    assert post_calls[2]["json"] == {"maBaiViet": "167409", "maDanhMuc": "8358"}
+    assert service.received[0].image_url == "https://moh.gov.vn/resource/CustomsCMS/BO_YTE/2026/4/29/thumb-1.png"
     assert result.items[0].action == "created"
     assert result.items[1].action == "skipped_duplicate"
     assert result.items[1].dedup_matched_by == "source_name+source_url"

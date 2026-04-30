@@ -7,6 +7,24 @@ function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
 }
 
+function normalizeRedirectTarget(value) {
+  const target = String(value || "").trim();
+  if (!target || target === "/login" || target.startsWith("/login?") || !target.startsWith("/")) {
+    return "/";
+  }
+  return target;
+}
+
+function getRedirectTarget(location) {
+  const from = location.state?.from;
+
+  if (!from) return "/";
+  if (typeof from === "string") return normalizeRedirectTarget(from);
+
+  const path = `${from.pathname || ""}${from.search || ""}${from.hash || ""}`;
+  return normalizeRedirectTarget(path);
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,9 +39,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const redirectTarget = useMemo(() => {
-    const redirect = new URLSearchParams(location.search).get("redirect");
-    return redirect || (profile?.isAdmin ? "/admin" : "/ask");
-  }, [location.search, profile?.isAdmin]);
+    return getRedirectTarget(location);
+  }, [location]);
 
   useEffect(() => {
     if (!profile) return;

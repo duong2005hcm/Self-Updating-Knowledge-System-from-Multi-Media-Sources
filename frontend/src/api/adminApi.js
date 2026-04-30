@@ -94,6 +94,64 @@ export function ingestArticles(payload, token) {
   });
 }
 
+export function ingestMohArticles(token, overrides = {}) {
+  return ingestArticles(
+    {
+      source_name: "moh",
+      limit_per_source: 2,
+      query: "health",
+      topic: "Tin tức",
+      tags: ["Tin tức", "Bộ Y tế", "Tin nổi bật"],
+      ...overrides,
+    },
+    token
+  );
+}
+
+export function listAdminArticles(token, params = {}) {
+  return apiRequest("/api/admin/articles", {
+    token,
+    params: {
+      limit: params.limit || 50,
+      status: params.status,
+      visibility: params.visibility,
+      topic: params.topic,
+      source_type: params.sourceType,
+    },
+  });
+}
+
+export function moderateArticle(articleId, action, token, body) {
+  return apiRequest(`/api/admin/articles/${articleId}/${action}`, {
+    method: "PATCH",
+    token,
+    body,
+  });
+}
+
+export function approveArticle(articleId, token) {
+  return moderateArticle(articleId, "approve", token, { status: "published" });
+}
+
+export function publishArticle(articleId, token) {
+  return moderateArticle(articleId, "publish", token, { status: "published" });
+}
+
+export function rejectArticle(articleId, token) {
+  return moderateArticle(articleId, "reject", token);
+}
+
+export function hideArticle(articleId, token) {
+  return moderateArticle(articleId, "hide", token);
+}
+
+export function deleteArticle(articleId, token) {
+  return apiRequest(`/api/admin/articles/${articleId}`, {
+    method: "DELETE",
+    token,
+  });
+}
+
 export function createArticle(payload, token) {
   return apiRequest("/api/articles", {
     method: "POST",

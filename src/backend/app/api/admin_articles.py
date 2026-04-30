@@ -3,11 +3,16 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from backend.app.api.dependencies.admin_auth import verify_admin_token
+from backend.app.models.article import Article
 from backend.app.repositories.article_repository import ArticleRepository, get_article_repository
 from backend.app.schemas.article import (
+    ArticleCreateResponse,
+    ArticleListResponse,
+    ArticleModerationRequest,
+    ArticleResponse,
     ExternalNewsIngestItemResponse,
     ExternalNewsIngestRequest,
     ExternalNewsIngestResponse,
@@ -29,6 +34,123 @@ def get_admin_external_news_ingest_service(
 ) -> ExternalNewsIngestService:
     article_service = ArticleService(repository)
     return ExternalNewsIngestService(article_service)
+
+
+def get_admin_article_service(
+    repository: ArticleRepository = Depends(get_article_repository),
+) -> ArticleService:
+    return ArticleService(repository)
+
+
+def _to_response(article: Article) -> ArticleResponse:
+    if hasattr(article, "model_dump"):
+        return ArticleResponse(**article.model_dump())
+    return ArticleResponse(**article.dict())
+
+
+def _article_response(action: str, article: Article) -> ArticleCreateResponse:
+    return ArticleCreateResponse(
+        status="ok",
+        action=action,
+        item=_to_response(article),
+    )
+
+
+@router.get("", response_model=ArticleListResponse)
+def list_admin_articles(
+    limit: int = Query(default=50, ge=1, le=200),
+    status: str | None = Query(default=None),
+    visibility: str | None = Query(default=None),
+    topic: str | None = Query(default=None),
+    source_type: str | None = Query(default=None),
+    _admin: dict[str, Any] = Depends(verify_admin_token),
+    service: ArticleService = Depends(get_admin_article_service),
+) -> ArticleListResponse:
+    try:
+        items = service.list_articles(
+            limit=limit,
+            status=status,
+            visibility=visibility,
+            topic=topic,
+            source_type=source_type,
+        )
+        return ArticleListResponse(
+            items=[_to_response(item) for item in items],
+            total=len(items),
+        )
+    except Exception as e:
+        logger.exception("Admin list articles failed: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to list admin articles: {str(e)}")
+
+
+@router.patch("/{article_id}/approve", response_model=ArticleCreateResponse)
+def approve_article(
+    article_id: str,
+    payload: ArticleModerationRequest | None = None,
+    _admin: dict[str, Any] = Depends(verify_admin_token),
+    service: ArticleService = Depends(get_admin_article_service),
+) -> ArticleCreateResponse:
+    next_status = payload.status if payload and payload.status else "published"
+    article = service.update_article(article_id, status=next_status, visibility="public")
+    if article is None:
+        raise HTTPException(status_code=404, detail="Article not found")
+    return _article_response("approved", article)
+
+
+@router.patch("/{article_id}/publish", response_model=ArticleCreateResponse)
+def publish_article(
+    article_id: str,
+    payload: ArticleModerationRequest | None = None,
+    _admin: dict[str, Any] = Depends(verify_admin_token),
+    service: ArticleService = Depends(get_admin_article_service),
+) -> ArticleCreateResponse:
+    next_status = payload.status if payload and payload.status else "published"
+    article = service.update_article(article_id, status=next_status, visibility="public")
+    if article is None:
+        raise HTTPException(status_code=404, detail="Article not found")
+    return _article_response("published", article)
+
+
+@router.patch("/{article_id}/reject", response_model=ArticleCreateResponse)
+def reject_article(
+    article_id: str,
+    _admin: dict[str, Any] = Depends(verify_admin_token),
+    service: ArticleService = Depends(get_admin_article_service),
+) -> ArticleCreateResponse:
+    article = service.update_article(article_id, status="rejected")
+    if article is None:
+        raise HTTPException(status_code=404, detail="Article not found")
+    return _article_response("rejected", article)
+
+
+@router.patch("/{article_id}/hide", response_model=ArticleCreateResponse)
+def hide_article(
+    article_id: str,
+    _admin: dict[str, Any] = Depends(verify_admin_token),
+    service: ArticleService = Depends(get_admin_article_service),
+) -> ArticleCreateResponse:
+    article = service.update_article(article_id, status="hidden", visibility="private")
+    if article is None:
+        raise HTTPException(status_code=404, detail="Article not found")
+    return _article_response("hidden", article)
+
+
+@router.delete("/{article_id}", response_model=ArticleCreateResponse)
+def delete_article(
+    article_id: str,
+    _admin: dict[str, Any] = Depends(verify_admin_token),
+    service: ArticleService = Depends(get_admin_article_service),
+) -> ArticleCreateResponse:
+    try:
+        article = service.delete_article(article_id)
+        if article is None:
+            raise HTTPException(status_code=404, detail="Article not found")
+        return _article_response("deleted", article)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Admin delete article failed: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to delete article: {str(e)}")
 
 
 @router.post("/ingest", response_model=ExternalNewsIngestResponse)

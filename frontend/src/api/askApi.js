@@ -13,12 +13,13 @@ export function askKnowledge(payload, token) {
   });
 }
 
-export function uploadChatPdf(file, conversationId) {
+export function uploadChatPdf(file, conversationId, token) {
   const formData = new FormData();
   formData.append("file", file);
 
   return apiRequest("/api/user/upload/pdf", {
     method: "POST",
+    token,
     params: { conversation_id: conversationId },
     body: formData,
   });

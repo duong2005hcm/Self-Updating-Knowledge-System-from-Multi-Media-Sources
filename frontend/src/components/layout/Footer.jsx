@@ -17,7 +17,16 @@ export default function Footer() {
     <footer className="border-t border-white/70 bg-white/80">
       <div className="page-shell grid gap-10 py-12 md:grid-cols-[1.3fr_0.7fr_0.8fr]">
         <div className="space-y-4">
-          <div className="font-display text-2xl font-bold text-ink">Tri thức Sức khỏe</div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-brand-100">
+              <img
+                src="/logoIcare.png"
+                alt="HealthCall"
+                className="h-full w-full object-contain p-1"
+              />
+            </div>
+            <div className="font-display text-2xl font-bold text-ink">Tri thức Sức khỏe</div>
+          </div>
           <p className="max-w-xl text-sm leading-7 text-slate-500">
             {t(
               "Nền tảng hỗ trợ tra cứu và hỏi đáp trên kho tri thức y tế đa nguồn, ưu tiên minh bạch nguồn tham khảo và cập nhật dữ liệu.",

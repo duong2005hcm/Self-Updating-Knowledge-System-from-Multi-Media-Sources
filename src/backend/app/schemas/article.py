@@ -14,6 +14,9 @@ class ArticleCreateRequest(BaseModel):
     source_type: str = "external_news"
     source_name: str = Field(..., min_length=1)
     source_url: str = Field(..., min_length=1)
+    image_url: Optional[str] = None
+    author_id: Optional[str] = None
+    author_name: Optional[str] = None
     external_id: Optional[str] = None
     content_hash: Optional[str] = None
     published_at: Optional[datetime] = None
@@ -32,6 +35,9 @@ class ArticleResponse(BaseModel):
     source_type: str
     source_name: str
     source_url: str
+    image_url: Optional[str] = None
+    author_id: Optional[str] = None
+    author_name: Optional[str] = None
     external_id: Optional[str] = None
     content_hash: Optional[str] = None
     published_at: Optional[datetime] = None
@@ -54,6 +60,11 @@ class ArticleListResponse(BaseModel):
     status: str = "ok"
     items: list[ArticleResponse]
     total: int
+
+
+class ArticleModerationRequest(BaseModel):
+    status: Optional[str] = None
+    visibility: Optional[str] = None
 
 
 class EuropePmcFetchRequest(BaseModel):

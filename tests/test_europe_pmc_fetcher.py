@@ -107,11 +107,10 @@ def test_europe_pmc_fetcher_maps_latest_results_and_uses_small_page_size():
         {
             "url": EUROPE_PMC_SEARCH_URL,
             "params": {
-                "query": "aviation medicine",
+                "query": "(aviation medicine) SORT_DATE:y",
                 "format": "json",
                 "resultType": "core",
                 "pageSize": 2,
-                "sort": "P_PDATE_D",
             },
             "timeout": 5,
         }

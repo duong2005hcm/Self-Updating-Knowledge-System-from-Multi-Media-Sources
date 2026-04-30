@@ -103,6 +103,15 @@ export function AuthProvider({ children }) {
         setProfile(mapProfile(auth.currentUser, tokenResult));
         return tokenResult;
       },
+      async refreshProfile() {
+        if (!auth?.currentUser) return null;
+        await auth.currentUser.reload();
+        const nextUser = auth.currentUser;
+        const tokenResult = await getIdTokenResult(nextUser, true);
+        setUser(nextUser);
+        setProfile(mapProfile(nextUser, tokenResult));
+        return nextUser;
+      },
     }),
     [auth, loading, profile, user]
   );

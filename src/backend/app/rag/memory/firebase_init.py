@@ -5,7 +5,10 @@ import firebase_admin
 from dotenv import load_dotenv
 from firebase_admin import credentials, firestore
 
+from backend.app.config.runtime_network import sanitize_dead_proxy_env
+
 load_dotenv()
+sanitize_dead_proxy_env()
 
 
 def _resolve_credentials_path(raw_path: str) -> Path:

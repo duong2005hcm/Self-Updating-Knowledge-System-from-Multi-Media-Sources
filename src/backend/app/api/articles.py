@@ -6,7 +6,12 @@ from typing import Any, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from backend.app.api.dependencies.admin_auth import verify_admin_token
-from backend.app.api.dependencies.authz import Principal, Role, get_current_principal
+from backend.app.api.dependencies.authz import (
+    Principal,
+    Role,
+    get_current_principal,
+    require_authenticated_principal,
+)
 from backend.app.models.article import Article
 from backend.app.repositories.article_repository import ArticleRepository, get_article_repository
 from backend.app.schemas.article import (
@@ -25,7 +30,7 @@ from backend.app.schemas.article import (
     MohFetchRequest,
     MohFetchResponse,
 )
-from backend.app.services.article_service import ArticleService
+from backend.app.services.article_service import ArticleService, PUBLIC_ARTICLE_STATUSES
 from backend.app.services.europe_pmc_fetcher import EuropePmcFetcher
 from backend.app.services.external_news_ingest_service import ExternalNewsIngestService
 from backend.app.services.moh_fetcher import MohFetcher
@@ -68,14 +73,37 @@ def _to_response(article: Article) -> ArticleResponse:
     return ArticleResponse(**article.dict())
 
 
+def _copy_article_request(payload: ArticleCreateRequest, updates: dict) -> ArticleCreateRequest:
+    if hasattr(payload, "model_copy"):
+        return payload.model_copy(update=updates)
+    return payload.copy(update=updates)
+
+
+def _is_public_article(article: Article) -> bool:
+    return article.visibility == "public" and article.status in PUBLIC_ARTICLE_STATUSES
+
+
 @router.post("", response_model=ArticleCreateResponse)
 def create_article(
     payload: ArticleCreateRequest,
-    _admin: dict[str, Any] = Depends(verify_admin_token),
+    principal: Principal = Depends(require_authenticated_principal),
     service: ArticleService = Depends(get_article_service),
 ) -> ArticleCreateResponse:
     try:
-        result = service.create_article(payload)
+        updates = {
+            "author_id": payload.author_id or principal.uid or principal.email,
+            "author_name": payload.author_name or principal.email or principal.uid,
+        }
+        if principal.role != Role.admin:
+            updates.update(
+                {
+                    "status": "pending",
+                    "visibility": "public",
+                    "source_type": payload.source_type or "community",
+                    "source_name": payload.source_name or "Cộng đồng",
+                }
+            )
+        result = service.create_article(_copy_article_request(payload, updates))
         return ArticleCreateResponse(
             action=result.action,
             dedup_matched_by=result.dedup_matched_by,
@@ -99,17 +127,29 @@ def list_articles(
 ) -> ArticleListResponse:
     try:
         if principal.role != Role.admin:
-            status = "active"
-            visibility = "public"
-            limit = min(limit, 20)
-
-        items = service.list_articles(
-            limit=limit,
-            status=status,
-            visibility=visibility,
-            topic=topic,
-            source_name=source_name,
-            content_type=content_type,
+            items = service.list_public_articles(
+                limit=min(limit, 50),
+                topic=topic,
+                source_name=source_name,
+                content_type=content_type,
+            )
+        else:
+            items = service.list_articles(
+                limit=limit,
+                status=status,
+                visibility=visibility,
+                topic=topic,
+                source_name=source_name,
+                content_type=content_type,
+            )
+        logger.info(
+            "articles_list_result role=%s limit=%s topic=%s source_name=%s content_type=%s total=%s",
+            principal.role.value if hasattr(principal.role, "value") else str(principal.role),
+            limit,
+            topic or "",
+            source_name or "",
+            content_type or "",
+            len(items),
         )
         return ArticleListResponse(
             items=[_to_response(item) for item in items],
@@ -118,6 +158,90 @@ def list_articles(
     except Exception as e:
         logger.exception("List articles failed: %s", str(e))
         raise HTTPException(status_code=500, detail=f"Failed to list articles: {str(e)}")
+
+
+@router.get("/latest", response_model=ArticleListResponse)
+def list_latest_public_articles(
+    limit: int = Query(default=6, ge=1, le=20),
+    topic: Optional[str] = Query(default=None),
+    source_name: Optional[str] = Query(default=None),
+    content_type: Optional[str] = Query(default=None),
+    service: ArticleService = Depends(get_article_service),
+) -> ArticleListResponse:
+    try:
+        items = service.list_public_articles(
+            limit=limit,
+            topic=topic,
+            source_name=source_name,
+            content_type=content_type,
+        )
+        logger.info(
+            "articles_latest_public_result limit=%s topic=%s source_name=%s content_type=%s total=%s",
+            limit,
+            topic or "",
+            source_name or "",
+            content_type or "",
+            len(items),
+        )
+        return ArticleListResponse(
+            items=[_to_response(item) for item in items],
+            total=len(items),
+        )
+    except Exception as e:
+        logger.exception("List latest public articles failed: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to list latest articles: {str(e)}")
+
+
+@router.get("/mine", response_model=ArticleListResponse)
+def list_my_articles(
+    limit: int = Query(default=50, ge=1, le=100),
+    status: Optional[str] = Query(default=None),
+    principal: Principal = Depends(require_authenticated_principal),
+    service: ArticleService = Depends(get_article_service),
+) -> ArticleListResponse:
+    try:
+        author_id = principal.uid or principal.email
+        if not author_id:
+            raise HTTPException(status_code=401, detail="Authenticated user id is required")
+
+        items = service.list_user_articles(
+            author_id=author_id,
+            author_name=principal.email,
+            limit=limit,
+            status=status,
+        )
+        return ArticleListResponse(
+            items=[_to_response(item) for item in items],
+            total=len(items),
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("List user articles failed: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to list user articles: {str(e)}")
+
+
+@router.get("/{article_id}", response_model=ArticleCreateResponse)
+def get_public_article(
+    article_id: str,
+    service: ArticleService = Depends(get_article_service),
+) -> ArticleCreateResponse:
+    try:
+        item = service.get_article(article_id)
+        if item is None:
+            raise HTTPException(status_code=404, detail="Article not found")
+        if not _is_public_article(item):
+            raise HTTPException(status_code=404, detail="Article not found")
+        return ArticleCreateResponse(
+            status="ok",
+            action="found",
+            item=_to_response(item),
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception("Get public article failed for article_id='%s': %s", article_id, str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to get article: {str(e)}")
 
 
 @router.post("/fetch/europe-pmc", response_model=EuropePmcFetchResponse)

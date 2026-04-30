@@ -1,6 +1,7 @@
 import { FileUp, MessageSquareText, SendHorizonal } from "lucide-react";
 import { useState } from "react";
 import { askKnowledge, uploadChatPdf } from "../api/askApi";
+import ChatAnswerFeedback from "../components/ask/ChatAnswerFeedback";
 import EmptyState from "../components/common/EmptyState";
 import { getOrCreateConversationId } from "../lib/storage";
 import { formatScore, truncate } from "../lib/utils";
@@ -14,6 +15,7 @@ export default function AskPage() {
   const [error, setError] = useState("");
   const [uploadMessage, setUploadMessage] = useState("");
   const [result, setResult] = useState(null);
+  const [lastQuestion, setLastQuestion] = useState("");
   const conversationId = getOrCreateConversationId();
 
   const submit = async (event) => {
@@ -34,6 +36,7 @@ export default function AskPage() {
         token
       );
       setResult(response);
+      setLastQuestion(normalizedQuestion);
     } catch (nextError) {
       setError(nextError.message || "Không thể gửi câu hỏi.");
       setResult(null);
@@ -49,7 +52,8 @@ export default function AskPage() {
     setUploadBusy(true);
     setUploadMessage("");
     try {
-      const response = await uploadChatPdf(file, conversationId);
+      const token = await getToken();
+      const response = await uploadChatPdf(file, conversationId, token);
       setUploadMessage(response.message || "PDF đã được lưu tạm cho conversation.");
     } catch (nextError) {
       setUploadMessage(nextError.message || "Không thể upload PDF.");
@@ -141,6 +145,14 @@ export default function AskPage() {
                   </div>
                   <div className="mt-4 rounded-[24px] border border-slate-100 bg-slate-50 p-6 text-sm leading-8 text-slate-700">
                     {result.answer}
+                  </div>
+                  <div className="mt-3">
+                    <ChatAnswerFeedback
+                      question={lastQuestion}
+                      answer={result.answer}
+                      conversationId={conversationId}
+                      contextsCount={(result.contexts || []).length}
+                    />
                   </div>
                 </div>
 

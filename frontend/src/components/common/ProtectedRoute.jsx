@@ -34,8 +34,7 @@ export function RequireAuth() {
   }
 
   if (!user) {
-    const redirect = `${location.pathname}${location.search}`;
-    return <Navigate replace to={`/login?redirect=${encodeURIComponent(redirect)}`} />;
+    return <Navigate replace to="/login" state={{ from: location }} />;
   }
 
   return <Outlet />;
@@ -50,8 +49,7 @@ export function RequireAdmin() {
   }
 
   if (!user) {
-    const redirect = `${location.pathname}${location.search}`;
-    return <Navigate replace to={`/login?redirect=${encodeURIComponent(redirect)}`} />;
+    return <Navigate replace to="/login" state={{ from: location }} />;
   }
 
   if (!profile?.isAdmin) {

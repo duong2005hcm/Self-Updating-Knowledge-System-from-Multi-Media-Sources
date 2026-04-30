@@ -1,16 +1,20 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Callable, Optional
 
 import requests
 
+from backend.app.config.runtime_network import should_trust_external_news_proxy
 from backend.app.schemas.article import ArticleCreateRequest
 from backend.app.services.article_service import ArticleCreateResult, ArticleService
 
 EUROPE_PMC_SEARCH_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
 EUROPE_PMC_SOURCE_NAME = "Europe PMC"
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -44,7 +48,7 @@ class EuropePmcFetcher:
         timeout_seconds: int = 20,
     ):
         self._articles = article_service
-        self._http_get = http_get or requests.get
+        self._http_get = http_get or _build_default_http_get()
         self._timeout_seconds = timeout_seconds
 
     def fetch_latest(
@@ -61,6 +65,13 @@ class EuropePmcFetcher:
 
         payload = self._fetch_payload(query=normalized_query, page_size=capped_page_size)
         raw_results = ((payload.get("resultList") or {}).get("result") or [])[:capped_page_size]
+        logger.info(
+            "europe_pmc_parse_result query=%s requested=%s raw_count=%s first_title=%s",
+            normalized_query,
+            capped_page_size,
+            len(raw_results),
+            _clean_text(raw_results[0].get("title")) if raw_results else "",
+        )
 
         items: list[EuropePmcFetchItem] = []
         created = 0
@@ -73,6 +84,14 @@ class EuropePmcFetcher:
                 tags=tags or [],
             )
             create_result = self._articles.create_article(article_payload)
+            logger.info(
+                "europe_pmc_dedup_result action=%s matched_by=%s external_id=%s source_url=%s title=%s",
+                create_result.action,
+                create_result.dedup_matched_by or "",
+                article_payload.external_id or "",
+                article_payload.source_url,
+                article_payload.title,
+            )
             if create_result.action == "created":
                 created += 1
             elif create_result.action == "skipped_duplicate":
@@ -90,22 +109,41 @@ class EuropePmcFetcher:
         )
 
     def _fetch_payload(self, *, query: str, page_size: int) -> dict[str, Any]:
+        search_query = _build_search_query(query)
+        params = {
+            "query": search_query,
+            "format": "json",
+            "resultType": "core",
+            "pageSize": page_size,
+        }
+        logger.info(
+            "europe_pmc_request url=%s params=%s",
+            EUROPE_PMC_SEARCH_URL,
+            params,
+        )
         response = self._http_get(
             EUROPE_PMC_SEARCH_URL,
-            params={
-                "query": query,
-                "format": "json",
-                "resultType": "core",
-                "pageSize": page_size,
-                "sort": "P_PDATE_D",
-            },
+            params=params,
             timeout=self._timeout_seconds,
+        )
+        logger.info(
+            "europe_pmc_response status=%s size=%s url=%s",
+            getattr(response, "status_code", ""),
+            len(getattr(response, "content", b"") or b""),
+            getattr(response, "url", EUROPE_PMC_SEARCH_URL),
         )
         response.raise_for_status()
         payload = response.json()
         if not isinstance(payload, dict):
             raise ValueError("Europe PMC response is not a JSON object")
         return payload
+
+
+def _build_search_query(query: str) -> str:
+    normalized = (query or "").strip() or "medicine"
+    if "SORT_DATE:" in normalized.upper():
+        return normalized
+    return f"({normalized}) SORT_DATE:y"
 
 
 def _map_result_to_article_request(
@@ -154,6 +192,12 @@ def _map_result_to_article_request(
         status="active",
         visibility="public",
     )
+
+
+def _build_default_http_get() -> Callable[..., Any]:
+    session = requests.Session()
+    session.trust_env = should_trust_external_news_proxy()
+    return session.get
 
 
 def _to_fetch_item(result: ArticleCreateResult) -> EuropePmcFetchItem:

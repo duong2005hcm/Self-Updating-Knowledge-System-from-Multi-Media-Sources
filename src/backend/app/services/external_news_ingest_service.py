@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import Any, Optional
 
@@ -13,6 +14,8 @@ SOURCE_EUROPE_PMC = "europe_pmc"
 SOURCE_MOH = "moh"
 SOURCE_ALL = "all"
 DEFAULT_SOURCE_ORDER = [SOURCE_PUBMED, SOURCE_EUROPE_PMC, SOURCE_MOH]
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -85,6 +88,13 @@ class ExternalNewsIngestService:
         failed_count = 0
 
         for source_key in source_keys:
+            logger.info(
+                "external_news_source_start source=%s limit=%s query=%s topic=%s",
+                source_key,
+                capped_limit,
+                normalized_query,
+                normalized_topic,
+            )
             try:
                 result = self._run_source(
                     source_key,
@@ -95,6 +105,7 @@ class ExternalNewsIngestService:
                 )
             except Exception as exc:
                 failed_count += 1
+                logger.exception("external_news_source_failed source=%s error=%s", source_key, str(exc))
                 source_results.append(
                     ExternalNewsSourceResult(
                         source_key=source_key,
@@ -112,6 +123,12 @@ class ExternalNewsIngestService:
             source_skipped = int(getattr(result, "skipped_duplicate", 0))
             created_count += source_created
             skipped_count += source_skipped
+            logger.info(
+                "external_news_source_result source=%s created=%s skipped=%s failed=0",
+                source_key,
+                source_created,
+                source_skipped,
+            )
             source_results.append(
                 ExternalNewsSourceResult(
                     source_key=source_key,
