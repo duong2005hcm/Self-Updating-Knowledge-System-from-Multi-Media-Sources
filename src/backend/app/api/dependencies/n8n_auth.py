@@ -3,12 +3,14 @@ from __future__ import annotations
 import os
 import secrets
 from typing import Optional
+from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import Header, HTTPException
 
 
 def verify_n8n_ingest_secret(
-    x_n8n_secret: Optional[str] = Header(default=None, alias="X-N8N-SECRET"),
+    x_n8n_secret: Optional[str] = Header(default=None, alias="X-N8N-INGEST-SECRET"),
 ) -> bool:
     expected_secret = (os.getenv("N8N_INGEST_SECRET") or "").strip()
     if not expected_secret:

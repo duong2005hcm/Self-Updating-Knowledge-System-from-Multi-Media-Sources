@@ -53,11 +53,11 @@ export default function Footer() {
           <div className="grid gap-3 text-sm text-slate-500">
             <div className="flex items-center gap-3">
               <Mail className="h-4 w-4 text-brand-600" />
-              <span>support@healthknowledge.vn</span>
+              <span>2331540179@vaa.edu.vn</span>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4 text-brand-600" />
-              <span>0123 456 789</span>
+              <span>090 237 9337</span>
             </div>
             <div className="flex items-center gap-3">
               <MapPin className="h-4 w-4 text-brand-600" />

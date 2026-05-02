@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pydantic import BaseModel
 from dotenv import load_dotenv
+load_dotenv()
 
 from backend.app.api.ask import router as ask_router
 from backend.app.api.articles import router as articles_router
@@ -27,7 +28,7 @@ from backend.app.api.sources import router as sources_router
 from backend.app.api.user_upload import router as user_upload_router
 from backend.app.api.heat import router as health_router
 
-load_dotenv()
+
 app = FastAPI(title="RAG Backend API")
 
 
@@ -69,8 +70,8 @@ app.include_router(admin_governance_router, prefix="/api")
 app.include_router(ingest_admin_router, prefix="/api")
 app.include_router(ingests_doc_router, prefix="/api")
 app.include_router(ingests_web_router, prefix="/api")
-app.include_router(n8n_ingests_doc_router, prefix="/api/admin/n8n")
-app.include_router(n8n_ingests_web_router, prefix="/api/admin/n8n")
+# app.include_router(n8n_ingests_doc_router, prefix="/api/admin/n8n")
+# app.include_router(n8n_ingests_web_router, prefix="/api/admin/n8n")
 app.include_router(n8n_pending_preview_router, prefix="/api")
 app.include_router(admin_prompts_router, prefix="/api")
 app.include_router(admin_knowledge_router, prefix="/api")

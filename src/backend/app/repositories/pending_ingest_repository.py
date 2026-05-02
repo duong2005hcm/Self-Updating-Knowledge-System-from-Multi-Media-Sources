@@ -5,8 +5,6 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-from firebase_admin import firestore as firestore_admin
-
 from backend.app.models.pending_ingest import PendingIngest
 from backend.app.rag.memory.firebase_init import db
 
@@ -61,6 +59,43 @@ def _normalize_optional_datetime(value: Any) -> Any:
     if _is_blank(value):
         return None
     return value
+
+
+def _datetime_sort_value(value: Any) -> float:
+    if _is_blank(value):
+        return 0.0
+    if isinstance(value, datetime):
+        candidate = value
+        if candidate.tzinfo is None:
+            candidate = candidate.replace(tzinfo=timezone.utc)
+        return candidate.timestamp()
+    if hasattr(value, "timestamp"):
+        try:
+            return float(value.timestamp())
+        except Exception:
+            pass
+    if isinstance(value, str):
+        normalized = value.strip()
+        if not normalized:
+            return 0.0
+        try:
+            if normalized.endswith("Z"):
+                normalized = normalized[:-1] + "+00:00"
+            candidate = datetime.fromisoformat(normalized)
+            if candidate.tzinfo is None:
+                candidate = candidate.replace(tzinfo=timezone.utc)
+            return candidate.timestamp()
+        except ValueError:
+            return 0.0
+    return 0.0
+
+
+def _snapshot_updated_sort_value(snapshot) -> float:
+    data = snapshot.to_dict() or {}
+    return max(
+        _datetime_sort_value(data.get("updated_at")),
+        _datetime_sort_value(data.get("created_at")),
+    )
 
 
 class PendingIngestRepository:
@@ -205,20 +240,9 @@ class PendingIngestRepository:
         if normalized_subtype:
             query = query.where("content_subtype", "==", normalized_subtype)
 
-        try:
-            ordered_query = query.order_by(
-                "updated_at",
-                direction=firestore_admin.Query.DESCENDING,
-            ).limit(capped_limit)
-            snapshots = list(ordered_query.stream(**FIRESTORE_CALL_KWARGS))
-        except Exception:
-            snapshots = list(query.stream(**FIRESTORE_CALL_KWARGS))
-            snapshots.sort(
-                key=lambda item: (item.to_dict() or {}).get("updated_at")
-                or datetime.min.replace(tzinfo=timezone.utc),
-                reverse=True,
-            )
-            snapshots = snapshots[:capped_limit]
+        snapshots = list(query.stream(**FIRESTORE_CALL_KWARGS))
+        snapshots.sort(key=_snapshot_updated_sort_value, reverse=True)
+        snapshots = snapshots[:capped_limit]
 
         return [self._snapshot_to_model(snapshot) for snapshot in snapshots]
 
