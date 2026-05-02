@@ -1,0 +1,633 @@
+
+<script>
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+var checkCookie = getCookie('ngon_ngu_session');
+if (checkCookie === 'TIENG_ANH') {
+	ngon_ngu_session = 'en';
+} else {
+	ngon_ngu_session = 'vn';
+}
+</script>
+<style>
+.content_intro {
+	text-align: justify;
+}
+
+.category-content span, .category-content p, .category-content font,
+	.category-content label, .category-content b {
+	font-family: HelveticaNeueLight, serif !important;
+	font-size: 16px !important;
+}
+.main-news {
+	background-color: var(--bg-module);
+	border-radius: 10px;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+.main-news img {
+	width: 100%;
+	height: auto;
+	display: block;
+	padding: 0.5rem;
+    border-radius: 10px 10px 0 0;
+    box-sizing: border-box;
+}
+
+.main-news-content {
+	padding: 16px;
+}
+
+.main-news-time {
+	color: gray;
+	font-size: 0.9em;
+	margin-bottom: 8px;
+}
+
+.main-news-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+.main-news-desc {
+	font-size: 1em;
+	color: #333;
+}
+
+.news-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 5px;
+}
+
+.news-card {
+	background-color: var(--bg-module);
+    margin: 5px;
+	border-radius: 10px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.news-card img {
+	width: 100%;
+	height: auto;
+	padding: 0.5rem;
+    border-radius: 10px 10px 0 0;
+    box-sizing: border-box;
+}
+.news-card-time {
+	color: gray;
+	font-size: 0.9em;
+	margin-bottom: 8px;
+}
+
+.news-card-content {
+	padding: 12px;
+}
+
+.news-card-title {
+	font-weight: bold;
+	margin-bottom: 6px;
+}
+
+.news-card-desc {
+	color: #555;
+	font-size: 0.95em;
+}
+</style>
+<script type="text/javascript">
+function printFunc(htmlString) {
+	 var divToPrint = document.getElementById('content-category');
+     var htmlToPrint = '' +
+         '<style>' +
+         'table th, table td {' +
+         'border:0 solid #000;' +
+         'padding;0.5em;' +
+         '}' +
+         '</style>';
+     htmlToPrint += divToPrint.outerHTML;
+    var newIframe = document.createElement('iframe');
+    newIframe.width = '1px';
+    newIframe.height = '1px';
+    newIframe.src = 'about:blank';
+
+    // for IE wait for the IFrame to load so we can access contentWindow.document.body
+    newIframe.onload = function() {
+        var script_tag = newIframe.contentWindow.document.createElement("script");
+        script_tag.type = "text/javascript";
+        var script = newIframe.contentWindow.document.createTextNode('function Print(){ window.focus(); window.print(); }');
+        script_tag.appendChild(script);
+
+        newIframe.contentWindow.document.body.innerHTML = htmlToPrint;
+        newIframe.contentWindow.document.body.appendChild(script_tag);
+
+        // for chrome, a timeout for loading large amounts of content
+        setTimeout(function() {
+            newIframe.contentWindow.Print();
+            newIframe.contentWindow.document.body.removeChild(script_tag);
+            newIframe.parentElement.removeChild(newIframe);
+        }, 200);
+    };
+    document.body.appendChild(newIframe);
+}
+</script>
+<script>
+    function printFunc_() {
+        var divToPrint = document.getElementById('content-category');
+        var htmlToPrint = '' +
+            '<style>' +
+            'table th, table td {' +
+            'border:0 solid #000;' +
+            'padding;0.5em;' +
+            '}' +
+            '</style>';
+        htmlToPrint += divToPrint.outerHTML;
+        newWin = window.open("");
+        newWin.document.write("<h3></h3>");
+        newWin.document.write(htmlToPrint);
+        newWin.print();
+        newWin.close();
+    }
+    </script>
+<script>
+ 	var domainUrl = "/Layout";
+ 	var moduleParam;
+ 	function isEmpty(str) {
+        if (str != null) {
+            return str;
+        }
+        else {
+            return "";
+        }
+    }
+    function loadData(param) {
+        var p = parseParamModule(param);
+        moduleParam = p;
+        if (!p.TemplateId) return;
+        var moduleTemplate = kendo.template($("#" + p.TemplateId).html());
+
+        var MA_DANH_MUC = getParams("cid");
+        
+        if (moduleParam.ButDanhCatIds)
+        {
+        	moduleParam.ButDanhCatIds = moduleParam.ButDanhCatIds.split(",");
+        	
+        	var MA = $.grep(moduleParam.ButDanhCatIds, function(a) {
+        	    return a === MA_DANH_MUC;
+        	});
+        	moduleParam.ShowButDanh = (MA !== undefined);
+        	
+        }
+        if (p.CDisplayType === "MA_DANH_MUC")
+            MA_DANH_MUC = p.CategoryId;
+        else {
+            MA_DANH_MUC = MA_DANH_MUC == undefined ? p.CategoryId : MA_DANH_MUC;
+        }
+        if (MA_DANH_MUC.indexOf("_") !== -1) {
+            var res = MA_DANH_MUC.split("_");
+            MA_DANH_MUC = res[0]
+        }
+        if (MA_DANH_MUC === undefined) {
+            $("#" + p.moduleId).find("module").html("<br><br><br>DANH SÁCH BÀI VIẾT<br><br><br>");
+            return;
+        }
+
+        var moduleId = p.moduleId;
+        if (moduleId === "m2") { 
+        	// TODO
+        }
+        
+        postShellService.ExecuteGetAction('bridge?url=' + main_new + '/api/lay_bai_viet_theo_danh_muc',
+        {
+            CHUYEN_TRANG: p.PageType,
+            NGON_NGU: p.Language,
+            MA_DANH_MUC: MA_DANH_MUC,
+            TYPE: p.IsFeatured == "true" ? 2 : 1, //1 normal 2 isFeatured
+            PAGE_SIZE: (p.RowCount == "" || p.RowCount == undefined) ? 1000 : parseInt(p.RowCount),
+            ISEXTEND: 1
+        }).then(function (result) {
+        	var _length = result[0].ITEMS;
+        	_length = _length.length;
+            data = result[0].ITEMS;
+            data1 = result[0];
+            
+            var _check = result[0].TEN_MUC;
+            var cc = data.length;
+            
+            if (data1.GIOI_THIEU && data1.GIOI_THIEU != "<p><br><\/p>" && data1.GIOI_THIEU != "") 
+            {
+                $("#" + moduleId).find(".category-content").html(data1.GIOI_THIEU).show();
+            }
+            
+            if (parseInt(p.RowCount) < data.length)
+                cc = parseInt(p.RowCount);
+
+            var retData = [];
+            for (var i = 0; i < cc; i++) {
+                var item = data[i];
+                item = isEmpty(item);
+                if (p.PageId != undefined)
+                    item.PageId = p.PageId;
+                else
+                    item.PageId = 1;
+                item.MA_DANH_MUC = MA_DANH_MUC;
+                item.HIEN_THI_ANH_DAI_DIEN = data1.HIEN_THI_ANH_DAI_DIEN;
+                retData.push(item);
+            }
+            
+            var log = moduleTemplate(retData);
+            
+            var xxHtml = moduleTemplate(retData);
+            $("#" + moduleId).find("module").html(xxHtml);
+            
+            
+            if (p.ClassName)
+            	$("#" + moduleId).addClass(p.ClassName.replace(/⇱/g, " "));
+            if (p.TemplateId)
+            	$("#" + moduleId).addClass(p.TemplateId);
+			
+            var h5Title = $("#" + moduleId).find("module .module-title");
+            var categoryTitle = "";
+            
+            
+            if (p.CategoryName)
+            	categoryTitle = $.trim(p.CategoryName.replace(/⇱/g, " "));
+            
+            if (p.ShowTitle != "true")
+                h5Title.remove();
+			
+            if (p.UseCategoryTitle == "true") {
+                if (p.ShowReadMore) {
+                    var categoryTitleLink = toModuleCategoryLink(p.CategoryPageId, p.CategoryId, categoryTitle);
+                    h5Title.html(categoryTitleLink);
+                }  else {
+                	h5Title.html(categoryTitle);
+                }
+                document.title = categoryTitle;
+            } else {
+                categoryTitle = p.ModuleTitle.replace(/⇱/g, " ");
+                if (p.ShowReadMore) {
+                    categoryTitle = toModuleCategoryLink(p.CategoryPageId, p.CategoryId, categoryTitle);
+                    h5Title.html(categoryTitle);
+                } else {
+                	h5Title.html(categoryTitle);	
+                }
+            }
+            
+            if (p.CDisplayType == "PARRAM") {
+                h5Title.html(data1.TEN_MUC);
+            }
+            if (result[0].GIOI_THIEU != "<p><br><\/p>" && result[0].GIOI_THIEU != "")
+                $("#" + moduleId).find(".category-content").html(result[0].GIOI_THIEU).show();
+            if (p.ClassName == "scroll-fit-screen") {
+                $("#" + moduleId).find(".module-content").slimScroll({
+                	height: '25em',
+                });
+            }
+            
+            //alert(h5Title.html());
+            //phan trang
+                if (data1.ITEMS && data1.ITEMS.length > 10) {
+                    $('.content-page').paginathing({
+                        perPage: 10,
+                        containerClass: 'panel-footer',
+                        pageNumbers: false,
+                        firstText: ((ngon_ngu_session == 'en') || (ngon_ngu_session == 'EN')) ? 'First page' : 'Trang đầu',
+                        lastText: ((ngon_ngu_session == 'en') || (ngon_ngu_session == 'EN')) ? 'Last page' : 'Trang cuối',
+                        limitPagination: 10|0,   
+                    });
+                    $(".button-bottom").css("display","none");
+                }
+            
+            if((MA_DANH_MUC == '45' || MA_DANH_MUC == '46' || MA_DANH_MUC == '52' || MA_DANH_MUC == '54') && p.TemplateId == "main_category_layout" && getParams("pageId") == '4'){
+            	$("#listItems").css("display", "none");
+            } else if (p.TemplateId == "cat2Template_notify") {
+            	$("#listItems").css("display", "none");
+//				$("#" + moduleId).find(".marquee-js-vertical").marquee({
+//              //If you wish to always animate using jQuery
+//              allowCss3Support: true, //works when allowCss3Support is set to true - for full list see http://www.w3.org/TR/2013/WD-css3-transitions-20131119/#transition-timing-function
+//              css3easing: "ease", //requires jQuery easing plugin. Default is 'linear'
+//              easing: "ease-out", //pause time before the next animation turn in milliseconds
+//              delayBeforeStart: 1, //'left', 'right', 'up' or 'down'
+//              direction: "up", //true or false - should the marquee be duplicated to show an effect of continues flow
+//              duplicated: true, //speed in milliseconds of the marquee in milliseconds
+//              duration: 5000, //gap in pixels between the tickers
+//              gap: 1, //on cycle pause the marquee
+//              pauseOnCycle: true, //on hover pause the marquee - using jQuery plugin https://github.com/tobia/Pause
+//              pauseOnHover: true, //the marquee is visible initially positioned next to the border towards it will be moving
+//              startVisible: true,
+//            });
+            }else{
+            	$("#listItems").css("display", "block");
+            }
+        }).catch(function(error){
+        	console.error('Đã xảy ra lỗi', error);
+        });
+    }
+
+</script>
+<script id="cat2Template" type="text/x-kendo-template">
+    <h5 class="module-title"></h5>
+    <ul class="module-content">
+        # for (var i = 0; i < data.length; i++)
+        { var item = data[i] #
+        <li>
+            <a class="content-title" href='/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#'>
+                #=item.TIEU_DE#
+            </a>
+        </li>
+        # } #
+    </ul>
+</script>
+<script id="cat2Template_other" type="text/x-kendo-template">
+    <h5 class="module-title blue-title title-box text-uppercase"></h5>
+    <ul class="module-content">
+        # for (var i = 0; i < data.length; i++)
+        { var item = data[i] #
+        <div class="col-md-6">
+            <article>
+                <span class="g-font-size-12 g-color-gray-dark-v5">
+                    #=item.THOI_GIAN_XUAT_BAN#
+                </span>
+                <h3 class="h6 g-mb-5">
+                    <a class="g-color-main g-color-primary--hover roboto-bold" href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                        #=item.TIEU_DE#
+                    </a>
+                </h3>
+                <hr class="g-my-5">
+            </article>
+        </div>
+        # } #
+    </ul>
+</script>
+<script id="template_yellow" type="text/x-kendo-template">
+    <h5 class="module-title yellow-title"></h5>
+
+    <div class="news-hot g-mb-5 sm-mb-30 module-content content-yellow">
+        <div class="row">
+            # for (var i = 0; i < data.length; i++)
+            { var item = data[i] #
+            <div class="col-lg-4 col-md-6 pr-md-2">
+                <article class="mb-sm-15">
+                    <div class="media">
+                        <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#" class="mr-3 align-self-center post-img">
+                            <img loading="lazy" src="#=toArticleImageTemplate(item.DUONG_DAN_ANH)#" alt="#=item.TIEU_DE#">
+                        </a>
+                        <div class="media-body">
+                            <h5 class="m-0 g-font-size-14 roboto-bold">
+                                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                                    #=item.TIEU_DE#
+                                </a>
+                            </h5>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            # } #
+        </div>
+    </div>
+</script>
+<script id="cat2Template_2col_left_image" type="text/x-kendo-template">
+    <h5 class="module-title blue-title title-box text-uppercase"></h5>
+    <div class="module-content content-list">
+        # for (var i = 0; i < data.length; i++)
+        { var item = data[i] #
+        <div class="col-md-12 content_item d-grid">
+	    <article class="content">
+            # if (toArticleImageTemplate(item.DUONG_DAN_ANH) != "" && item.HIEN_THI_ANH_DAI_DIEN == "1") {#
+				
+            <div class="content_image">
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    <img loading="lazy" title="#=item.TIEU_DE#" alt="#=item.TIEU_DE#" src="#=toArticleImageTemplate(item.DUONG_DAN_ANH)#">
+                </a>
+            </div>
+           
+            # }else if(toArticleImageTemplate(item.DUONG_DAN_ANH) == "" && item.HIEN_THI_ANH_DAI_DIEN == "1"){#
+            <div class="content_image">
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    <img loading="lazy" title="#=item.TIEU_DE#" alt="#=item.TIEU_DE#" src="/resources/images/logo.png">
+                </a>
+            </div>
+            # } #
+            <div class="content_title">
+		<span class="g-font-size-12 g-color-gray-dark-v5">
+                    #=item.THOI_GIAN_XUAT_BAN#
+                </span>
+		<p>
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    #=item.TIEU_DE#
+                </a>
+		</p>
+            </div>
+            </article>
+        </div>
+        # } #
+    </div>
+</script>
+<script id="cat2Template_1col" type="text/x-kendo-template">
+    <h5 class="module-title blue-title title-box text-uppercase"></h5>
+    <div class="module-content accordion-wrapper">
+        # for (var i = 0; i < data.length; i++)
+        { var item = data[i] #
+        <div class="col-md-12">
+            <article class="details-quest">
+                <span class="g-font-size-12 g-color-gray-dark-v5">
+                    #=item.THOI_GIAN_XUAT_BAN#
+                </span>
+                <h3 class="h6 g-mb-5">
+                    <a class="g-color-main g-color-primary--hover roboto-bold text-line" style="--line-clamp: 1;" href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                        #=item.TIEU_DE#
+                    </a>
+                </h3>
+                <hr class="g-my-5">
+            </article>
+        </div>
+        # } #
+    </div>
+</script>
+<script id="cat2Template_notify" type="text/x-kendo-template">
+    <h5 class="module-title notify blue-title title-box text-uppercase"></h5>
+    <ol class="module-content marquee-js-vertical">
+        # for (var i = 0; i < data.length; i++)
+        { var item = data[i] #
+        <li class="col-md-12">
+            <article>
+                <span class="g-font-size-12 g-color-gray-dark-v5">
+                    #=item.THOI_GIAN_XUAT_BAN#
+                </span>
+                <h3 class="h6 g-mb-5">
+                    <a class="g-color-main g-color-primary--hover roboto-bold" href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                        #=item.TIEU_DE#
+                    </a>
+                </h3>
+                <hr class="g-my-5">
+            </article>
+        </li>
+        # } #
+    </ol>
+</script>
+<script id="cat2Template_1col_hasImage" type="text/x-kendo-template">
+    <h5 class="module-title yellow-title"></h5>
+    <div class="news-hot g-mb-5 sm-mb-30 module-content content-yellow">
+        <div>
+            # for (var i = 0; i < data.length; i++)
+            { var item = data[i] #
+
+            <article class="g-mb-20">
+                # if (toArticleImageTemplate(item.DUONG_DAN_ANH) != "") {#
+                <figure class="g-pos-rel">
+                    <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                        <img loading="lazy" class="img-fluid w-100 g-mb-10" src="#=toArticleImageTemplate(item.DUONG_DAN_ANH)#" alt="Image Description">
+                    </a>
+                </figure>
+                # } #
+
+                <h3 class="h4 g-mb-10 g-font-size-14">
+                    <a class="u-link-v5 g-color-gray-dark-v2 g-color-primary--hover color-primary"
+                       href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                        #=item.TIEU_DE#
+                    </a>
+                </h3>
+            </article>
+            # } #
+        </div>
+    </div>
+</script>
+<script id="main_category_layout" type="text/x-kendo-template">
+# var url_en = ngon_ngu_session; #
+<div id="content-category">
+    <h5 class="module-title component-title"></h5>
+    <div class="category-content" style="display:none;" id="category-content">
+    </div>
+    <div class="content-list module-content content-yellow content-page" id="listItems">
+        # for (var i = 0; i < data1.ITEMS.length; i++)
+        { var item = data1.ITEMS[i]; 
+			if(item.DUONG_DAN_ANH.indexOf(urlImg) != -1){
+        		item.DUONG_DAN_ANH = item.DUONG_DAN_ANH.replace(urlImgResources, mainImageUrl);
+			}
+		#
+        <div class="content_item" >
+            # if (toArticleImageTemplate(item.DUONG_DAN_ANH) != "" && data1.HIEN_THI_ANH_DAI_DIEN == "1") {#
+				
+            <div class="content_image">
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    <img loading="lazy" title="#=item.TIEU_DE#" alt="#=item.TIEU_DE#" src="#=toArticleImageTemplate(item.DUONG_DAN_ANH)#">
+                </a>
+            </div>
+           
+            # }else if(toArticleImageTemplate(item.DUONG_DAN_ANH) == "" && data1.HIEN_THI_ANH_DAI_DIEN == "1"){#
+            <div class="content_image">
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    <img loading="lazy" title="#=item.TIEU_DE#" alt="#=item.TIEU_DE#" src="/resources/images/logo.png">
+                </a>
+            </div>
+            # } #
+            <h3 class="content_title">
+				
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    #=item.TIEU_DE#
+                </a>
+            </h3>
+			<p class='note-layout'>
+        # if (item.BUT_DANH == null || item.BUT_DANH == "null" ) { #
+			
+        # } else if (moduleParam.ShowButDanh == true){#
+           <span style="padding-right:8px;">#=item.BUT_DANH#</span>
+        # } 
+		 if (item.THOI_GIAN_XUAT_BAN == null || item.THOI_GIAN_XUAT_BAN == "null") { #
+        # } else {#
+             #=item.THOI_GIAN_XUAT_BAN#
+        # } #
+        
+       
+    </p>
+            <div class="content_intro">
+                <div class="content_intro">
+                    #=(item.MO_TA == null || item.MO_TA == "null") ? "" : trimDescription200(item.MO_TA)#
+                    <!--#=trimDescription(item.MO_TA)#-->
+                </div>
+            </div>
+            <div class="clr">
+            </div>
+        </div>
+       
+        # } #
+
+    </div>
+</div>
+<div class="col-xs-12  button-bottom">
+	<button type="button" id="btn" onclick="printFunc('content-category');"><i class="fa fa-print"></i> 
+		#if(url_en.toLowerCase() === 'en') {#
+            Print
+        #} else {#
+            Bản In
+        #}#</button>
+	<button type="button" onclick="Export2Doc('content-category');"><i class="fa fa-save"></i> 
+	#if(url_en.toLowerCase() === 'en') {#
+            Save file
+        #} else {#
+            Lưu file
+        #}#</button>
+</div>
+</script>
+<script id="tab-template" type="text/x-kendo-template">
+	# if (data && data.length > 0) { #
+	<div class="main-news">
+	# var main = data[0] #
+		# if (main.HIEN_THI_ANH_DAI_DIEN == "1") {#
+               <a href="/index.jsp?pageId=#=main.PageId#&aid=#=main.MA#&cid=#=main.MA_DANH_MUC#">
+					# if (toArticleImageTemplate(main.DUONG_DAN_ANH) != "") { #
+						<img loading="lazy" title="#=main.TIEU_DE#" alt="#=main.TIEU_DE#" src="#=toArticleImageTemplate(main.DUONG_DAN_ANH)#">
+					# } else { #
+						<img loading="lazy" title="#=main.TIEU_DE#" alt="#=main.TIEU_DE#" src="/resources/images/logo.png">
+					# } #
+               </a>
+		# } #
+      <div class="main-news-content">
+        <div class="main-news-time break-word clamp-1" title="#= main.THOI_GIAN_XUAT_BAN#">#= main.THOI_GIAN_XUAT_BAN #</div>
+        <div class="main-news-title break-word clamp-1" title="#= main.TIEU_DE#">#= main.TIEU_DE #</div>
+		#if(main.MO_TA != 'null') { #
+			<div class="main-news-desc break-word clamp-2" title="#= main.MO_TA#">#= main.MO_TA #</div>
+		# } #
+      </div>
+    </div>
+    <div class="news-grid">
+      # for (var i = 1; i < data.length; i++) { 
+			var item = data[i]
+		#
+        <div class="news-card">
+		  	# if (toArticleImageTemplate(item.DUONG_DAN_ANH) != "" && item.HIEN_THI_ANH_DAI_DIEN == "1") {#
+				
+               <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                  <img loading="lazy" title="#=item.TIEU_DE#" alt="#=item.TIEU_DE#" src="#=toArticleImageTemplate(item.DUONG_DAN_ANH)#">
+               </a>
+           
+            # }else if(toArticleImageTemplate(item.DUONG_DAN_ANH) == "" && item.HIEN_THI_ANH_DAI_DIEN == "1"){#
+                <a href="/index.jsp?pageId=#=item.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                    <img loading="lazy" title="#=item.TIEU_DE#" alt="#=item.TIEU_DE#" src="/resources/images/logo.png">
+                </a>
+            # } #
+          <div class="news-card-content">
+			<div class="news-card-time break-word clamp-1" title="#=item.THOI_GIAN_XUAT_BAN#">#= item.THOI_GIAN_XUAT_BAN #</div>
+            <div class="news-card-title break-word clamp-1" title="#= item.TIEU_DE#">#= item.TIEU_DE #</div>
+			#if (item.MO_TA != 'null') { #
+				<div class="news-card-desc break-word clamp-2" title="#= item.MO_TA#">#= item.MO_TA #</div>
+			#}#
+          </div>
+        </div>
+      # } #
+    </div>
+	# } # 
+ </script>
+<module style="display: block;" class="module-box"> </module>

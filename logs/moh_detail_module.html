@@ -1,0 +1,725 @@
+<script>
+	function getCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for (var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ')
+				c = c.substring(1, c.length);
+			if (c.indexOf(nameEQ) == 0)
+				return c.substring(nameEQ.length, c.length);
+		}
+		return null;
+	}
+	var checkCookie = getCookie('ngon_ngu_session');
+	if (checkCookie === 'TIENG_ANH') {
+		ngon_ngu_session = 'en';
+	} else {
+		ngon_ngu_session = 'vn';
+	}
+</script>
+<style type="text/css">
+.container-iframe {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 35px;
+	height: 0;
+	overflow: hidden;
+}
+/* Then style the iframe to fit in the container div with full height and width */
+.responsive-iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
+
+content_header {
+	margin: 5px 0;
+	display: block;
+}
+
+.ul_related_news {
+	padding-left: 18px;
+}
+
+.ul_related_news li {
+	margin-bottom: 5px;
+}
+
+.ul_attachments li {
+	list-style: none;
+}
+.ul_attachments li img {
+	width: 100%;
+	padding: .5em 0;
+}
+em {
+	text-align: left;
+}
+
+.component-content p {
+	margin-bottom: 15px;
+}
+
+.component-content h2,
+.journal-content-article h2 {
+	font-family: HelveticaNeueLight !important;
+	line-height: 2;
+	font-size: 18px;
+}
+#detail-news table>tbody>tr>td, #detail-news table>tbody>tr>th,
+	#detail-news table>tfoot>tr>td, #detail-news table>tfoot>tr>th,
+	#detail-news table>thead>tr>td, #detail-news table>thead>tr>th {
+	border: 1px solid #000 !important;
+}
+
+#detail-news table>tbody>tr>td a, #detail-news table>tbody>tr>td a span
+	{
+	word-break: break-all;
+}
+
+.detail-header-action {
+	display: flex;
+	align-items: center
+}
+
+.detail-header-action li {
+	margin-left: 20px
+}
+
+.detail-header-action li a {
+	font-size: 15px
+}
+
+.detail-header-action .comment {
+	color: #508CA4;
+	font-size: 13px
+}
+
+.detail-header-action .fb-share {
+	color: #3B5999
+}
+
+.detail-header-action .twitter-share {
+	color: #55ACEE
+}
+
+.detail-header-action .copy-link {
+	color: #508CA4
+}
+
+.detail-header-action .floating-bar-action {
+	color: #18136f;
+	font-size: 18px
+}
+
+#floating-bar .detail-header-action {
+	width: 40px;
+}
+
+.floating-bar {
+	position: relative;
+	float: right;
+	width: 62 px;
+}
+
+.floating-bar .detail-header-action .floating-bar_fb {
+	color: #3B5999
+}
+
+.floating-bar .detail-header-action .floating-bar_twitter {
+	color: #55ACEE
+}
+
+.floating-bar .detail-header-action {
+	flex-direction: column;
+	background: #fff;
+	border: 1px solid rgba(43, 114, 93, 0.2);
+}
+
+.floating-bar .detail-header-action li {
+	margin-left: 0;
+	padding: 13px 10px
+}
+
+.floating-bar .detail-header-action li .comment {
+	display: flex;
+	flex-direction: column
+}
+
+.toolTipCopy {
+	position: relative;
+	display: inline-block
+}
+
+.toolTipCopy .tooltiptext {
+	line-height: 24px;
+	visibility: hidden;
+	width: 140px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	position: absolute;
+	z-index: 1;
+	bottom: 150%;
+	left: 50%;
+	margin-left: -75px;
+	opacity: 0;
+	transition: opacity .3s
+}
+
+.toolTipCopy .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #555 transparent transparent
+}
+
+.toolTipCopy:hover .tooltiptext {
+	visibility: visible;
+	opacity: 1
+}
+
+#floating-bar .li:before {
+	content: ”\00A3″;
+	font-family: “FontAwesome” !important;
+	font-weight: normal !important;
+}
+
+.zalo img, .comment img, .copy-link img, .save img, .report img {
+	width: 18px;
+	margin: auto
+}
+
+.d-flex {
+	display: -webkit-box !important;
+	display: -ms-flexbox !important;
+	display: flex !important;
+}
+
+.align-items-center {
+	-webkit-box-align: center !important;
+	-ms-flex-align: center !important;
+	align-items: center !important;
+}
+
+.justify-content-between {
+	-webkit-box-pack: justify !important;
+	-ms-flex-pack: justify !important;
+	justify-content: space-between !important;
+}
+  #detail-news.dark-mode {
+    background-color: #1c1c1c !important;
+    color: #f1f1f1 !important;
+  }
+
+  #detail-news.dark-mode a {
+    color: #6ab0f3 !important;
+  }
+
+  #detail-news.dark-mode h1,
+  #detail-news.dark-mode h2,
+  #detail-news.dark-mode h3,
+  #detail-news.dark-mode span,
+  #detail-news.dark-mode table,
+  #detail-news.dark-mode strong {
+    background-color: #1c1c1c !important;
+    color: #ffffff !important;
+  }
+    #detail-news.dark-mode table{
+    background-color: #1c1c1c !important;
+    color: #ffffff !important;
+  }
+  #detail-news.dark-mode img {
+    filter: brightness(0.9) contrast(1.1);
+  }
+  
+  .color-option {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #999;
+    display: inline-block;
+    margin: 3px;
+    cursor: pointer;
+  }
+
+  /* Hiển thị màu rõ hơn khi nền sáng */
+  #colorPickerMenu {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  }
+</style>
+<script>
+	// ham in
+	function printFunc() {
+		var element = document.getElementById("sharing");
+		var divToPrint = document.getElementById('detail-news');
+		var htmlToPrint = '' + '<style type="text/css">'
+				+ 'table th, table td {' + 'border:1px solid #000;'
+				+ 'padding:0.5em;' + '}' + '</style>';
+		element.remove();
+		htmlToPrint += divToPrint.outerHTML;
+		newWin = window.open("");
+		newWin.document.write("<h3 align='center'></h3>");
+		newWin.document.write(htmlToPrint);
+		newWin.print();
+		newWin.close();
+	}
+	//ham export word
+</script>
+
+<script type="text/x-kendo-template" id="banner_template">
+    <h1 class="component-title">
+        #=data.TIEU_DE_HIEN_THI#
+    </h1>
+    <content class="component-content">
+        #=data.NOI_DUNG#
+    </content>
+</script>
+<script type="text/x-kendo-template" id="article_template">
+<div class="content-article">
+	<div id="content-article">
+    	<h1 class="component-title">
+        	#=data.TIEU_DE_HIEN_THI#
+    	</h1>
+    <content_header>
+        # if (data.BUT_DANH == null || data.BUT_DANH == "null") { #
+        # } else {#
+            <span style="padding-right:8px;"> #=data.BUT_DANH# </span>
+        # } #
+        
+         #=data.THOI_GIAN_CAP_NHAT#
+    </content_header>
+    <content class="component-content">
+        #=data.NOI_DUNG#
+    </content>
+</div>
+<div class='col-xs-12'>
+	<ul class='ul_attachments'>
+	# for (var j = 0; j < data.files.length; j++) { var item = data.files[j] #
+           <li>
+            	<a href='#=item#' target='_blank' rel='noopener'><span class='fa fa-fw fa-file'></span>#=parseFileName(item)#</a>
+           </li>
+        # } #
+	</ul>
+</div>
+	<div class='col-xs-12  button-bottom'>
+        <button type='button' id='btn' onclick='printFunc();'><i class="fa fa-print"></i>Bản In </button>
+        <button type='button' onclick="Export2Doc('content-article',filename)";><i class="fa fa-save"></i>Lưu file</button>
+    </div>
+</div>
+    <div class="col-xs-12 other-article">
+        <h3>Tin liên quan</h3>
+        <ul class="ul_related_news">
+            # for (var i = 0; i < data.Others.length; i++) {
+				var item = data.Others[i]
+			 #
+            <li class="mb-sm-15">
+                    
+                    <!--<a href="/index.jsp?pageId=#=data.PageId#&aid=#=item.MA#&cid=#=item.DANH_MUC#" class="mr-3 align-self-center post-img">
+                        <img src="#=toArticleImageTemplate(item.DUONG_DAN_ANH)#" alt="#=item.TIEU_DE#" alt="#=item.TIEU_DE#">
+                    </a>-->
+                        
+                    <a href="/index.jsp?pageId=#=data.PageId#&aid=#=item.MA#&cid=#=item.MA_DANH_MUC#">
+                        #=item.TIEU_DE#
+                    </a>
+                 
+            </li>
+            
+            # } #
+        </ul>
+    </div>
+</script>
+
+<script>
+	function loadData(param) {
+		/* tieng anh */
+		var url_en = ngon_ngu_session;
+		if (url_en.toLowerCase() === 'en') {
+			$(".text_VN").remove();
+		} else {
+			$(".text_EN").remove();
+		}
+		/* end tieng anh */
+		var articleDetailTemplate = kendo.template($("#article_template")
+				.html());
+		var bannerDetailTemplate = kendo.template($("#banner_template").html());
+		var args = param.split('|');
+		var p = parseParamModule(param);
+		var moduleTemplate = kendo.template($("#" + p.TemplateId).html());
+		var MA = getParams("aid");
+		var MA_DANH_MUC = getParams("cid");
+		//check null
+		function isEmpty(str) {
+			var str = str;
+			if (str != null || str != undefined) {
+				return str;
+			} else {
+				return str = "";
+			}
+		}
+		if (MA == undefined) {
+			$("#" + p.moduleId).find("module").html(
+					"<br><br><br>CHI TIẾT BÀI VIẾT<br><br><br>");
+			return;
+		}
+		if (p.ADisplayType == "MA_BAI_VIET")
+			MA = p.MA_BAI_VIET;
+		var DANH_MUC = getParams("category");
+		var moduleId = p.moduleId;
+		var module = $("#" + moduleId).find("module");
+		$("#" + moduleId).addClass(p.AClassName);
+		var url = 'bridge?url=' + main_new + '/api/layChiTietBaiViet';
+		if (p.ADisplayType == "MA_BAI_VIET")
+			url = 'bridge?url=' + main_new + '/api/lay_tin_bai'
+		postShellService.ExecuteGetAction(url, {
+			MA : MA,
+			CHUYEN_TRANG : p.PageType,
+			NGON_NGU : p.Language
+		}).then(
+				function(data) {
+					var article = $.grep(data, function(a) {
+						return (a.MA == MA);
+					})[0];
+
+					var others = $.grep(data, function(a) {
+						return (a.MA != MA);
+					});
+					if (article != undefined) {
+						if (p.AUseCategoryTitle != "true") {
+							article.TIEU_DE_HIEN_THI = p.ModuleTitle.replace(
+									/_/g, " ");
+						} else
+							article.TIEU_DE_HIEN_THI = article.TIEU_DE;
+						article.Others = [];
+						for (var i = 0; i < 3; i++) {
+							var item = others[i];
+							if (item)
+								article.Others.push(item);
+						}
+						if (p.PageId != undefined)
+							article.PageId = p.PageId;
+						else
+							article.PageId = 1;
+						article.files = [];
+						if (p.ADisplayType != "MA_BAI_VIET") {
+							if (article.FILE_DINH_KEM.length > 0) {
+								var arrAttachFile = article.FILE_DINH_KEM
+										.split("✪");
+								if (arrAttachFile != null
+										&& arrAttachFile != "null")
+									article.files = arrAttachFile;
+								else
+									article.files = [];
+							}
+							module.html(articleDetailTemplate(article));
+						} else
+							module.html(bannerDetailTemplate(article));
+						if (p.AShowTitle == "true") {
+							document.title = article.TIEU_DE_HIEN_THI;
+							module.find("h1").show();
+						} else {
+							module.find("h1").remove();
+						}
+						module.removeClass("empty");
+					}
+				});
+		// chi tiet bai viet
+		function chitietBV() {
+			postShellService
+					.ExecuteGetAction(
+							'bridge?url=' + main_new + '/api/layChiTietBaiViet',
+							{
+								maBaiViet : getParams("aid"),
+								maDanhMuc : MA_DANH_MUC
+
+							})
+					.then(
+							function(data) {
+								var _data = data.d;
+								let danhsach = $('#detail-news');
+								danhsach.empty();
+								var currentURL = window.location.href;
+								
+								var array_file = new Array();
+								var html = "<h1 class='component-title'>"
+										+ _data.tieuDe + "</h1>";
+								html += "<content_header>";
+								html += "<span style='padding-right:8px;'>"
+										+ isEmpty(_data.butDanh) + "</span>"
+										+ isEmpty(_data.thoiGianBatDauDang);
+								html += '<div id="sharing" style="display: flex;justify-content: space-between;align-items: center;display: -webkit-box !important;display: -ms-flexbox !important;display: flex !important; -webkit-box-pack: justify !important;-ms-flex-pack: justify !important;justify-content: space-between !important;-webkit-box-align: center !important;-ms-flex-align: center !important;align-items: center !important;font-size: 20px;line-height: 20px;margin: 8px 0;height: 30px;">';
+								html += '<ul style="display: inline-flex; flex-direction: row; list-style-type: none; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px; padding: 0; position: relative; grid-column-gap: 15px !important" id="floating-bar"><p style="font-size: 16px !important;">Chia sẻ:&nbsp; &nbsp; </p>';
+								html += '<li><a title="Liên kết facebook" href="https://www.facebook.com/sharer/sharer.php?u=' + currentURL + '" rel="nofollow" target="_blank"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>';
+								
+								html += '<li><span><a title="In" href="" id="btn" onclick="printFunc();"><i class="fa fa-print"></i></a></span></li>';
+								html += '<li><span><a title="Kết xuất" href="" onclick="Export2Doc("detail-news")"><i class="fa fa-save"></i></a></span></li>';
+								html += '</ul>';
+								html += '<div style="float: right;display: flex; justify-content: center; align-items: center;">';
+								html += '<i onclick="zoomTo()" class="fa fa-search-plus" aria-hidden="true" title="Phóng to" style="font-size: 20px; margin-right: 10px"></i>';
+								html += '<i onclick="zoomNho()" class="fa fa-search-minus" aria-hidden="true" title="Thu nhỏ" style="font-size: 20px; margin-right: 10px"></i>';
+								html += `
+                                     <div style="margin-right: 10px;">
+                                        <i onclick="toggleReadAloud()" class="fa fa-volume-up" aria-hidden="true" title="Đọc nội dung" style="font-size: 20px; cursor: pointer;"></i>
+                                     </div>
+                                    `;
+                                html += '<i onclick="toggleDarkMode()" class="fa fa-moon-o" aria-hidden="true" title="Thay đổi tương phản" style="font-size: 20px; cursor: pointer;"></i>';
+								html += `
+									  <div style="position: relative; display: inline-block; margin-left: 10px;">
+									    <i onclick="toggleColorPicker()" class="fa fa-paint-brush" aria-hidden="true" title="Đổi màu chữ" style="font-size: 20px; cursor: pointer;"></i>
+									    <div id="colorPickerMenu" style="display: none; position: absolute; top: 25px; left: -10px; background: white; border: 1px solid #ccc; padding: 5px; border-radius: 5px; z-index: 999;">
+									      <div class="color-option" style="background-color: black;"   onclick="changeTextColor('#000000')" title="Đen"></div>
+									      <div class="color-option" style="background-color: red;"     onclick="changeTextColor('#ff0000')" title="Đỏ"></div>
+									      <div class="color-option" style="background-color: blue;"    onclick="changeTextColor('#0000ff')" title="Xanh dương"></div>
+									      <div class="color-option" style="background-color: green;"   onclick="changeTextColor('#008000')" title="Xanh lá"></div>
+									      <div class="color-option" style="background-color: orange;"  onclick="changeTextColor('#ffa500')" title="Cam"></div>
+									      <div class="color-option" style="background-color: yellow;"   onclick="changeTextColor('#afaf00')" title="Vàng"></div>
+									    </div>
+									  </div>
+									`;
+								html += "</div>";
+								html += "</div>";
+								html += "</content_header>";
+								var _noiDung = '';
+								if (_data.noiDung != ''
+										&& _data.noiDung != null) {
+									_noiDung = _data.noiDung;
+									_noiDung = _noiDung.replace(
+											'href=\"/Lists', 'href=\"'
+													+ mainImageUrl + 'Lists');
+									_noiDung = _noiDung.replace(
+											'href=\"/EnglishDocLib', 'href=\"'
+													+ mainImageUrl
+													+ 'EnglishDocLib');
+									_noiDung = _noiDung.replaceAll(']]>', '');
+									_noiDung = _noiDung.replaceAll(']]&gt;', '');
+									if (_noiDung
+											.indexOf(urlImgResources) > -1) {
+										_noiDung = _noiDung
+												.replaceAll(
+														urlImgResources,
+														mainImageUrl);
+									} else {
+										_noiDung = _noiDung.replaceAll(
+												'http://' + urlImg + ':8081',
+												mainImageUrl);
+									}
+									var facebookMatches = _noiDung
+											.match(/\[facebookLiveUrl=(.*?)\]/);
+									if (facebookMatches) {
+										var facebookLiveUrl = facebookMatches[1];
+										console.log(facebookLiveUrl);
+										_noiDung = _noiDung
+												.replace(
+														/\[facebookLiveUrl=(.*?)\]/,
+														'<div class="container-iframe"><iframe class="responsive-iframe" src="' + facebookLiveUrl + '" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe></div>');
+									}
+									var youtubeMatches = _noiDung
+											.match(/\[youtubeUrl=(.*?)\]/);
+									if (youtubeMatches) {
+										var youtubeUrl = youtubeMatches[1];
+										console.log(youtubeUrl);
+										_noiDung = _noiDung
+												.replace(
+														/\[youtubeUrl=(.*?)\]/,
+														'<div class="container-iframe"><iframe class="responsive-iframe" src="' + youtubeUrl + '" width="560" height="314"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>');
+									}
+								}
+								if (_data.tinLienQuanTuInternet != '' && _data.tinLienQuanTuInternet != null) {
+									_noiDung += '<div class="container-iframe"><iframe class="responsive-iframe" src="' + getEmbedUrl(_data.tinLienQuanTuInternet) + 
+									'" width="560" height="314"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'
+								}
+								var regex = /(font-size:x-large|font-size:\s\d*px;|font-size:medium|font-size:\smedium;|font-size:\smedium|font-size:\s\d*px|font-size:\d*px;|font-size:\d*px|font-size:\d*\.?\d+px;|font-size:\d*\.?\d+pt)/g;
+								html += "<content class='component-content'>"
+										+ _noiDung.replace(regex, '')
+										+ "</content>";
+								var _filename = _data.fileDinhKem;
+								var _videoname = _data.videoDinhKem;
+								if (_filename != null) {
+									array_file = _filename.split("✪");
+									html += "<div class='col-xs-12'><label>"
+											+ (url_en.toLowerCase() === 'en' ? 'Attached files'
+													: 'File đính kèm')
+											+ "</label>";
+									html += "<ul class='ul_attachments'>";
+									for (i = 0; i < array_file.length; i++) {
+										var _tenfile = array_file[i].split("/");
+										html += "<li>";
+										/* html += "<a style=\"position: relative;z-index: 10;\"href='"+mainImageUrl+array_file[i]+"' target='_blank'><span class='fa fa-fw fa-file'></span>"
+												+ _tenfile[_tenfile.length - 1]
+												+ "</a>"; */
+										if (isImageExtension(_tenfile[_tenfile.length - 1])) {
+											html += "<img src='" + mainImageUrl+array_file[i] + "'>"
+										} else {
+											html += "<a style=\"position: relative;z-index: 10;\"href='"+mainImageUrl+array_file[i]+"' target='_blank' rel='noopener'><span class='fa fa-fw fa-file'></span>"
+											+ _tenfile[_tenfile.length - 1]
+											+ "</a>";
+										}
+										html += "</li>";
+									}
+									html += "</ul>";
+									html += "</div>";
+
+								}
+
+								if (_videoname != null) {
+									var array_video = _videoname.split("✪");
+									html += "<div style='padding-top:15px; z-index: 9' class='col-xs-12 video-attr'><label>Video đính kèm</label><div>";
+									html += "<figure style='text-align:center'>";
+									for (i = 0; i < array_video.length; i++) {
+										var _tenvideo = array_video[i]
+												.split("/");
+										html += "<video width='640' height='480' controls><source src='"+mainImageUrl + array_video[i]+"' type='video/mp4'></video>"
+										html += "<figcaption>" + _tenvideo.pop().split(".").shift() + "</figcaption>"
+									}
+									html += "</figure>";
+								}
+								if (_data.tinLienQuanNoiBo != null
+										&& _data.tinLienQuanNoiBo != "") {
+									var tinLienQuan = JSON.parse(_data.tinLienQuanNoiBo);
+									if (Array.isArray(tinLienQuan) && tinLienQuan.length > 0) {
+										html += "<div style='padding-top:15px' class='col-xs-12'><label>"
+												+ (url_en.toLowerCase() === 'en' ? 'Others'
+														: 'Tin liên quan')
+												+ "</label>";
+										html += "<div style='padding-left: 2%'><ul>";
+										for (i = 0; i < tinLienQuan.length; i++) {
+											var item = tinLienQuan[i];
+											var MA = item.MA;
+											var TEN_CHUYEN_TRANG = item.TEN_CHUYEN_TRANG;
+											var URL = item.URL;
+											var TIEU_DE = item.TIEU_DE;
+											
+											if (URL != undefined) {
+												html += "<li><a style=\"position: relative;z-index: 10;\"href='"+ URL +"' target='_blank' rel='noopener'>"
+														+ TIEU_DE + "</a></li>";
+											}
+										}
+										html += "</ul></div></div>";
+									}
+								}
+								danhsach.append(html);
+								//$("#detail-news table tr td").removeAttr("style");
+
+							});
+		}
+		if (p.TemplateId == "chitiet") {
+			chitietBV();
+		}
+	}
+	/**
+	 * Kiểm tra file có phải là ảnh dựa trên extension
+	 * @param {File|string} file - Đối tượng File hoặc tên file
+	 */
+	function isImageExtension(file) {
+	    const fileName = typeof file === 'string' ? file : file.name;
+	    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.webp|\.svg)$/i;
+	    
+	    return allowedExtensions.test(fileName);
+	}
+	function toAttachFiles(files) {
+		if (files.length > 0) {
+			var arrAttachFile = files.split("✪");
+			var html = attachFileTemplate1(arrAttachFile);
+			return html;
+			//alert("vao day");
+			//return attachFileTemplate(arrAttachFile);
+		}
+	}
+	function parseFileName(url) {
+		var _lastPath = url.lastIndexOf("/");
+		return url.substring(_lastPath + 1);
+	}
+	var fontdefault = 18;
+	var foncurrent;
+	function zoomTo() {
+		console.log("to");
+		if (foncurrent < 0 || foncurrent == 'undefined' || foncurrent == ''
+				|| foncurrent == null) {
+			foncurrent = fontdefault;
+		}
+		foncurrent = foncurrent + 2;
+		  $(".component-content *").css("font-size", foncurrent + "px");
+	}
+	function zoomNho() {
+		if (foncurrent > fontdefault) {
+			foncurrent = foncurrent - 2;
+			  $(".component-content *").css("font-size", foncurrent + "px");
+		}
+	}
+</script>
+<script>
+  function toggleDarkMode() {
+    const detail = document.getElementById("detail-news");
+    if (detail) {
+      detail.classList.toggle("dark-mode");
+    }
+  }
+</script>
+<script>
+  function toggleColorPicker() {
+    const picker = document.getElementById("colorPickerMenu");
+    if (picker.style.display === "none" || picker.style.display === "") {
+      picker.style.display = "block";
+    } else {
+      picker.style.display = "none";
+    }
+  }
+
+  function changeTextColor(color) {
+    const article = document.getElementById("detail-news");
+    if (article) {
+    	article.querySelectorAll("*").forEach(el => el.style.color = color);
+    }
+    document.getElementById("colorPickerMenu").style.display = "none";
+  }
+
+  // Tự động đóng menu nếu click ra ngoài
+  window.addEventListener("click", function(event) {
+    const picker = document.getElementById("colorPickerMenu");
+    if (picker && !picker.contains(event.target) && !event.target.classList.contains("fa-paint-brush")) {
+      picker.style.display = "none";
+    }
+  });
+</script>
+<script>
+  let isSpeaking = false;
+  let utterance;
+
+  function toggleReadAloud() {
+    const content = document.getElementById("detail-news");
+    if (!content) return;
+
+    if (!isSpeaking) {
+      const text = content.innerText || content.textContent;
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "vi-VN"; // Tiếng Việt
+      speechSynthesis.speak(utterance);
+      isSpeaking = true;
+
+      // Khi đọc xong
+      utterance.onend = function () {
+        isSpeaking = false;
+      };
+    } else {
+      speechSynthesis.cancel(); // Dừng đọc
+      isSpeaking = false;
+    }
+  }
+</script>
+
+<module class="module-box">
+<div id="chitiet"></div>
+<div id="detail-news"></div>
+<div class='col-xs-12 button-bottom'></div>
+</module>
