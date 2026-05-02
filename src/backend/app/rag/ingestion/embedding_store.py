@@ -3,7 +3,8 @@ import uuid
 import hashlib
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
+from decimal import Decimal
 from typing import Any, Optional
 
 from backend.app.chroma_manager import get_chroma_manager
@@ -12,6 +13,79 @@ logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 32
 
+ALLOWED_METADATA_KEYS = {
+    "source_id",
+    "source_name",
+    "source_kind",
+    "source_url",
+    "url",
+    "pdf_url",
+    "title",
+    "disease_name",
+    "canonical_key",
+    "corpus",
+    "content_subtype",
+    "topic",
+    "domain",
+    "region",
+    "category",
+    "published_at",
+    "updated_at",
+    "data_type",
+    "chunk_index",
+    "page",
+    "section",
+    "raw_source",
+    "extract_mode",
+    "phase",
+    "candidate_index",
+    "file_hash",
+    "source_file",
+    "ingested_at",
+}
+
+def _normalize_chroma_metadata_value(value: Any):
+    if value is None:
+        return None
+
+    if isinstance(value, (str, int, float, bool)):
+        return value
+
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+
+    if isinstance(value, Decimal):
+        return float(value)
+
+    if isinstance(value, (list, tuple, set)):
+        return ", ".join(str(v) for v in value if v is not None)
+
+    if isinstance(value, dict):
+        return json.dumps(value, ensure_ascii=False, default=str)
+
+    return str(value)
+
+
+def normalize_chroma_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
+    return {
+        str(key): _normalize_chroma_metadata_value(value)
+        for key, value in (metadata or {}).items()
+    }
+
+def compact_chroma_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
+    normalized = normalize_chroma_metadata(metadata)
+
+    compact = {
+        key: value
+        for key, value in normalized.items()
+        if key in ALLOWED_METADATA_KEYS
+    }
+
+    # Chroma Cloud đang giới hạn 32 keys; giữ dư địa an toàn
+    if len(compact) > 30:
+        compact = dict(list(compact.items())[:30])
+
+    return compact
 
 def normalize_text(text: str) -> str:
     return " ".join(text.strip().split())
@@ -91,7 +165,7 @@ def embed_and_store_chunks(
                 })
 
                 texts.append(normalized_text)
-                metadatas.append(metadata)
+                metadatas.append(compact_chroma_metadata(metadata))
 
                 deterministic_id = str(
                     uuid.uuid5(
