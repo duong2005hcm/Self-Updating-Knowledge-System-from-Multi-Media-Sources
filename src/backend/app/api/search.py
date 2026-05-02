@@ -7,7 +7,16 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from backend.app.api.dependencies.authz import Principal, Role, get_current_principal
-from backend.app.schemas.search import SearchMode, SearchRequest, SearchResponse, SearchSortBy, SearchSortOrder
+from backend.app.schemas.search import (
+    SearchHubRequest,
+    SearchHubResponse,
+    SearchMode,
+    SearchRequest,
+    SearchResponse,
+    SearchSortBy,
+    SearchSortOrder,
+)
+from backend.app.services.multi_source_search_service import MultiSourceSearchService
 from backend.app.services.search_service import SearchBackendUnavailableError, SearchService
 
 logger = logging.getLogger(__name__)
@@ -20,6 +29,30 @@ router = APIRouter(
 
 def get_search_service() -> SearchService:
     return SearchService()
+
+
+def get_multi_source_search_service() -> MultiSourceSearchService:
+    return MultiSourceSearchService()
+
+
+def _copy_search_request(payload: SearchRequest, updates: dict) -> SearchRequest:
+    if hasattr(payload, "model_copy"):
+        return payload.model_copy(update=updates)
+    return payload.copy(update=updates)
+
+
+def _apply_search_policy(payload: SearchRequest, principal: Principal) -> SearchRequest:
+    if principal.role == Role.admin:
+        return payload
+
+    limit_cap = 10 if principal.role == Role.guest else 50
+    updates = {
+        "status": "active",
+        "visibility": "public",
+        "created_by": None,
+        "limit": min(payload.limit, limit_cap),
+    }
+    return _copy_search_request(payload, updates)
 
 
 def _execute_search(
@@ -58,24 +91,21 @@ def _execute_search(
     )
 
 
-def _copy_search_request(payload: SearchRequest, updates: dict) -> SearchRequest:
-    if hasattr(payload, "model_copy"):
-        return payload.model_copy(update=updates)
-    return payload.copy(update=updates)
-
-
-def _apply_search_policy(payload: SearchRequest, principal: Principal) -> SearchRequest:
-    if principal.role == Role.admin:
-        return payload
-
-    limit_cap = 10 if principal.role == Role.guest else 50
-    updates = {
-        "status": "active",
-        "visibility": "public",
-        "created_by": None,
-        "limit": min(payload.limit, limit_cap),
-    }
-    return _copy_search_request(payload, updates)
+def _execute_multi_source_search(
+    *,
+    service: MultiSourceSearchService,
+    payload: SearchHubRequest,
+    principal: Principal,
+) -> SearchHubResponse:
+    effective_limit = min(payload.limit, 10 if principal.role == Role.guest else payload.limit)
+    return service.search(
+        query=payload.q,
+        search_mode=payload.search_mode,
+        limit=effective_limit,
+        include_external=payload.include_external,
+        min_score=payload.min_score if payload.min_score is not None else 0.35,
+        debug=payload.debug and principal.role == Role.admin,
+    )
 
 
 @router.get("", response_model=SearchResponse, response_model_exclude_none=True)
@@ -120,11 +150,7 @@ def search_documents(
             offset=offset,
             limit=limit,
         )
-        return _execute_search(
-            service=service,
-            payload=payload,
-            principal=principal,
-        )
+        return _execute_search(service=service, payload=payload, principal=principal)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except SearchBackendUnavailableError as e:
@@ -141,7 +167,37 @@ def search_documents_post(
     principal: Principal = Depends(get_current_principal),
 ) -> SearchResponse:
     try:
-        return _execute_search(
+        return _execute_search(service=service, payload=payload, principal=principal)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except SearchBackendUnavailableError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        logger.exception("Search documents failed: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to search documents: {str(e)}")
+
+
+@router.get("/multi", response_model=SearchHubResponse, response_model_exclude_none=True)
+def search_multi_source(
+    q: str = Query(..., min_length=1),
+    search_mode: SearchMode = Query(default=SearchMode.hybrid),
+    limit: int = Query(default=10, ge=1, le=10),
+    include_external: bool = Query(default=True),
+    min_score: Optional[float] = Query(default=None, ge=0, le=1),
+    debug: bool = Query(default=False),
+    service: MultiSourceSearchService = Depends(get_multi_source_search_service),
+    principal: Principal = Depends(get_current_principal),
+) -> SearchHubResponse:
+    try:
+        payload = SearchHubRequest(
+            q=q,
+            search_mode=search_mode,
+            limit=limit,
+            include_external=include_external,
+            min_score=min_score,
+            debug=debug,
+        )
+        return _execute_multi_source_search(
             service=service,
             payload=payload,
             principal=principal,
@@ -151,5 +207,5 @@ def search_documents_post(
     except SearchBackendUnavailableError as e:
         raise HTTPException(status_code=503, detail=str(e))
     except Exception as e:
-        logger.exception("Search documents failed: %s", str(e))
-        raise HTTPException(status_code=500, detail=f"Failed to search documents: {str(e)}")
+        logger.exception("Multi-source search failed: %s", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to search sources: {str(e)}")

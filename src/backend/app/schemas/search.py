@@ -76,3 +76,49 @@ class SearchResponse(BaseModel):
     offset: int
     limit: int
     message: Optional[str] = None
+
+
+class SearchHubRequest(BaseModel):
+    q: str = Field(..., min_length=1)
+    search_mode: SearchMode = SearchMode.hybrid
+    limit: int = Field(default=10, ge=1, le=10)
+    include_external: bool = True
+    min_score: Optional[float] = Field(default=None, ge=0, le=1)
+    debug: bool = False
+
+
+class SearchHubItem(BaseModel):
+    type: str
+    title: str
+    score: Optional[float] = None
+    url: Optional[str] = None
+    document_id: Optional[str] = None
+    article_id: Optional[str] = None
+    summary: Optional[str] = None
+    snippet: Optional[str] = None
+    source_type: Optional[str] = None
+    source_name: Optional[str] = None
+    source_url: Optional[str] = None
+    display_link: Optional[str] = None
+    topic: Optional[str] = None
+    tags: list[str] = Field(default_factory=list)
+    updated_at: Optional[datetime] = None
+    published_at: Optional[datetime] = None
+    image_url: Optional[str] = None
+    author_name: Optional[str] = None
+    rating_avg: Optional[float] = None
+
+
+class SearchHubSection(BaseModel):
+    label: str
+    total: int
+    items: list[SearchHubItem] = Field(default_factory=list)
+
+
+class SearchHubResponse(BaseModel):
+    status: str = "ok"
+    query: str
+    search_mode: SearchMode
+    total: int
+    sections: dict[str, SearchHubSection]
+    message: Optional[str] = None
