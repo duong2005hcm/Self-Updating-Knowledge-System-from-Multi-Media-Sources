@@ -30,6 +30,12 @@ class N8nPendingPreviewRequest(BaseModel):
     candidate_index: Optional[int] = None
     extract_mode: Optional[str] = None
 
+    article_title: Optional[str] = None
+    parent_topic_title: Optional[str] = None
+    disease_topic_url: Optional[str] = None
+    category: Optional[str] = None
+    chroma_collection_override: Optional[str] = None
+
 
 class PendingPreviewResponse(BaseModel):
     status: Literal["ok", "failed"] = "ok"
@@ -65,6 +71,13 @@ class PendingIngestItem(BaseModel):
     phase: Optional[str] = None
     candidate_index: Optional[int] = None
     extract_mode: Optional[str] = None
+
+    article_title: Optional[str] = None
+    parent_topic_title: Optional[str] = None
+    disease_topic_url: Optional[str] = None
+    category: Optional[str] = None
+    chroma_collection_override: Optional[str] = None
+
     status: str = "pending"
     checksum: str = ""
     extracted_text_preview: str = ""
@@ -106,6 +119,9 @@ class PendingApproveResponse(BaseModel):
     document_id: Optional[str] = None
     version_id: Optional[str] = None
     ingest_job_id: Optional[str] = None
+    chunks_inserted: int = 0
+    collections: list[str] = Field(default_factory=list)
+    chroma_collection_override: Optional[str] = None
     message: str = ""
 
 
