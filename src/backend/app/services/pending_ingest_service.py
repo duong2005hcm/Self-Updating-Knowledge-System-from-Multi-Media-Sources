@@ -168,6 +168,7 @@ class PendingIngestService:
         note: Optional[str] = None,
     ) -> dict[str, Any]:
         pending = self.get_pending(pending_id)
+
         if pending.status == "approved" and pending.approved_document_id and pending.approved_version_id:
             return {
                 "status": "ok",
@@ -176,16 +177,24 @@ class PendingIngestService:
                 "document_id": pending.approved_document_id,
                 "version_id": pending.approved_version_id,
                 "ingest_job_id": pending.ingest_job_id,
+                "chunks_inserted": 0,
+                "collections": [],
+                "chroma_collection_override": self._collection_override_for_pending(pending),
                 "message": "Pending ingest was already approved.",
             }
 
         chunks = self._read_chunks_file(pending.chunks_path)
         if not chunks:
-            raise PendingIngestInvalidError("Pending ingest has no chunks to approve")
+            raise PendingIngestInvalidError(
+                f"Pending ingest has no chunks to approve. "
+                f"chunks_path={pending.chunks_path!r}, "
+                f"exists={os.path.exists(pending.chunks_path or '')}"
+            )
 
         extracted_text = self._read_text_file(pending.extracted_text_path)
         if not extracted_text:
             extracted_text = "\n\n".join(_stringify(chunk.get("text")) for chunk in chunks).strip()
+
         effective_checksum = pending.checksum or (checksum_text(extracted_text) if extracted_text else "")
 
         source_type = self._source_type(pending)
@@ -223,38 +232,6 @@ class PendingIngestService:
                 ingest_job_id=job_id,
             )
 
-            if sync_result.action == "skipped":
-                self._ingest_job_service.increment_counters(
-                    job_id,
-                    processed_count=1,
-                    skipped_count=1,
-                )
-                self._document_service.touch_source_last_sync(
-                    source_type=source_type,
-                    source_locator=source_locator,
-                    source_name=pending.source_name or title,
-                    domain=domain,
-                    created_by=actor,
-                )
-                self._ingest_job_service.finish_job(job_id)
-                self._repository.approve_pending(
-                    pending.pending_id,
-                    reviewed_by=actor,
-                    note=note,
-                    approved_document_id=sync_result.document_id,
-                    approved_version_id=sync_result.version_id,
-                    ingest_job_id=job_id,
-                )
-                return {
-                    "status": "ok",
-                    "action": "skipped",
-                    "pending_id": pending.pending_id,
-                    "document_id": sync_result.document_id,
-                    "version_id": sync_result.version_id,
-                    "ingest_job_id": job_id,
-                    "message": "Content checksum is unchanged; Chroma embedding was skipped.",
-                }
-
             self._document_service.update_version_artifacts(
                 version_id=sync_result.version_id,
                 raw_path=pending.raw_path,
@@ -264,62 +241,29 @@ class PendingIngestService:
                 extracted_text=extracted_text,
             )
 
-            ingest_context = build_ingest_context(
+            embed_result = self._embed_pending_chunks(
+                pending=pending,
                 source_type=source_type,
-                source_name=pending.source_name or source_locator,
                 source_locator=source_locator,
-                document_title=title,
+                title=title,
                 domain=domain,
                 topic=topic,
-                priority="normal",
-                visibility="public",
-                status="active",
-                created_by=actor,
-                ingest_job_id=job_id,
+                actor=actor,
+                job_id=job_id,
                 checksum=effective_checksum,
-                version_no=sync_result.version_no,
-            )
-            extra_metadata = build_chunk_metadata(
-                ingest_context,
-                extra={
-                    "source_id": sync_result.source_id,
-                    "document_id": sync_result.document_id,
-                    "version_id": sync_result.version_id,
-                    "ingest_job_id": job_id,
-                    "pending_id": pending.pending_id,
-                    "n8n_source_id": pending.source_id,
-                    "source_name": pending.source_name or pending.source_id,
-                    "corpus": pending.corpus or "",
-                    "content_subtype": pending.content_subtype or "",
-                    "source_kind": pending.source_kind,
-                    "url": pending.url or "",
-                    "pdf_url": pending.pdf_url or "",
-                    "published_at": pending.published_at or "",
-                    "updated_at": pending.updated_at or "",
-                    "region": pending.region or "",
-                    "doi": pending.doi or "",
-                    "pmid": pending.pmid or "",
-                    "disease_name": pending.disease_name or "",
-                    "canonical_key": pending.canonical_key or "",
-                    "raw_source": pending.raw_source or "",
-                    "phase": pending.phase or "",
-                    "candidate_index": pending.candidate_index if pending.candidate_index is not None else "",
-                    "extract_mode": pending.extract_mode or "",
-                },
-            )
-            embed_result = embed_and_store_chunks(
-                chunks_json_path=pending.chunks_path or "",
-                allow_duplicates=False,
-                extra_metadata=extra_metadata,
+                sync_result=sync_result,
             )
 
             created_count = 1 if sync_result.action == "created" else 0
             updated_count = 1 if sync_result.action == "updated" else 0
+            skipped_count = 1 if sync_result.action == "skipped" else 0
+
             self._ingest_job_service.increment_counters(
                 job_id,
                 processed_count=1,
                 created_count=created_count,
                 updated_count=updated_count,
+                skipped_count=skipped_count,
             )
             self._document_service.touch_source_last_sync(
                 source_type=source_type,
@@ -329,6 +273,7 @@ class PendingIngestService:
                 created_by=actor,
             )
             self._ingest_job_service.finish_job(job_id)
+
             self._repository.approve_pending(
                 pending.pending_id,
                 reviewed_by=actor,
@@ -338,6 +283,33 @@ class PendingIngestService:
                 ingest_job_id=job_id,
             )
 
+            chunks_inserted = int(embed_result.get("inserted", 0) or 0)
+            collections = embed_result.get("collections") or []
+            collection_override = self._collection_override_for_pending(pending)
+
+            if sync_result.action == "skipped":
+                message = (
+                    f"Content unchanged; checked/recovered Chroma embedding. "
+                    f"Inserted {chunks_inserted} chunk(s)."
+                )
+            else:
+                message = f"Approved pending ingest and stored {chunks_inserted} chunk(s)."
+
+            logger.info(
+                "Approved pending ingest: pending_id=%s source_kind=%s sync_action=%s "
+                "chunks_path=%s chunk_count=%s data_type=%s collection_override=%s "
+                "collections=%s inserted=%s",
+                pending.pending_id,
+                pending.source_kind,
+                sync_result.action,
+                pending.chunks_path,
+                pending.chunk_count,
+                self._data_type_for_pending(pending),
+                collection_override,
+                collections,
+                chunks_inserted,
+            )
+
             return {
                 "status": "ok",
                 "action": sync_result.action,
@@ -345,9 +317,10 @@ class PendingIngestService:
                 "document_id": sync_result.document_id,
                 "version_id": sync_result.version_id,
                 "ingest_job_id": job_id,
-                "message": (
-                    f"Approved pending ingest and stored {embed_result.get('inserted', 0)} chunk(s)."
-                ),
+                "chunks_inserted": chunks_inserted,
+                "collections": collections,
+                "chroma_collection_override": collection_override,
+                "message": message,
             }
         except Exception:
             try:
@@ -359,6 +332,7 @@ class PendingIngestService:
     def _create_preview(self, request: N8nPendingPreviewRequest, *, source_kind: str) -> dict[str, Any]:
         payload = _model_dump(request)
         payload["source_kind"] = source_kind
+
         locator = _stringify(payload.get("pdf_url") if source_kind == "pdf_url" else payload.get("url"))
         if not locator:
             raise PendingIngestInvalidError(
@@ -369,10 +343,18 @@ class PendingIngestService:
         pending_dir = os.path.join(PENDING_STORAGE_DIR, pending_id)
         os.makedirs(pending_dir, exist_ok=True)
 
+        logger.info(
+            "Creating pending preview: pending_id=%s source_kind=%s source_id=%s locator=%s",
+            pending_id,
+            source_kind,
+            payload.get("source_id"),
+            locator,
+        )
+
         if source_kind == "pdf_url":
             extracted_text, chunks, raw_path = self._extract_pdf_url(locator, pending_dir)
         else:
-            extracted_text, chunks, raw_path = self._extract_web(locator)
+            extracted_text, chunks, raw_path = self._extract_web(locator, payload=payload)
 
         if not extracted_text.strip():
             raise PendingIngestInvalidError("No extractable text found")
@@ -384,6 +366,12 @@ class PendingIngestService:
         chunks_path = os.path.join(pending_dir, "chunks.json")
         self._write_text_file(extracted_text_path, extracted_text)
         self._write_chunks_file(chunks_path, chunks)
+
+        collection_override = (
+            _stringify(payload.get("chroma_collection_override"))
+            or ("rag_web_pdf" if _stringify(payload.get("corpus")) == "disease_core" else "")
+            or None
+        )
 
         item = PendingIngest.create(
             pending_id=pending_id,
@@ -409,6 +397,11 @@ class PendingIngestService:
             phase=_stringify(payload.get("phase")) or None,
             candidate_index=self._optional_int(payload.get("candidate_index")),
             extract_mode=_stringify(payload.get("extract_mode")) or None,
+            article_title=_stringify(payload.get("article_title")) or None,
+            parent_topic_title=_stringify(payload.get("parent_topic_title")) or None,
+            disease_topic_url=_stringify(payload.get("disease_topic_url")) or None,
+            category=_stringify(payload.get("category")) or None,
+            chroma_collection_override=collection_override,
             checksum=checksum,
             extracted_text_preview=_trim(extracted_text, 1200),
             chunks_preview=self._build_chunks_preview(chunks),
@@ -417,7 +410,22 @@ class PendingIngestService:
             chunks_path=chunks_path,
             raw_path=raw_path,
         )
+
+        logger.info(
+            "Writing pending ingest to Firestore: pending_id=%s chunks_path=%s extracted_text_path=%s",
+            pending_id,
+            chunks_path,
+            extracted_text_path,
+        )
+
         action, saved = self._repository.create_or_update_pending(item)
+
+        logger.info(
+            "Pending ingest saved: action=%s pending_id=%s",
+            action,
+            saved.pending_id,
+        )
+
         return {
             "status": "ok",
             "action": action,
@@ -428,22 +436,52 @@ class PendingIngestService:
             "message": self._preview_message(action),
         }
 
-    def _extract_web(self, url: str) -> tuple[str, list[dict[str, Any]], Optional[str]]:
+    def _extract_web(
+        self,
+        url: str,
+        *,
+        payload: Optional[dict[str, Any]] = None,
+    ) -> tuple[str, list[dict[str, Any]], Optional[str]]:
+        payload = payload or {}
         canonical_url = canonicalize_url(url) or url
         html = fetch_html(url)
         web_type = classify_web(url)
+        extract_mode = _stringify(payload.get("extract_mode"))
+        fallback_title = _stringify(payload.get("title"))
+
         extracted_text = ""
 
         try:
-            if web_type == "news":
-                extracted_text = clean_news(html)
-            elif web_type == "ecommerce":
-                product = clean_ecommerce(html)
-                extracted_text = "\n".join(
-                    part for part in [product.get("title", ""), product.get("description", "")] if part
-                )
-            else:
-                extracted_text = clean_docs(html)
+            if extract_mode == "skds_disease_article":
+                try:
+                    from backend.app.services.extractors.skds_article_extractor import (
+                        extract_skds_disease_article,
+                    )
+
+                    extracted = extract_skds_disease_article(
+                        html_or_text=html,
+                        url=canonical_url,
+                        fallback_title=fallback_title,
+                    )
+                    extracted_text = _stringify(extracted.get("text"))
+                except Exception:
+                    logger.exception("SKDS extractor failed for %s; falling back to generic extractor", url)
+
+            if not extracted_text:
+                if web_type == "news":
+                    extracted_text = clean_news(html)
+                elif web_type == "ecommerce":
+                    product = clean_ecommerce(html)
+                    extracted_text = "\n".join(
+                        part
+                        for part in [
+                            product.get("title", ""),
+                            product.get("description", ""),
+                        ]
+                        if part
+                    )
+                else:
+                    extracted_text = clean_docs(html)
         except Exception:
             logger.exception("HTML extractor failed for %s; falling back to plain text", url)
 
@@ -469,6 +507,7 @@ class PendingIngestService:
     def _extract_pdf_url(self, pdf_url: str, pending_dir: str) -> tuple[str, list[dict[str, Any]], Optional[str]]:
         file_bytes, filename = self._download_pdf(pdf_url)
         raw_path = os.path.join(pending_dir, filename)
+
         with open(raw_path, "wb") as file_stream:
             file_stream.write(file_bytes)
 
@@ -476,6 +515,14 @@ class PendingIngestService:
         chunks = self._read_chunks_file_unchecked(chunking_result.chunks_json_path)
         if not chunks:
             raise PendingIngestInvalidError("PDF chunker produced no chunks")
+
+        for index, chunk in enumerate(chunks):
+            chunk.setdefault("id", f"chunk_{index}")
+            chunk.setdefault("chunk_index", index)
+            chunk.setdefault("source", pdf_url)
+            chunk.setdefault("url", pdf_url)
+            chunk.setdefault("pdf_url", pdf_url)
+            chunk["data_type"] = "pdf"
 
         try:
             generated_path = os.path.abspath(chunking_result.chunks_json_path)
@@ -510,6 +557,7 @@ class PendingIngestService:
             basename = _safe_filename(raw_name, fallback="download")
             if not basename.lower().endswith(".pdf"):
                 basename = f"{basename}.pdf"
+
             filename = f"{_safe_filename(urlparse(pdf_url).netloc, 'pdf')}_{basename}"
 
             if not _looks_like_pdf(content_type, filename, pdf_url):
@@ -527,9 +575,11 @@ class PendingIngestService:
 
             chunks: list[bytes] = []
             total_size = 0
+
             for chunk in response.iter_content(chunk_size=1024 * 256):
                 if not chunk:
                     continue
+
                 total_size += len(chunk)
                 if total_size > MAX_FILE_SIZE_BYTES:
                     raise PendingIngestInvalidError(
@@ -540,12 +590,89 @@ class PendingIngestService:
             file_bytes = b"".join(chunks)
             if not file_bytes:
                 raise PendingIngestInvalidError("Downloaded PDF is empty")
+
             if not file_bytes.startswith(b"%PDF") and not _looks_like_pdf(content_type, filename, pdf_url):
                 raise PendingIngestInvalidError("Downloaded file is not a valid PDF")
+
             return file_bytes, filename
         finally:
             if response is not None:
                 response.close()
+
+    def _embed_pending_chunks(
+        self,
+        *,
+        pending: PendingIngest,
+        source_type: str,
+        source_locator: str,
+        title: str,
+        domain: str,
+        topic: str,
+        actor: str,
+        job_id: str,
+        checksum: str,
+        sync_result,
+    ) -> dict[str, Any]:
+        ingest_context = build_ingest_context(
+            source_type=source_type,
+            source_name=pending.source_name or source_locator,
+            source_locator=source_locator,
+            document_title=title,
+            domain=domain,
+            topic=topic,
+            priority="normal",
+            visibility="public",
+            status="active",
+            created_by=actor,
+            ingest_job_id=job_id,
+            checksum=checksum,
+            version_no=sync_result.version_no,
+        )
+
+        extra_metadata = build_chunk_metadata(
+            ingest_context,
+            extra={
+                "source_id": sync_result.source_id,
+                "document_id": sync_result.document_id,
+                "version_id": sync_result.version_id,
+                "ingest_job_id": job_id,
+                "pending_id": pending.pending_id,
+                "n8n_source_id": pending.source_id,
+                "source_name": pending.source_name or pending.source_id,
+                "corpus": pending.corpus or "",
+                "content_subtype": pending.content_subtype or "",
+                "source_kind": pending.source_kind,
+                "url": pending.url or "",
+                "pdf_url": pending.pdf_url or "",
+                "title": pending.title or "",
+                "article_title": getattr(pending, "article_title", None) or "",
+                "parent_topic_title": getattr(pending, "parent_topic_title", None) or "",
+                "disease_topic_url": getattr(pending, "disease_topic_url", None) or "",
+                "category": getattr(pending, "category", None) or "",
+                "published_at": pending.published_at or "",
+                "updated_at": pending.updated_at or "",
+                "region": pending.region or "",
+                "doi": pending.doi or "",
+                "pmid": pending.pmid or "",
+                "disease_name": pending.disease_name or "",
+                "canonical_key": pending.canonical_key or "",
+                "raw_source": pending.raw_source or "",
+                "phase": pending.phase or "",
+                "candidate_index": pending.candidate_index if pending.candidate_index is not None else "",
+                "extract_mode": pending.extract_mode or "",
+            },
+        )
+
+        data_type = self._data_type_for_pending(pending)
+        collection_override = self._collection_override_for_pending(pending)
+
+        return embed_and_store_chunks(
+            chunks_json_path=pending.chunks_path or "",
+            allow_duplicates=False,
+            data_type=data_type,
+            extra_metadata=extra_metadata,
+            chroma_collection_override=collection_override,
+        )
 
     def _source_locator(self, pending: PendingIngest) -> str:
         return _stringify(pending.pdf_url if pending.source_kind == "pdf_url" else pending.url)
@@ -553,8 +680,22 @@ class PendingIngestService:
     def _source_type(self, pending: PendingIngest) -> str:
         return "PDF" if pending.source_kind == "pdf_url" else "Web"
 
+    def _data_type_for_pending(self, pending: PendingIngest) -> str:
+        return "pdf" if pending.source_kind == "pdf_url" else "web"
+
+    def _collection_override_for_pending(self, pending: PendingIngest) -> Optional[str]:
+        explicit = _stringify(getattr(pending, "chroma_collection_override", None))
+        if explicit:
+            return explicit
+
+        if _stringify(pending.corpus) == "disease_core":
+            return "rag_web_pdf"
+
+        return None
+
     def _build_chunks_preview(self, chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
         preview: list[dict[str, Any]] = []
+
         for chunk in chunks[:3]:
             preview.append(
                 {
@@ -565,6 +706,7 @@ class PendingIngestService:
                     "page_end": chunk.get("page_end"),
                 }
             )
+
         return preview
 
     def _optional_int(self, value: Any) -> Optional[int]:
@@ -608,13 +750,16 @@ class PendingIngestService:
         raw_path = _stringify(path)
         if not raw_path:
             return None
+
         root = os.path.abspath(PENDING_STORAGE_DIR)
         candidate = os.path.abspath(raw_path)
+
         try:
             if os.path.commonpath([root, candidate]) != root:
                 return None
         except ValueError:
             return None
+
         return candidate
 
     def _write_text_file(self, path: str, value: str) -> None:
